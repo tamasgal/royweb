@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Restless Oyster</title>
+        <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/menu.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/graphs.css">
+        <link rel="stylesheet" href="/static/css/smoothness/jquery-ui-1.10.4.custom.min.css">
+        <link rel="stylesheet" href="/static/lib/qunit/qunit-1.14.0.css">
+        
+        <script type="text/javascript">
+            // Settings
+            window.royweb_ip = "{{ royweb_ip }}";
+            window.royweb_port = "{{ royweb_port }}";
+        </script>
+
+        <script type="text/javascript" src="/static/lib/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="/static/lib/jquery-ui-1.10.4.custom.min.js"></script>
+        <script type="text/javascript" src="/static/lib/d3.v3.min.js"></script>
+        
+        <script type="text/javascript" src="/static/js/menu.js"></script>
+        <script type="text/javascript" src="/static/js/navigation.js"></script>
+        <script type="text/javascript" src="/static/js/websocket_handler.js"></script>
+        <script type="text/javascript" src="/static/js/ui.js"></script>
+    </head>
+    <body>
+    <div id='header'>
+        <img src="/static/img/km3net_logo.png" />
+        <img src="/static/img/roy_logo.png" />
+    </div>
+    <div id='wrapper'>
+        <div id='sidebar'>
+        <div id='cssmenu'>
+            <ul>
+                <li class='active'><a href='/'><span>Dashboard</span></a></li>
+                <li class='has-sub'><a href='#'><span>Analysis</span></a>
+                    <ul>
+                        <li class='has-sub'><a href='#'><span>Foo</span></a>
+                            <ul>
+                                <li><a href='#'><span>Bar</span></a></li>
+                                <li class='last'><a href='#'><span>Baz</span></a></li>
+                            </ul>
+                        </li>
+                        <li class='has-sub'><a href='#'><span>Narf</span></a>
+                            <ul>
+                                <li><a href='#'><span>Fjoord</span></a></li>
+                                <li class='last'><a href='#'><span>Mooh</span></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href='#'><span>Archive</span></a></li>
+                <li class='has-sub'><a href='#'><span>Tests</span></a>
+                    <ul>
+                        <li><a id="run_unit_tests"><span>Unit Tests</span></a></li>
+                        <li class='last'><a id="run_spec_tests"><span>Spec Tests</span></a></li>
+                    </ul>
+                </li>
+                <li class='last'><a href='/'><span>Reconnect</span></a></li>
+            </ul>
+        </div>
+        <div id='infobar'>
+            <div>
+                <h3>Event rate</h3>
+                <span id="event_rate"></span><span id="event_rate_indicator">&nbsp;</span>
+            </div>
+        </div>
+        </div>
+
+        <div id="content">
+        </div>
+
+	<div id="right-sidebar">
+		<h3>Parameters</h3>
+                <div id="parameter_types"></div>
+	</div>
+    </div>
+
+    <div id="console">
+        <div class="window_title minimized_window">Console Log</div>
+        <div id="console_log"></div>
+    </div>
+    </body>
+</html>  
+

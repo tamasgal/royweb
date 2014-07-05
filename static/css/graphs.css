@@ -1,0 +1,25 @@
+.graph h2 {
+    border-top: 3px solid #FDF6E3;
+    text-align: center;
+    padding-top: 10px;
+}
+
+.graph {
+    float: left;
+    margin-right: 16px;
+}
+
+svg {
+    border: 0;
+}
+
+.axis path,
+.axis line {
+        fill: none;
+        stroke: black;
+        shape-rendering: crispEdges;
+}
+.axis text {
+        font-family: sans-serif;
+        font-size: 11px;
+}
