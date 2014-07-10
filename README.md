@@ -4,7 +4,7 @@ royweb
 Restless Oyster online monitor.
 
 ## Getting the latest version
-The original git-repository is on [GitHub](http://github.com): <http://github.com/tamasgal/royweb.>
+The original git-repository is on [GitHub](http://github.com): <http://github.com/tamasgal/royweb>.
 
 
 ## Simple usage
