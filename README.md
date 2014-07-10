@@ -4,7 +4,7 @@ royweb
 Restless Oyster online monitor.
 
 ## Getting the latest version
-The original git-repository is on [GitHub](http://github.com): <http://github.com/tamasgal/royweb.>
+The original git-repository is on [GitHub](http://github.com): <http://github.com/tamasgal/royweb>.
 
 ## Installing dependencies
 ROyWeb is based on Python and needs two additional libraries: [Tornado](http://www.tornadoweb.org) and daemon.
