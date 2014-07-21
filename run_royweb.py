@@ -2,6 +2,7 @@
 # coding=utf-8
 # Filename: run_royweb.py
 # pylint: disable=E0611,W0611
+from __future__ import print_function
 """
 The ROyWeb tornado webserver startup script.
 
@@ -18,7 +19,7 @@ import threading
 
 import daemon
 
-from royweb.networking import WebSocketBroadcaster, Clients
+from royweb.networking import WebSocketBroadcaster
 from royweb.webhandler import MainHandler, EchoWebSocket, UnitTests, SpecTests
 
 define("ip", default="127.0.0.1", type=str,
@@ -69,14 +70,15 @@ if __name__ == "__main__":
                 'template_path': os.path.join(root, 'templates'),
                }
 
+    clients = []
+
     application = tornado.web.Application([
         (r"/", MainHandler, dict(royweb_ip=royweb_ip, royweb_port=royweb_port)),
-        (r"/websocket", EchoWebSocket),
+        (r"/websocket", EchoWebSocket, {'clients': clients}),
         (r"/unit_tests", UnitTests),
         (r"/spec_tests", SpecTests),
     ], **settings)
 
-    clients = Clients.Instance()
     ws_broadcaster = WebSocketBroadcaster(royweb_ip, udp_port, clients)
     t = threading.Thread(target = ws_broadcaster.run)
     t.daemon = True

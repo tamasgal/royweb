@@ -7,23 +7,22 @@ Networking stuff for UDP and WebSocket communication.
 """
 __author__ = 'Tamas Gal'
 __email__ = 'tamas.gal@physik.uni-erlangen.de'
-__all__ = ('WebSocketBroadcaster', 'Clients')
+__all__ = ('WebSocketBroadcaster', )
 
 import sys
 import socket
 
-from tools import Singleton
 
 class WebSocketBroadcaster(object):
     """Receives data from UDP and redistributes them via WebSockets."""
     def __init__(self, server, port, clients):
         """Bind to UDP port."""
         self.is_running = True
-        UDP_IP = server
-        UDP_PORT = port 
+        udp_ip = server
+        udp_port = port
         self.clients = clients
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.sock.bind((UDP_IP, UDP_PORT))
+        self.sock.bind((udp_ip, udp_port))
 
     def run(self):
         """Listen for UDP packets and immediately send them to the clients."""
@@ -37,9 +36,3 @@ class WebSocketBroadcaster(object):
     def stop(self):
         """Stop the port listener."""
         self.is_running = False
-
-
-@Singleton
-class Clients(list):
-    pass
-
