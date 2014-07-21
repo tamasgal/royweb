@@ -17,8 +17,6 @@ from tornado.options import define, options
 import os
 import threading
 
-import daemon
-
 from royweb.networking import WebSocketBroadcaster
 from royweb.webhandler import MainHandler, EchoWebSocket, UnitTests, SpecTests
 
@@ -84,16 +82,16 @@ if __name__ == "__main__":
     t.daemon = True
     t.start()
 
-    #demonise
-    """if not options.log_file:
-        log_file = "tornado.{0}.log".format(royweb_port)
-    else:
-        log_file = options.log_file
-
-    log = open(log_file, 'a+')
-    ctx = daemon.DaemonContext(stdout=log, stderr=log,  working_directory='.')
-    ctx.open()
-    """
+    ## demonise
+    # import daemon
+    # if not options.log_file:
+    #     log_file = "tornado.{0}.log".format(royweb_port)
+    # else:
+    #     log_file = options.log_file
+    # log = open(log_file, 'a+')
+    # ctx = daemon.DaemonContext(stdout=log, stderr=log,  working_directory='.')
+    # ctx.open()
+    
 
     try:
         application.listen(royweb_port)

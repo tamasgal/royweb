@@ -1,6 +1,6 @@
 # coding=utf-8
 # Filename: webhandler.py
-# pylint: disable=E0611,W0611
+# pylint: disable=locally-disabled,too-many-public-methods,attribute-defined-outside-init
 """
 Tornado WebHandler.
 
@@ -20,6 +20,7 @@ import json
 
 class MainHandler(tornado.web.RequestHandler):
     """The main request handler for ROyWeb"""
+    #pylint: disable=arguments-differ
     def initialize(self, royweb_ip, royweb_port):
         self.royweb_ip = royweb_ip
         self.royweb_port = royweb_port
@@ -35,7 +36,7 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
         self.clients = kwargs.pop('clients')
         super(EchoWebSocket, self).__init__(*args, **kwargs)
 
-    def open(self, *args):
+    def open(self):
         print("WebSocket opened")
         self.send_json_message(u"WebSocket opened")
         self.clients.append(self)

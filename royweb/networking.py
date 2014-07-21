@@ -5,6 +5,8 @@
 Networking stuff for UDP and WebSocket communication.
 
 """
+from __future__ import print_function
+
 __author__ = 'Tamas Gal'
 __email__ = 'tamas.gal@physik.uni-erlangen.de'
 __all__ = ('WebSocketBroadcaster', )
@@ -29,7 +31,8 @@ class WebSocketBroadcaster(object):
         while self.is_running == True:
             #print("Waiting for UDP packets")
             data, addr = self.sock.recvfrom(65535)
-            #print("Received {0} bytes of data.".format(sys.getsizeof(data)))
+            size = sys.getsizeof(data)
+            print("Received {0} bytes of data from {1}.".format(size, addr))
             for client in self.clients:
                 client.write_message(data)
 
