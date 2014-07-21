@@ -32,6 +32,10 @@ This is easy as pip is:
     > pip install tornado
     > pip install daemon
 
+or simply use the `requirements.txt` file to install all dependencies automatically:
+
+    > pip install -r requirements.txt
+
 ### Done
 
 From now on, every time you want to start a ROyWeb server, activate the virtual environment and you're ready to go.
