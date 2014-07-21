@@ -28,6 +28,7 @@ class WebSocketBroadcaster(object):
     def run(self):
         """Listen for UDP packets and immediately send them to the clients."""
         while self.is_running == True:
+            #print("Waiting for UDP packets")
             data, addr = self.sock.recvfrom(65535)
             #print("Received {0} bytes of data.".format(sys.getsizeof(data)))
             for client in self.clients:

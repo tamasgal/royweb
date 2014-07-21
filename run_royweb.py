@@ -79,6 +79,7 @@ if __name__ == "__main__":
     clients = Clients.Instance()
     ws_broadcaster = WebSocketBroadcaster(royweb_ip, udp_port, clients)
     t = threading.Thread(target = ws_broadcaster.run)
+    t.daemon = True
     t.start()
 
     #demonise
