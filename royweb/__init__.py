@@ -9,7 +9,7 @@ __copyright__ = ("Copyright 2014, Tamas Gal and the KM3NeT collaboration "
                  "(http://km3net.org)")
 __credits__ = []
 __license__ = "GPL"
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __maintainer__ = "Tamas Gal"
-__email__ = "tamas.gal@physik.uni-erlangen.de"
+__email__ = "tgal@km3net.de"
 __status__ = "Development"
