@@ -1,0 +1,9 @@
+include README.md
+recursive-include whatever *
+recursive-include static *
+recursive-include templates *
+recursive-include docs *
+recursive-exclude docs *.pyc
+recursive-exclude docs *.pyo
+recursive-include config *
+prune docs/_build

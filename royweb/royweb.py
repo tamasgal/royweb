@@ -17,8 +17,14 @@ from tornado.options import define, options
 import os
 import threading
 
-from royweb.networking import WebSocketBroadcaster
-from royweb.webhandler import MainHandler, EchoWebSocket, UnitTests, SpecTests
+import socket
+import time
+from time import sleep
+from random import random
+import json
+
+from .networking import WebSocketBroadcaster
+from .webhandler import MainHandler, EchoWebSocket, UnitTests, SpecTests
 
 define("ip", default="127.0.0.1", type=str,
        help="The WAN IP of this machine. You can use 127 for local tests.")
@@ -100,6 +106,30 @@ def main():
         print("Stopping tornado...")
         ws_broadcaster.stop()
         tornado.ioloop.IOLoop.instance().stop()
+
+
+def send_test_parameter():
+    UDP_IP = "127.0.0.1"
+    UDP_PORT = 9999
+    print("UDP target IP: {0}".format(UDP_IP))
+    print("UDP target port: {0}".format(UDP_PORT))
+
+    event = 100
+    while True:
+        current_time = int(time.time())
+        MESSAGE = json.dumps(
+            {'kind': 'parameter',
+             'type': 'muon_energy_min',
+             'description': 'this is the reconstructed energy of the primary muon.',
+	     'value': random()*1.5+0.1,
+             'time': current_time,
+             'event_number': event})
+
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
+        sleep(random()*1.5+0.1)
+        event += 1
+
 
 if __name__ == "__main__":
     main()
