@@ -18,6 +18,10 @@ setup(name='royweb',
               'royweb_tester=royweb.royweb:send_test_parameter',
           ],
       },
+      classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+      ],
 )
 
 __author__ = 'Tamas Gal'
