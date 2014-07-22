@@ -3,17 +3,14 @@ ws.onopen = function() {
    ws.send("Hello");
 };
 
-window.event_times = [];
+window.limit = 20; // maximum number of kept entries for a parameter
 window.parameter_types = [];
-window.graphs = [];
-window.current_event = 0;
+window.parameters = new Object();
 
 ws.onmessage = function (evt) {
     var json_obj = JSON.parse(evt.data);
 
     if(json_obj.kind == "parameter") {
-    	var event_number = json_obj.event_number;
-        update_event_number(event_number);
     	process_parameter(json_obj);
     }
 
@@ -42,81 +39,35 @@ function log_message(data) {
     }
 }
 
+
 function clean_up_history(lines_to_keep) {
     if($("#console_log").children().length > 500) {
         $('#console_log').find('div').first().remove();
     }
 }
 
-function update_event_number(event_number) {
-    if(event_number > window.current_event) {
-    	var event_rate = calculate_event_rate();
-        window.current_event = event_number;
-    }
-}
-
-function calculate_event_rate() {
-    if(window.event_times.length > 10) {
-        window.event_times.shift();
-    }
-    var event_time = new Date().getTime();
-    window.event_times.push(event_time);
-    var latest = window.event_times.slice(-1)[0];
-    var first = window.event_times[0];
-    var count = window.event_times.length;
-    var event_rate = ((count - 1) / (latest - first) * 1000).toFixed(2);
-
-    d3.select("#event_rate").text(event_rate + " Hz");
-
-    if(event_rate > 2) {
-        $('#event_rate').css("color", "#FF5179");
-        $('#event_rate_indicator').css("background-color", "#FF5179");
-    } else {
-        $('#event_rate').css("color", "#268BD3");
-        $('#event_rate_indicator').css("background-color", "#268BD3");
-    }
-    $('#event_rate').stop(true, true).show();
-    $('#event_rate_indicator')
-        .stop(true, true)
-        .fadeIn(50)
-        .fadeOut(10, function(){
-            $('#event_rate').fadeOut(5000);
-        });
-
-    return event_rate;
-}
 
 function includes(arr,obj) {
     return (arr.indexOf(obj) != -1);
 }
 
 
-function process_parameter(obj) {
-    if(!includes(window.parameter_types, obj.type)) {
-        window.parameter_types.push(obj.type);
+function process_parameter(parameter) {
+    if(!includes(window.parameter_types, parameter.type)) {
+        log_message("New parameter type received: " + parameter.type);
+        window.parameter_types.push(parameter.type);
         d3.select("#parameter_types").append("div")
-                .attr("id", obj.type + "_tag")
+                .attr("id", parameter.type + "_tag")
                 .attr("class", "parameter_tag")
-                .attr("rel", obj.type)
-                .text(obj.type);
-        $("#"+obj.type + "_tag").click(function() {
-            $("#" + obj.type + "_graph").parent().fadeToggle();
-            $(this).toggleClass("inactive_parameter", 200);
-        }); 
-
-        var graph = new Graph(obj.type);
-        window.graphs.push(graph);
-
-        log_message("New parameter type received: " + obj.type);
+                .attr("rel", parameter.type)
+                .text(parameter.type);
+        window.parameters[parameter.type] = [];
     }
 
-    for (index = 0; index < window.graphs.length; ++index) {
-        graph = window.graphs[index];
-        if(graph.type == obj.type) {
-            graph.add_obj(obj);
-            graph.redraw();
-        }
+    if(window.parameters[parameter.type].length > window.limit) {
+            window.parameters[parameter.type].shift();
     }
+    window.parameters[parameter.type].push(parameter);
 }
 
 function Graph (parameter_type) {
