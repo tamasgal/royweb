@@ -33,9 +33,9 @@ The server will listen to incoming client connections on port **8080** and start
 
 Send test data
 --------------
-To send some live test data to the web server, run ``royweb_test`` (if installed via ``pip``) or the ``send_udp.py`` script. This will generate some random parameters and distributes them via UDP to the default port **9999** on localhost::
+To send some live test data to the web server, run ``royweb_tester`` (if installed via ``pip``) or the ``send_udp.py`` script. This will generate some random parameters and distributes them via UDP to the default port **9999** on localhost::
 
-    # royweb_test
+    # royweb_tester
     UDP target IP: 127.0.0.1
     UDP target port: 9999
 
