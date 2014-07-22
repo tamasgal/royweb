@@ -71,7 +71,7 @@ def main():
 
     settings = {'debug': False, 
                 'static_path': os.path.join(root, 'static'),
-                'template_path': os.path.join(root, 'templates'),
+                'template_path': os.path.join(root, 'static/templates'),
                }
 
     clients = []
