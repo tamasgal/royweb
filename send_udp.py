@@ -18,11 +18,10 @@ while True:
     current_time = int(time.time())
     MESSAGE = json.dumps(
         {'kind': 'parameter',
-         'type': 'muon_energy_min',
+         'type': 'foo',
          'description': 'this is the reconstructed energy of the primary muon.',
-	     'value': random()*1.5+0.1,
-         'time': current_time,
-         'event_number': event})
+	 'value': random()*1.5+0.1,
+        })
 
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
