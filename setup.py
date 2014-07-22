@@ -6,8 +6,11 @@ setup(name='royweb',
       description='Restless Oyster online monitoring tool',
       author='Tamas Gal',
       author_email='tgal@km3net.de',
-      packages=['royweb', 'whatever'],
+      packages=['royweb'],
       #package_dir={'royweb': 'royweb', 'royweb': 'whatever'},
+      #package_data={
+      #    'docs': ['docs/*.rst'],
+      #},
       include_package_data=True,
       platforms='any',
       install_requires=[
