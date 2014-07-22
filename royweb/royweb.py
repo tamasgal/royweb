@@ -23,8 +23,8 @@ from time import sleep
 from random import random
 import json
 
-from .networking import WebSocketBroadcaster
-from .webhandler import MainHandler, EchoWebSocket, UnitTests, SpecTests
+from networking import WebSocketBroadcaster
+from webhandler import MainHandler, EchoWebSocket, UnitTests, SpecTests
 
 define("ip", default="127.0.0.1", type=str,
        help="The WAN IP of this machine. You can use 127 for local tests.")
@@ -69,7 +69,7 @@ def main():
     print("Running on {0}:{1}".format(royweb_ip, royweb_port))
     print("Listening for UDP data on port {0}".format(udp_port))
 
-    settings = {'debug': False, 
+    settings = {'debug': True, 
                 'static_path': os.path.join(root, 'static'),
                 'template_path': os.path.join(root, 'static/templates'),
                }

@@ -1,6 +1,5 @@
 include README.md
-recursive-include static *
-recursive-include templates *
+recursive-include royweb/static *
 recursive-include docs *
 recursive-exclude docs *.pyc
 recursive-exclude docs *.pyo
