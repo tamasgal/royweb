@@ -7,7 +7,7 @@ The current status is alpha and I'm redesigning the parameter format to add more
 The main goal is to create a tool which runs a web interface and monitors several types of parameters sent via UDP packets. The visualisation of the data is done by the d3.js framework and the parameters are sent as JSON objects.
 Monitoring a specific parameter should be as easy as sending a JSON object through UDP to the webserver. Any connected client should then receive the packet and the user will be able to create live graphs or histograms with the desired parameters.
 
-Feel free to contribute/join, any kind feedback is welcome!
+Feel free to contribute or join; any kind of feedback is welcome!
 
 
 Documentation
