@@ -22,7 +22,7 @@ This will automatically install all dependencies and scripts. Of course, you can
 
 Simple usage
 ------------
-If you installed ``royweb`` via ``pip``, you can use the ``royweb`` script to start the web server with the default configuration. Otherwise, simply take the ``run_royweb.py``.
+If you installed ``royweb`` via ``pip``, you can use the ``royweb`` script to start the web server with the default configuration. Otherwise, simply take the ``royweb.py`` in the ``royweb`` package.
 The server will listen to incoming client connections on port **8080** and start a UDP-listener on port **9999** for parameter monitoring::
 
     # royweb 
