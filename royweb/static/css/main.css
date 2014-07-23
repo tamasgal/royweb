@@ -184,8 +184,24 @@ div.parameter_tag:hover {
 
 /* RIGHT SIDEBAR */
 #right-sidebar {
-    border: 1px solid red;
     width: 200px;
     min-height: 500px;
     float: right;
+}
+
+/* PARAMETER TABLE */
+#parameters {
+    width: 180px;
+}
+
+.parameter_name {
+    text-align: left;
+}
+
+.parameter_rate {
+    text-align: right;
+}
+
+td.parameter_name {
+    font-weight: bold;
 }

@@ -65,6 +65,14 @@ function process_parameter(parameter) {
                 .attr("class", "parameter_tag")
                 .attr("rel", parameter.type)
                 .text(parameter.type);
+        var table_row = d3.select("#parameters").append("tr");
+        table_row.append("td")
+            .attr("class", "parameter_name")
+            .text(parameter.type);
+        table_row.append("td")
+            .attr("class", "parameter_rate")
+            .attr("id", parameter.type + "_rate")
+            .text("0");
         window.parameters[parameter.type] = [];
     }
 
@@ -72,6 +80,17 @@ function process_parameter(parameter) {
             window.parameters[parameter.type].shift();
     }
     window.parameters[parameter.type].push(parameter);
+
+    update_parameter_rate(parameter);
+}
+
+function update_parameter_rate(parameter) {
+    var rate = calculate_parameter_rate(parameter);
+    d3.select("#foo_rate").text(rate);
+}
+
+function calculate_parameter_rate(parameter) {
+    return 4;
 }
 
 function Graph (parameter_type) {
