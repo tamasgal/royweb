@@ -13,7 +13,8 @@ __all__ = ('WebSocketBroadcaster', )
 
 import sys
 import socket
-
+import json
+import time
 
 class WebSocketBroadcaster(object):
     """Receives data from UDP and redistributes them via WebSockets."""
@@ -34,7 +35,17 @@ class WebSocketBroadcaster(object):
             size = sys.getsizeof(data)
             print("Received {0} bytes of data from {1}.".format(size, addr))
             for client in self.clients:
-                client.write_message(data)
+                client.write_message(self.with_timestamp(data))
+
+    def with_timestamp(self, json_obj):
+        """Returns a copy of a json obj with an additional time property."""
+        timestamp = time.time() * 1000
+        decoded_data = json.loads(json_obj)
+        decoded_data['time'] = timestamp
+        return json.dumps(decoded_data)
+
+
+
 
     def stop(self):
         """Stop the port listener."""

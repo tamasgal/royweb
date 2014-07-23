@@ -51,6 +51,10 @@ function includes(arr,obj) {
     return (arr.indexOf(obj) != -1);
 }
 
+function timestamp() {
+    // Return unix timestamp with milliseconds accuracy.
+    return +new Date()
+}
 
 function process_parameter(parameter) {
     if(!includes(window.parameter_types, parameter.type)) {
