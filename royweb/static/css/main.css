@@ -194,7 +194,7 @@ div.parameter_tag:hover {
     width: 180px;
 }
 
-.parameter_name {
+.parameter_type {
     text-align: left;
 }
 
@@ -202,6 +202,6 @@ div.parameter_tag:hover {
     text-align: right;
 }
 
-td.parameter_name {
+td.parameter_type {
     font-weight: bold;
 }

@@ -67,7 +67,7 @@ function process_parameter(parameter) {
                 .text(parameter.type);
         var table_row = d3.select("#parameters").append("tr");
         table_row.append("td")
-            .attr("class", "parameter_name")
+            .attr("class", "parameter_type")
             .text(parameter.type);
         table_row.append("td")
             .attr("class", "parameter_rate")
@@ -90,7 +90,12 @@ function update_parameter_rate(parameter) {
 }
 
 function calculate_parameter_rate(parameter) {
-    return 4;
+    var parameters = window.parameters[parameter.type];
+    var latest = parameters.slice(-1)[0].time;
+    var first = parameters[0].time;
+    var count = parameters.length;
+    parameter_rate = ((count - 1) / (latest - first) * 1000).toFixed(2);
+    return parameter_rate;
 }
 
 function Graph (parameter_type) {
