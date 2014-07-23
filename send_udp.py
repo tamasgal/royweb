@@ -17,11 +17,23 @@ while True:
     message = json.dumps(
         {'kind': 'parameter',
          'type': 'foo',
-         'description': 'this is the reconstructed energy of the primary muon.',
+         'description': 'This is the foo parameters description.',
 	 'value': random()*1.5+0.1,
         })
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.sendto(message, (udp_ip, udp_port))
     sleep(random()*1.5+0.1)
+
+    current_time = int(time.time())
+    message = json.dumps(
+        {'kind': 'parameter',
+         'type': 'narf',
+         'description': 'This is the narf parameters description.',
+	 'value': random()*1.5+0.1,
+        })
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.sendto(message, (udp_ip, udp_port))
+    sleep(random()*1.5+0.1)
+
     event += 1
     

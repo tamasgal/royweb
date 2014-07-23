@@ -86,7 +86,7 @@ function process_parameter(parameter) {
 
 function update_parameter_rate(parameter) {
     var rate = calculate_parameter_rate(parameter);
-    d3.select("#foo_rate").text(rate);
+    d3.select("#" + parameter.type + "_rate").text(rate);
 }
 
 function calculate_parameter_rate(parameter) {
