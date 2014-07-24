@@ -21,6 +21,14 @@ setup(name='royweb',
       classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
+        'Intended Audience :: Science/Research',
+        'Intended Audience :: System Administrators',
+        'Programming Language :: Python',
+        'Programming Language :: JavaScript',
+        'Topic :: Scientific/Engineering :: Visualization',
+        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+        'Topic :: Internet :: WWW/HTTP :: HTTP Servers',
+        'Environment :: Web Environment',
       ],
 )
 
