@@ -40,12 +40,13 @@ define("log_file", help="Location of the log file for stdout and stderr.")
 
 def main():
     root = os.path.dirname(__file__)
+    cwd = os.getcwd()
 
     options.parse_command_line()
 
     if options.config_file:
         if not options.config_file[0] == "/":
-            config_file = os.path.join(root, options.config_file)
+            config_file = os.path.join(cwd, options.config_file)
         else:
             config_file = options.config_file
         print("Reading configuration from: {0}".format(config_file))
