@@ -110,10 +110,10 @@ def main():
 
 
 def send_test_parameter():
-    UDP_IP = "127.0.0.1"
-    UDP_PORT = 9999
-    print("UDP target IP: {0}".format(UDP_IP))
-    print("UDP target port: {0}".format(UDP_PORT))
+    udp_ip = "127.0.0.1"
+    udp_port = 9999
+    print("UDP target IP: {0}".format(udp_ip))
+    print("UDP target port: {0}".format(udp_port))
 
     while True:
         message = json.dumps({
