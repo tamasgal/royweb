@@ -115,21 +115,27 @@ def send_test_parameter():
     print("UDP target IP: {0}".format(UDP_IP))
     print("UDP target port: {0}".format(UDP_PORT))
 
-    event = 100
     while True:
-        current_time = int(time.time())
-        MESSAGE = json.dumps(
-            {'kind': 'parameter',
-             'type': 'muon_energy_min',
-             'description': 'this is the reconstructed energy of the primary muon.',
+        message = json.dumps({
+            'kind': 'parameter',
+             'type': 'foo',
+             'description': 'This is the foo parameters description.',
 	     'value': random()*1.5+0.1,
-             'time': current_time,
-             'event_number': event})
-
+            })
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
+        sock.sendto(message, (udp_ip, udp_port))
         sleep(random()*1.5+0.1)
-        event += 1
+
+        current_time = int(time.time())
+        message = json.dumps({
+            'kind': 'parameter',
+            'type': 'narf',
+            'description': 'This is the narf parameters description.',
+	    'value': random()*1.5+0.1,
+            })
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.sendto(message, (udp_ip, udp_port))
+        sleep(random()*1.5+0.1)
 
 
 if __name__ == "__main__":
