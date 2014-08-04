@@ -54,3 +54,6 @@ docs/_build/
 
 # VI swap files
 *.swp
+
+# PyCharm files
+.idea
