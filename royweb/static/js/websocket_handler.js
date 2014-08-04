@@ -4,6 +4,7 @@ ws.onopen = function() {
 };
 
 window.limit = 20; // maximum number of kept entries for a parameter
+window.graphs = [];
 window.parameter_types = [];
 window.parameters = new Object();
 
@@ -47,7 +48,7 @@ function clean_up_history(lines_to_keep) {
 }
 
 
-function includes(arr,obj) {
+function includes(arr, obj) {
     return (arr.indexOf(obj) != -1);
 }
 
@@ -56,17 +57,27 @@ function timestamp() {
     return +new Date()
 }
 
+var guid = (function() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+               .toString(16)
+               .substring(1);
+  }
+  return function() {
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+           s4() + '-' + s4() + s4() + s4();
+  };
+})();
+
 function process_parameter(parameter) {
     if(!includes(window.parameter_types, parameter.type)) {
         log_message("New parameter type received: " + parameter.type);
         window.parameter_types.push(parameter.type);
-        d3.select("#parameter_types").append("div")
-                .attr("id", parameter.type + "_tag")
-                .attr("class", "parameter_tag")
-                .attr("rel", parameter.type)
-                .text(parameter.type);
         var table_row = d3.select("#parameters").append("tr");
         table_row.append("td")
+            .append("input")
+            .attr("type", "submit")
+            .attr("value", parameter.type)
             .attr("class", "parameter_type")
             .text(parameter.type);
         table_row.append("td")
@@ -74,14 +85,18 @@ function process_parameter(parameter) {
             .attr("id", parameter.type + "_rate")
             .text("0");
         window.parameters[parameter.type] = [];
+        var graph = new Graph();
+        graph.parameter_types.push(parameter.type);
+        graph.set_title(parameter.type);
     }
 
-    if(window.parameters[parameter.type].length > window.limit) {
+    if(window.parameters[parameter.type].length >= window.limit) {
             window.parameters[parameter.type].shift();
     }
     window.parameters[parameter.type].push(parameter);
 
     update_parameter_rate(parameter);
+    update_graphs(parameter);
 }
 
 function update_parameter_rate(parameter) {
@@ -98,7 +113,131 @@ function calculate_parameter_rate(parameter) {
     return parameter_rate;
 }
 
-function Graph (parameter_type) {
+function update_graphs(parameter) {
+    for(var index in window.graphs) {
+        var graph = window.graphs[index];
+        if(includes(graph.parameter_types, parameter.type)) {
+            graph.redraw();
+        }
+    }
+}
+
+
+function Graph() {
+    // A graph, which automatically adds itself to the content-DIV
+    var self = {};
+
+    self.id = guid();
+
+    self.parameter_types = []; // TODO: multi-graph
+
+    self.w = 450;
+    self.h = 200;
+    self.padding = 25;
+    self.padding_left = 50;
+
+    self.div = d3.select("#content").append("div").attr("class", "graph");
+    self.title_field = self.div.append("h2");
+    self.svg = self.div.append("svg")
+                       .attr("width", self.w)
+                       .attr("height", self.h)
+                       .attr("id", self.id);
+
+    self.points = self.svg.append("g")
+        .attr("class", "points");
+
+
+    //self.xScale = d3.scale.linear().range([self.padding_left, self.w - self.padding]);
+    self.xScale = d3.time.scale().range([self.padding_left, self.w - self.padding]);
+    self.yScale = d3.scale.linear().range([self.h - self.padding, self.padding]);
+
+
+    var formatAsPercentage = d3.format(".1%");
+    var timeFormat = d3.time.format("%X");
+
+    self.xAxis = d3.svg.axis().scale(self.xScale).orient("bottom").ticks(5)
+                              .tickPadding(5)
+                              .tickFormat(timeFormat);
+    self.yAxis = d3.svg.axis().scale(self.yScale).orient("left").ticks(5);
+
+    self.svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + (self.h - self.padding) + ")")
+        .call(self.xAxis);
+    self.svg.append("g")
+        .attr("class", "y axis")
+        .attr("transform", "translate(" + self.padding_left + ",0)")
+        .call(self.yAxis);
+
+
+
+    self.set_title = function(title) {
+        // Update the H2 field of the graph.
+        self.title_field.text(title);
+    }
+
+    self.resize = function(width, height) {
+        // Change the width and height of the SVG container.
+        self.svg.attr("width", width).attr("height", height);
+    }
+
+    self.redraw = function() {
+        for(var index in self.parameter_types) {
+            //console.log(index);
+        }
+        var data = window.parameters[self.parameter_types[0]]; // TODO: multi-graphs
+
+        self.xScale.domain([
+                           d3.min(data, function(d) { return d.time; }),
+                           d3.max(data, function(d) { return d.time; })
+                           ]);
+
+        self.yScale.domain([
+                           d3.min(data, function(d) { return d.value; }),
+                           d3.max(data, function(d) { return d.value; })
+                           ]);
+
+        self.svg.select(".x.axis")
+            .transition()
+            .duration(500)
+            .call(self.xAxis)
+        self.svg.select(".y.axis")
+            .transition()
+            .duration(500)
+            .call(self.yAxis)
+
+        var points = self.points.selectAll("circle")
+                      .data(data, function(d) { return d.time; })
+
+
+        points.enter()
+              .append("circle")
+              .attr("cx", function(d) {
+                  return self.xScale(d.time);
+              })
+              .attr("cy", function(d) {
+                  return self.yScale(d.value);
+              })
+              .attr("r", 2)
+              .attr("fill", "#268BD3");
+
+        points.transition()
+              .duration(500)
+              .attr("cx", function(d) {
+                  return self.xScale(d.time);
+              });
+
+        points.exit()
+              .transition()
+              .duration(500)
+              .remove();
+    }
+
+    window.graphs.push(self);
+    return self;
+}
+
+function Graph_ (parameter_type) {
     var self = {};
 
     self.dataset = [];

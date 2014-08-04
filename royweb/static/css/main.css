@@ -61,61 +61,6 @@ h3 {
     float: right;
 }
 
-div.parameter_tag {
-    cursor: pointer;
-    cursor: hand;
-    -moz-box-shadow:inset 0px 1px 0px 0px #30acff;
-    -webkit-box-shadow:inset 0px 1px 0px 0px #30acff;
-    box-shadow:inset 0px 1px 0px 0px #30acff;
-    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #268bd3), color-stop(1, #237cb8) );
-    background:-moz-linear-gradient( center top, #268bd3 5%, #237cb8 100% );
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#268bd3', endColorstr='#237cb8');
-    background-color:#268bd3;
-    -webkit-border-top-left-radius:0px;
-    -moz-border-radius-topleft:0px;
-    border-top-left-radius:0px;
-    -webkit-border-top-right-radius:0px;
-    -moz-border-radius-topright:0px;
-    border-top-right-radius:0px;
-    -webkit-border-bottom-right-radius:0px;
-    -moz-border-radius-bottomright:0px;
-    border-bottom-right-radius:0px;
-    -webkit-border-bottom-left-radius:0px;
-    -moz-border-radius-bottomleft:0px;
-    border-bottom-left-radius:0px;
-    text-indent:0;
-    border:1px solid #123f5e;
-    display:inline-block;
-    color:#fdf6e3;
-    font-size:10px;
-    font-weight:bold;
-    font-style:normal;
-    height:20px;
-    line-height:20px;
-    text-decoration:none;
-    text-align:center;
-    text-shadow:1px 1px 0px #647b83;
-	padding-left: 7px;
-	padding-right: 7px;
-	margin-left: 2px;
-	margin-right: 2px;
-	margin-bottom: 4px;
-}
-
-div.parameter_tag:hover {
-    background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #237cb8), color-stop(1, #268bd3) );
-    background:-moz-linear-gradient( center top, #237cb8 5%, #268bd3 100% );
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#237cb8', endColorstr='#268bd3');
-    background-color:#237cb8;
-}
-.inactive_parameter {
-/*  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #93A1A1), color-stop(1, #647B83) ) !important;
-    background:-moz-linear-gradient( center top, #93A1A1 5%, #647B83 100% ) !important;
-    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#93A1A1 ', endColorstr='#647B83') !important;
-    background-color:#93A1A1 !important; */
-    opacity: 0.3 !important;
-}
-
 
 #console {
     height: 200px;
@@ -170,7 +115,7 @@ div.parameter_tag:hover {
     top: 80px;
     left: 200px;
     padding: 45px;
-    padding-right: 200px;
+    margin-right: 200px;
     float:left;
     min-height: 600px;
 }
