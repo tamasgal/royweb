@@ -136,7 +136,7 @@ function Graph() {
     self.h = 200;
     self.padding = 25;
     self.padding_left = 50;
-    self.smoothness = 100; // transition time in ms
+    self.smoothness = 0; // transition time in ms
 
     self.div = d3.select("#content").append("div").attr("class", "graph");
     self.title_field = self.div.append("h2");
@@ -157,7 +157,7 @@ function Graph() {
 
     self.xAxis = d3.svg.axis().scale(self.xScale).orient("bottom").ticks(5)
                               .tickSize(-(self.h - 2*self.padding), 0, 0)
-                              .tickPadding(5)
+                              .tickPadding(8)
                               .tickFormat(timeFormat);
     self.yAxis = d3.svg.axis().scale(self.yScale).orient("left").ticks(5)
                               .tickSize(-(self.w - self.padding - self.padding_left), 0, 0);

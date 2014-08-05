@@ -1,5 +1,6 @@
 div.graph {
     border: 1px solid #268BD3;
+    margin: 10px;
 }
 
 .graph h2 {
@@ -15,7 +16,7 @@ div.graph {
 }
 
 .graph svg {
-    border: 1px solid #FDF6E3;
+    /* border: 1px solid #FDF6E3; */
 }
 
 .axis path,
