@@ -130,11 +130,13 @@ function Graph() {
     self.id = guid();
 
     self.parameter_types = []; // TODO: multi-graph
+    self.data = window.parameters[self.parameter_types[0]]; // TODO: multi-graphs
 
     self.w = 450;
     self.h = 200;
     self.padding = 25;
     self.padding_left = 50;
+    self.smoothness = 0; // transition time in ms
 
     self.div = d3.select("#content").append("div").attr("class", "graph");
     self.title_field = self.div.append("h2");
@@ -143,6 +145,8 @@ function Graph() {
                        .attr("height", self.h)
                        .attr("id", self.id);
 
+    self.lines = self.svg.append("g")
+        .attr("class", "lines");
     self.points = self.svg.append("g")
         .attr("class", "points");
 
@@ -170,6 +174,11 @@ function Graph() {
         .call(self.yAxis);
 
 
+    self.line_func = d3.svg.line()
+        .x(function(d) { return self.xScale(d.time); })
+        .y(function(d) { return self.yScale(d.value); });
+    self.lines.append("svg:path").attr("class", "line");
+
 
     self.set_title = function(title) {
         // Update the H2 field of the graph.
@@ -185,30 +194,42 @@ function Graph() {
         for(var index in self.parameter_types) {
             //console.log(index);
         }
-        var data = window.parameters[self.parameter_types[0]]; // TODO: multi-graphs
-
+        self.data = window.parameters[self.parameter_types[0]]; 
         self.xScale.domain([
-                           d3.min(data, function(d) { return d.time; }),
-                           d3.max(data, function(d) { return d.time; })
+                           d3.min(self.data, function(d) { return d.time; }),
+                           d3.max(self.data, function(d) { return d.time; })
                            ]);
 
         self.yScale.domain([
-                           d3.min(data, function(d) { return d.value; }),
-                           d3.max(data, function(d) { return d.value; })
+                           d3.min(self.data, function(d) { return d.value; }),
+                           d3.max(self.data, function(d) { return d.value; })
                            ]);
 
         self.svg.select(".x.axis")
             .transition()
-            .duration(500)
+            .duration(self.smoothness)
             .call(self.xAxis)
         self.svg.select(".y.axis")
             .transition()
-            .duration(500)
+            .duration(self.smoothness)
             .call(self.yAxis)
 
-        var points = self.points.selectAll("circle")
-                      .data(data, function(d) { return d.time; })
 
+        //self.lines.append("svg:path").data([data]).attr("d", self.line_func);
+
+        //self.lines.append("svg:path").attr("d", self.line_func(data));
+        //var linegraph = self.lines.data(self.data, function(d) { return d.time; });
+
+        //self.line.transition().duration(1000).attr('d', self.line_func);
+
+        //linegraph.enter().append("path")
+        //    .attr("class", "line")
+        //    .attr("d", line_func);
+        //linegraph.exit().remove();
+
+
+        var points = self.points.selectAll("circle")
+                      .data(self.data, function(d) { return d.time; })
 
         points.enter()
               .append("circle")
@@ -222,15 +243,25 @@ function Graph() {
               .attr("fill", "#268BD3");
 
         points.transition()
-              .duration(500)
+              .duration(self.smoothness)
               .attr("cx", function(d) {
                   return self.xScale(d.time);
+              })
+              .attr("cy", function(d) {
+                  return self.yScale(d.value);
               });
 
         points.exit()
               .transition()
-              .duration(500)
+              .duration(self.smoothness)
               .remove();
+
+        self.lines.selectAll("path")
+              .data([self.data])
+              .attr("d", self.line_func)
+              .transition()
+              .ease("linear")
+              .duration(self.smoothness);
     }
 
     window.graphs.push(self);

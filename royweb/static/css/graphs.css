@@ -30,3 +30,9 @@ div.graph {
         font-size: 10px;
 }
 
+path.line {
+    stroke-width: 2px;
+    stroke: #FDF6E3;
+    fill: none;
+}
+
