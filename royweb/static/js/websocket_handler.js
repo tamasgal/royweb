@@ -136,7 +136,7 @@ function Graph() {
     self.h = 200;
     self.padding = 25;
     self.padding_left = 50;
-    self.smoothness = 0; // transition time in ms
+    self.smoothness = 100; // transition time in ms
 
     self.div = d3.select("#content").append("div").attr("class", "graph");
     self.title_field = self.div.append("h2");
@@ -145,10 +145,6 @@ function Graph() {
                        .attr("height", self.h)
                        .attr("id", self.id);
 
-    self.lines = self.svg.append("g")
-        .attr("class", "lines");
-    self.points = self.svg.append("g")
-        .attr("class", "points");
 
 
     //self.xScale = d3.scale.linear().range([self.padding_left, self.w - self.padding]);
@@ -160,9 +156,11 @@ function Graph() {
     var timeFormat = d3.time.format("%X");
 
     self.xAxis = d3.svg.axis().scale(self.xScale).orient("bottom").ticks(5)
+                              .tickSize(-(self.h - 2*self.padding), 0, 0)
                               .tickPadding(5)
                               .tickFormat(timeFormat);
-    self.yAxis = d3.svg.axis().scale(self.yScale).orient("left").ticks(5);
+    self.yAxis = d3.svg.axis().scale(self.yScale).orient("left").ticks(5)
+                              .tickSize(-(self.w - self.padding - self.padding_left), 0, 0);
 
     self.svg.append("g")
         .attr("class", "x axis")
@@ -173,9 +171,14 @@ function Graph() {
         .attr("transform", "translate(" + self.padding_left + ",0)")
         .call(self.yAxis);
 
+    self.lines = self.svg.append("g")
+        .attr("class", "lines");
+    self.points = self.svg.append("g")
+        .attr("class", "points");
 
     self.line_func = d3.svg.line()
         .x(function(d) { return self.xScale(d.time); })
+        //.x(function(d, i) { return self.xScale(i); })
         .y(function(d) { return self.yScale(d.value); });
     self.lines.append("svg:path").attr("class", "line");
 
@@ -256,12 +259,19 @@ function Graph() {
               .duration(self.smoothness)
               .remove();
 
+        //var slide = self.data.slice(-2)[0].time - self.data.slice(-1)[0].time;
+        //var time_interval =  self.data.slice(-1)[0].time - self.data[0].time;
+        //var slide_px = slide / time_interval * (self.w - self.padding_left - self.padding);
+
         self.lines.selectAll("path")
               .data([self.data])
+              //.attr("transform", "translate(" + -slide_px + ")")
+              .attr("transform", "translate(0)")
               .attr("d", self.line_func)
               .transition()
               .ease("linear")
-              .duration(self.smoothness);
+              .duration(self.smoothness)
+              .attr("transform", "translate(0)");
     }
 
     window.graphs.push(self);

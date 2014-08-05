@@ -18,7 +18,7 @@ while True:
         {'kind': 'parameter',
          'type': 'foo',
          'description': 'This is the foo parameters description.',
-	 'value': random()*1.5+0.1,
+	 'value': random()*1.5+100.1,
         })
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.sendto(message, (udp_ip, udp_port))
@@ -29,7 +29,7 @@ while True:
         {'kind': 'parameter',
          'type': 'narf',
          'description': 'This is the narf parameters description.',
-	 'value': random()*1.5+0.1,
+	 'value': random()*1.5+9.1,
         })
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.sendto(message, (udp_ip, udp_port))

@@ -30,6 +30,16 @@ div.graph {
         font-size: 10px;
 }
 
+.x.axis line,
+.y.axis line {
+    stroke: lightgrey;
+}
+
+.x.axis .minor,
+.x.axis .minor {
+    stroke-opacity: .5;
+}
+
 path.line {
     stroke-width: 2px;
     stroke: #FDF6E3;
