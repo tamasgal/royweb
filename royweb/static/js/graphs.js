@@ -2,7 +2,7 @@ function Graph() {
     // A graph, which automatically adds itself to the content-DIV
     var self = {};
 
-    self.id = guid();
+    self.id = roy.tools.guid();
 
     self.parameter_types = []; // TODO: multi-graph
     self.data = window.parameters[self.parameter_types[0]]; // TODO: multi-graphs
