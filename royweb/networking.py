@@ -40,7 +40,7 @@ class WebSocketBroadcaster(object):
     def with_timestamp(self, json_obj):
         """Returns a copy of a json obj with an additional time property."""
         timestamp = time.time() * 1000
-        decoded_data = json.loads(json_obj)
+        decoded_data = json.loads(json_obj.decode('utf-8'))
         decoded_data['time'] = timestamp
         return json.dumps(decoded_data)
 

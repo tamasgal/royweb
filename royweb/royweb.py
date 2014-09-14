@@ -23,8 +23,8 @@ from time import sleep
 from random import random
 import json
 
-from networking import WebSocketBroadcaster
-from webhandler import MainHandler, EchoWebSocket, UnitTests, SpecTests
+from royweb.networking import WebSocketBroadcaster
+from royweb.webhandler import MainHandler, EchoWebSocket, UnitTests, SpecTests
 
 define("ip", default="127.0.0.1", type=str,
        help="The WAN IP of this machine. You can use 127 for local tests.")
@@ -123,7 +123,7 @@ def send_test_parameter():
 	     'value': random()*1.5+0.1,
             })
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.sendto(message, (udp_ip, udp_port))
+        sock.sendto(bytes(message, 'UTF-8'), (udp_ip, udp_port))
         sleep(random()*1.5+0.1)
 
         current_time = int(time.time())
@@ -134,7 +134,7 @@ def send_test_parameter():
 	    'value': random()*1.5+0.1,
             })
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.sendto(message, (udp_ip, udp_port))
+        sock.sendto(bytes(message, 'UTF-8'), (udp_ip, udp_port))
         sleep(random()*1.5+0.1)
 
 

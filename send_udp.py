@@ -21,7 +21,7 @@ while True:
 	 'value': random()*1.5+100.1,
         })
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.sendto(message, (udp_ip, udp_port))
+    sock.sendto(bytes(message, 'UTF-8'), (udp_ip, udp_port))
     sleep(random()*1.5+0.1)
 
     current_time = int(time.time())
@@ -32,7 +32,7 @@ while True:
 	 'value': random()*1.5+9.1,
         })
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.sendto(message, (udp_ip, udp_port))
+    sock.sendto(bytes(message, 'UTF-8'), (udp_ip, udp_port))
     sleep(random()*1.5+0.1)
 
     event += 1
