@@ -20,11 +20,15 @@ while True:
          'description': 'This is the foo parameters description.',
 	 'value': random()*1.5+100.1,
         })
+    if sys.version_info >= (3, 0):
+        message = bytes(message, 'UTF-8')
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.sendto(bytes(message, 'UTF-8'), (udp_ip, udp_port))
     sleep(random()*1.5+0.1)
 
     current_time = int(time.time())
+    if sys.version_info >= (3, 0):
+        message = bytes(message, 'UTF-8')
     message = json.dumps(
         {'kind': 'parameter',
          'type': 'narf',
