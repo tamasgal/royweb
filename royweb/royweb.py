@@ -2,7 +2,7 @@
 # coding=utf-8
 # Filename: run_royweb.py
 # pylint: disable=E0611,W0611
-from __future__ import print_function
+from __future__ import print_function, absolute_import
 """
 The ROyWeb tornado webserver startup script.
 
@@ -16,6 +16,7 @@ from tornado.options import define, options
 
 import os
 import threading
+import sys
 
 import socket
 import time
@@ -23,8 +24,8 @@ from time import sleep
 from random import random
 import json
 
-from networking import WebSocketBroadcaster
-from webhandler import MainHandler, EchoWebSocket, UnitTests, SpecTests
+from royweb.networking import WebSocketBroadcaster
+from royweb.webhandler import MainHandler, EchoWebSocket, UnitTests, SpecTests
 
 define("ip", default="127.0.0.1", type=str,
        help="The WAN IP of this machine. You can use 127 for local tests.")
@@ -123,6 +124,8 @@ def send_test_parameter():
 	     'value': random()*1.5+0.1,
             })
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        if sys.version_info >= (3, 0):
+            message = bytes(message, 'UTF-8')
         sock.sendto(message, (udp_ip, udp_port))
         sleep(random()*1.5+0.1)
 
@@ -133,6 +136,8 @@ def send_test_parameter():
             'description': 'This is the narf parameters description.',
 	    'value': random()*1.5+0.1,
             })
+        if sys.version_info >= (3, 0):
+            message = bytes(message, 'UTF-8')
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.sendto(message, (udp_ip, udp_port))
         sleep(random()*1.5+0.1)
