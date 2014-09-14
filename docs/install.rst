@@ -12,8 +12,8 @@ Installing dependencies
 -----------------------
 ROyWeb is based on Python and needs two additional libraries: `Tornado <http://www.tornadoweb.org>`_ and daemon.
 
-Setting up an independent Python environment
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Setting up an independent Python environment via virtualenv
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The easiest way to set up a working environment is to install `virtualenv <http://virtualenv.readthedocs.org/en/latest/virtualenv.html#installation>`_ first (if not already installed). Grab the latest version via::
 
     curl -O https://pypi.python.org/packages/source/v/virtualenv/virtualenv-X.X.tar.gz
@@ -30,9 +30,34 @@ From now on, you can simply activate the virtual environment via::
 and mess around with it.
 Btw. I recommend having a look at `virtualenvwrapper <http://virtualenvwrapper.readthedocs.org/en/latest/>`_, which is a great addition to the already awesome virtualenv tool.
 
-Installing tornado and daemon
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This is easy as pip is:
+
+Easier sandboxing via virtualenvwrapper
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+As I already wrote, I recommend ``virtualenvwrapper`` to manage your Python environments, which of course you can install via ``pip``::
+
+    pip install virtualenvwrapper
+
+And then follow the instructions to setup your virtualenvwrapper environment. It is very simple, you only have to put a line into your shell startup script (``.bashrc`` or whatever) and define a working directory and another directory to store your virtual envorionments.
+After that, the workflow to create an independent Python environment is::
+
+    mkproject royweb
+    pip install royweb
+
+To exit the environment simply type::
+
+    deactivate
+
+And to switch back anytime, use the ``workon`` command::
+
+    workon royweb
+
+This way you can create a bunch of virtual envrionemnts which are completely clean and independent from each other.
+
+
+Installing the dependencies when using the source
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+If you want to work on the develeopment version, you'll need to install Tornado and daemon.
+This is easy as pip is::
 
     pip install tornado
     pip install daemon
