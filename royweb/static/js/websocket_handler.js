@@ -85,6 +85,7 @@ function register_new_parameter (parameter) {
     window.parameters[parameter.type] = [];
     var graph = new Graph();
     graph.parameter_types.push(parameter.type);
+    graph.parameter_types.push("foo");
     graph.set_title(parameter.type);
 }
 
@@ -123,10 +124,15 @@ function calculate_parameter_rate (parameter) {
 
 
 function update_graphs (parameter) {
-    for (var index in window.graphs) {
-        var graph = window.graphs[index];
+    //for (var index in window.graphs) {
+    //    var graph = window.graphs[index];
+    //    if (roy.tools.includes(graph.parameter_types, parameter.type)) {
+    //        graph.redraw();
+    //    }
+    //}
+    window.graphs.forEach(function(graph) {
         if (roy.tools.includes(graph.parameter_types, parameter.type)) {
             graph.redraw();
         }
-    }
+    });
 }

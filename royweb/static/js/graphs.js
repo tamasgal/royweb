@@ -4,8 +4,17 @@ function Graph() {
 
     self.id = roy.tools.guid();
 
-    self.parameter_types = []; // TODO: multi-graph
-    self.data = window.parameters[self.parameter_types[0]]; // TODO: multi-graphs
+    self.parameter_types = ["foo", "narf"]; //TODO: REMOVE THIS LINE!
+
+    self.fetch_data = function() {
+        var data = [];
+        self.parameter_types.forEach(function(parameter_type) {
+            data = data.concat(window.parameters[parameter_type]);
+        });
+        return data;
+    }
+    self.data = self.fetch_data();
+
 
     self.w = 450;
     self.h = 200;
@@ -55,7 +64,10 @@ function Graph() {
         .x(function(d) { return self.xScale(d.time); })
         //.x(function(d, i) { return self.xScale(i); })
         .y(function(d) { return self.yScale(d.value); });
-    self.lines.append("svg:path").attr("class", "line");
+
+    self.parameter_types.forEach(function(parameter_type) {
+        self.lines.append("svg:path").attr("class", "line " + parameter_type);
+    });
 
 
     self.set_title = function(title) {
@@ -68,11 +80,13 @@ function Graph() {
         self.svg.attr("width", width).attr("height", height);
     }
 
+
     self.redraw = function() {
         for(var index in self.parameter_types) {
             //console.log(index);
         }
-        self.data = window.parameters[self.parameter_types[0]]; 
+        self.parameter_types = ["foo", "narf"]; //TODO: REMOVE THIS LINE!
+        self.data = self.fetch_data();
         self.xScale.domain(d3.extent(self.data, function(d) { return d.time; }));
         self.yScale.domain(d3.extent(self.data, function(d) { return d.value; }));
 
@@ -112,7 +126,14 @@ function Graph() {
                   return self.yScale(d.value);
               })
               .attr("r", 2)
-              .attr("fill", "#268BD3");
+              .attr("fill", function(d) {
+                  if(d.type == "foo") {
+                      return "#268BD3";
+                  } else if (d.type == "narf") {
+                      return "#ffffff";
+                  }
+              });
+
 
         points.transition()
               .duration(self.smoothness)
@@ -132,15 +153,18 @@ function Graph() {
         //var time_interval =  self.data.slice(-1)[0].time - self.data[0].time;
         //var slide_px = slide / time_interval * (self.w - self.padding_left - self.padding);
 
-        self.lines.selectAll("path")
-              .data([self.data])
-              //.attr("transform", "translate(" + -slide_px + ")")
-              .attr("transform", "translate(0)")
-              .attr("d", self.line_func)
-              .transition()
-              .ease("linear")
-              .duration(self.smoothness)
-              .attr("transform", "translate(0)");
+        self.parameter_types.forEach(function(parameter_type) {
+            self.lines.selectAll("." + parameter_type)
+                  .data([window.parameters[parameter_type]])
+                  //.attr("transform", "translate(" + -slide_px + ")")
+                  .attr("transform", "translate(0)")
+                  .attr("d", self.line_func)
+                  //.attr("class", parameter_type+"_line")
+                  .transition()
+                  .ease("linear")
+                  .duration(self.smoothness)
+                  .attr("transform", "translate(0)");
+        });
     }
 
     window.graphs.push(self);
