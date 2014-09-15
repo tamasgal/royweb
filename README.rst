@@ -4,8 +4,10 @@ royweb
 Restless Oyster Web is an online monitoring tool. It provides a graphical user interface which can be accessed by any WebSocket-capable web browser. Although it's designed for the KM3NeT neutrino detector, it provides a simple interface to let you monitor other kinds of parameters.
 The current status is alpha and I'm redesigning the parameter format to add more flexibility for other use cases.
 
-.. image:: http://pi4062.physik.uni-erlangen.de:8080/static/img/km3net_logo.png
+.. image:: https://github.com/tamasgal/royweb/blob/master/docs/ROyWeb_Screenshot.png
     :alt: Restless Oyster online monitoring tool
+    :width: 700
+    :height: 445
     :align: center
 
 
