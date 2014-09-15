@@ -4,16 +4,6 @@ function Graph() {
 
     self.id = roy.tools.guid();
 
-    self.parameter_types = ["foo", "narf"]; //TODO: REMOVE THIS LINE!
-
-    self.fetch_data = function() {
-        var data = [];
-        self.parameter_types.forEach(function(parameter_type) {
-            data = data.concat(window.parameters[parameter_type]);
-        });
-        return data;
-    }
-    self.data = self.fetch_data();
 
 
     self.w = 450;
@@ -65,9 +55,24 @@ function Graph() {
         //.x(function(d, i) { return self.xScale(i); })
         .y(function(d) { return self.yScale(d.value); });
 
-    self.parameter_types.forEach(function(parameter_type) {
-        self.lines.append("svg:path").attr("class", "line " + parameter_type);
-    });
+
+    self.parameter_types = [];
+    self.register_parameter_type = function(parameter_type) {
+        if(!roy.tools.includes(self.parameter_types, parameter_type)) {
+            self.parameter_types.push(parameter_type);
+            self.lines.append("svg:path").attr("class", "line " + parameter_type);
+        }
+    }
+
+    self.fetch_data = function() {
+        var data = [];
+        self.parameter_types.forEach(function(parameter_type) {
+            data = data.concat(window.parameters[parameter_type]);
+        });
+        return data;
+    }
+    self.data = self.fetch_data();
+
 
 
     self.set_title = function(title) {
@@ -85,7 +90,6 @@ function Graph() {
         for(var index in self.parameter_types) {
             //console.log(index);
         }
-        self.parameter_types = ["foo", "narf"]; //TODO: REMOVE THIS LINE!
         self.data = self.fetch_data();
         self.xScale.domain(d3.extent(self.data, function(d) { return d.time; }));
         self.yScale.domain(d3.extent(self.data, function(d) { return d.value; }));

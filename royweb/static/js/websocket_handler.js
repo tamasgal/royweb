@@ -84,8 +84,7 @@ function register_new_parameter (parameter) {
         .text("0");
     window.parameters[parameter.type] = [];
     var graph = new Graph();
-    graph.parameter_types.push(parameter.type);
-    graph.parameter_types.push("foo");
+    graph.register_parameter_type(parameter.type);
     graph.set_title(parameter.type);
 }
 
