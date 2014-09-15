@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
-# Filename: run_royweb.py
+# Filename: royweb.py
 # pylint: disable=E0611,W0611
 from __future__ import print_function, absolute_import
 """
