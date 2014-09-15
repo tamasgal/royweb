@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 import socket
 import time
 from time import sleep
@@ -25,7 +26,7 @@ while True:
     if sys.version_info >= (3, 0):
         message = bytes(message, 'UTF-8')
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.sendto(bytes(message, 'UTF-8'), (udp_ip, udp_port))
+    sock.sendto(message, (udp_ip, udp_port))
     sleep(random()*1.5+0.1)
 
 
@@ -39,8 +40,10 @@ while True:
          'description': 'This is the narf parameters description.',
 	 'value': random()*1.5+bias,
         })
+    if sys.version_info >= (3, 0):
+        message = bytes(message, 'UTF-8')
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.sendto(bytes(message, 'UTF-8'), (udp_ip, udp_port))
+    sock.sendto(message, (udp_ip, udp_port))
     sleep(random()*1.5+0.1)
 
     i += 1
