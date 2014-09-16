@@ -30,6 +30,15 @@ var roy = {
 
             var uuid = s.join("");
             return uuid;
+        },
+        color: function(i) {
+            var colors = ["#0B3272", "#8C1E0B", "#445809", "#70095B", 
+                          "#36B136", "#F5750A", "#78B4B0", "#8F95FD",
+                          "#FB6D74", "#C4AB68", "#4F373E", "#CE26A3",
+                          "#9E6613", "#A27B90", "#E5689F", "#01687A",
+                          "#BDA1DA", "#D0B53B", "#59CEAB", "#601D3C",
+                          "#4D419A", "#315E88"];
+            return colors[i];
         }
     },
     narf: {

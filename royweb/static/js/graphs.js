@@ -166,11 +166,8 @@ function Graph() {
                   return d.type;
               })
               .attr("fill", function(d) {
-                  if(d.type == "foo") {
-                      return "#268BD3";
-                  } else if (d.type == "narf") {
-                      return "#ffffff";
-                  }
+                  var index = self.parameter_types.indexOf(d.type);
+                  return roy.tools.color(index);
               });
 
 
@@ -198,6 +195,10 @@ function Graph() {
                   //.attr("transform", "translate(" + -slide_px + ")")
                   .attr("transform", "translate(0)")
                   .attr("d", self.line_func)
+                  .attr("stroke", function(d) {
+                      var index = self.parameter_types.indexOf(parameter_type);
+                      return roy.tools.color(index);
+                  })
                   //.attr("class", parameter_type+"_line")
                   .transition()
                   .ease("linear")
