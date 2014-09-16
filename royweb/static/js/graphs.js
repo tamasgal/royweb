@@ -112,6 +112,7 @@ function Graph() {
         self.title_field.text(title);
     }
 
+
     self.resize = function(width, height) {
         // Change the width and height of the SVG container.
         self.svg.attr("width", width).attr("height", height);
@@ -190,8 +191,13 @@ function Graph() {
         //var slide_px = slide / time_interval * (self.w - self.padding_left - self.padding);
 
         self.parameter_types.forEach(function(parameter_type) {
+            var data = window.parameters[parameter_type];
+            var min_value = d3.min(self.data, function(d) { return d.value; })
+            var first = {'type': parameter_type, 'value': min_value, 'time': data[0].time};
+            var last = {'type': parameter_type, 'value': min_value, 'time': data.slice(-1)[0].time};
+            data = [first].concat(data, last);
             self.lines.selectAll("." + parameter_type)
-                  .data([window.parameters[parameter_type]])
+                  .data([data])
                   //.attr("transform", "translate(" + -slide_px + ")")
                   .attr("transform", "translate(0)")
                   .attr("d", self.line_func)
@@ -199,7 +205,10 @@ function Graph() {
                       var index = window.parameter_types.indexOf(parameter_type);
                       return roy.tools.color(index);
                   })
-                  //.attr("class", parameter_type+"_line")
+                  .attr("fill", function(d) {
+                      var index = window.parameter_types.indexOf(parameter_type);
+                      return roy.tools.color(index);
+                  })
                   .transition()
                   .ease("linear")
                   .duration(self.smoothness)

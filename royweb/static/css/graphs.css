@@ -52,6 +52,7 @@ div.graph {
 path.line {
     stroke-width: 1px;
 /*    stroke: #FDF6E3; */
-    fill: none;
+/*    fill: none; */
+    fill-opacity: .5;
 }
 

@@ -32,6 +32,7 @@ var roy = {
             return uuid;
         },
         color: function(i) {
+            // http://tools.medialab.sciences-po.fr/iwanthue/
             var colors = ["#315E88", "#CE26A3", "#36B136", "#0B3272",
                           "#8C1E0B", "#445809", "#70095B", "#F5750A",
                           "#78B4B0", "#8F95FD", "#FB6D74", "#C4AB68",
