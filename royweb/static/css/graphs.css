@@ -15,6 +15,12 @@ div.graph {
     margin-right: 16px;
 }
 
+.graph select.parameter_selection {
+    float:right;
+}
+
+
+
 .graph svg {
     /* border: 1px solid #FDF6E3; */
 }

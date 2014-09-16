@@ -14,6 +14,8 @@ function Graph() {
 
     self.div = d3.select("#content").append("div").attr("class", "graph");
     self.title_field = self.div.append("h2");
+    self.parameter_selection = self.div.append("ul")
+                                   .attr("class", "parameter_selection");
     self.svg = self.div.append("svg")
                        .attr("width", self.w)
                        .attr("height", self.h)
@@ -63,6 +65,17 @@ function Graph() {
             self.lines.append("svg:path").attr("class", "line " + parameter_type);
         }
     }
+
+    self.refresh_parameter_list = function() {
+        self.parameter_selection.text("");
+        window.parameter_types.forEach(function(parameter_type) {
+            var list_entry = self.parameter_selection.append("li");
+                list_entry.append("input").attr("type", "checkbox");
+                list_entry.append("span").text(parameter_type);
+        });
+    }
+
+
 
     self.fetch_data = function() {
         var data = [];
@@ -172,6 +185,7 @@ function Graph() {
     }
 
     window.graphs.push(self);
+    self.refresh_parameter_list();
     return self;
 }
 
