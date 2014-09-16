@@ -19,7 +19,9 @@ div.graph {
     float:right;
 }
 
-
+.graph li {
+    list-style-type: none;    
+}
 
 .graph svg {
     /* border: 1px solid #FDF6E3; */

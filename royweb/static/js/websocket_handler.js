@@ -83,13 +83,12 @@ function register_new_parameter (parameter) {
         .attr("id", parameter.type + "_rate")
         .text("0");
     window.parameters[parameter.type] = [];
+    var graph = new Graph();
+    graph.register_parameter_type(parameter.type);
+    graph.set_title(parameter.type);
     window.graphs.forEach(function(graph){
         graph.refresh_parameter_list();
     });
-    var graph = new Graph();
-    graph.register_parameter_type(parameter.type);
-    graph.register_parameter_type("narf"); //TODO: REMOVE THIS LINE
-    graph.set_title(parameter.type);
 }
 
 

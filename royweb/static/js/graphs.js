@@ -2,8 +2,7 @@ function Graph() {
     // A graph, which automatically adds itself to the content-DIV
     var self = {};
 
-    self.id = roy.tools.guid();
-
+    self.id = roy.tools.guid_alt();
 
 
     self.w = 450;
@@ -66,12 +65,32 @@ function Graph() {
         }
     }
 
+    self.unregister_parameter_type = function(parameter_type) {
+        var index = self.parameter_types.indexOf(parameter_type);
+        self.parameter_types.splice(index, 1);
+        self.svg.selectAll("."+parameter_type).remove();
+    }
+
+    self.toggle_parameter_type = function(parameter_type) {
+        if(!roy.tools.includes(self.parameter_types, parameter_type)) {
+            self.register_parameter_type(parameter_type);
+        } else {
+            self.unregister_parameter_type(parameter_type);
+        }
+    }
+
     self.refresh_parameter_list = function() {
         self.parameter_selection.text("");
         window.parameter_types.forEach(function(parameter_type) {
+            var js = "roy.toggle_parameter_type('" + self.id + "', '" + parameter_type + "');"
             var list_entry = self.parameter_selection.append("li");
-                list_entry.append("input").attr("type", "checkbox");
-                list_entry.append("span").text(parameter_type);
+            var checkbox = list_entry.append("input")
+                    .attr("type", "checkbox")
+                    .attr("onclick", js);
+            if(roy.tools.includes(self.parameter_types, parameter_type)) {
+                checkbox.property("checked", true);
+            }
+            list_entry.append("span").text(parameter_type);
         });
     }
 
@@ -143,6 +162,9 @@ function Graph() {
                   return self.yScale(d.value);
               })
               .attr("r", 2)
+              .attr("class", function(d) {
+                  return d.type;
+              })
               .attr("fill", function(d) {
                   if(d.type == "foo") {
                       return "#268BD3";
