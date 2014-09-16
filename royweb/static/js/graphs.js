@@ -13,7 +13,13 @@ function Graph() {
 
     self.div = d3.select("#content").append("div").attr("class", "graph");
     self.title_field = self.div.append("h2");
-    self.parameter_selection = self.div.append("ul")
+    var parameter_selection_div = self.div.append("div")
+                                          .attr("class", "parameter_selection")
+
+        parameter_selection_div.append("h3")
+                               .attr("class", "parameter_selection")
+                               .text("Parameters");
+    self.parameter_selection = parameter_selection_div.append("ul")
                                    .attr("class", "parameter_selection");
     self.svg = self.div.append("svg")
                        .attr("width", self.w)
