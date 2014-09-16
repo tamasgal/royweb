@@ -7,7 +7,6 @@ The current status is alpha and I'm redesigning the parameter format to add more
 .. image:: http://tamasgal.com/km3net/ROyWeb_Screenshot.png
     :alt: Restless Oyster online monitoring tool
     :width: 700
-    :height: 445
     :align: center
 
 
