@@ -33,7 +33,7 @@ var roy = {
         },
         color: function(i) {
             // http://tools.medialab.sciences-po.fr/iwanthue/
-            var colors = ["#315E88", "#CE26A3", "#36B136", "#0B3272",
+            var colors = ["#315E88", "#CE26A3", "#36B136", 
                           "#8C1E0B", "#445809", "#70095B", "#F5750A",
                           "#78B4B0", "#8F95FD", "#FB6D74", "#C4AB68",
                           "#4F373E", "#9E6613", "#A27B90", "#E5689F",

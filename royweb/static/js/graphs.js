@@ -5,11 +5,12 @@ function Graph() {
     self.id = roy.tools.guid_alt();
 
 
+    self.time_limit = 30; // max time offset of parameter to show
     self.w = 450;
     self.h = 200;
     self.padding = 25;
     self.padding_left = 50;
-    self.smoothness = 0; // transition time in ms
+    self.smoothness = 0; // transition time in ms. Not ready yet
 
     self.div = d3.select("#content").append("div").attr("class", "graph");
     self.title_field = self.div.append("h2");
@@ -105,7 +106,11 @@ function Graph() {
     self.fetch_data = function() {
         var data = [];
         self.parameter_types.forEach(function(parameter_type) {
-            data = data.concat(window.parameters[parameter_type]);
+            var parameter_data = window.parameters[parameter_type];
+            var filtered_data = parameter_data.filter(function(parameter) {
+                return (parameter.time / 1000 > Math.round(new Date().getTime() / 1000) - self.time_limit);
+            });
+            data = data.concat(filtered_data);
         });
         return data;
     }
@@ -197,7 +202,9 @@ function Graph() {
         //var slide_px = slide / time_interval * (self.w - self.padding_left - self.padding);
 
         self.parameter_types.forEach(function(parameter_type) {
-            var data = window.parameters[parameter_type];
+            var data = self.data.filter(function(parameter){
+                return parameter.type == parameter_type;
+            });
             var min_value = d3.min(self.data, function(d) { return d.value; })
             var first = {'type': parameter_type, 'value': min_value, 'time': data[0].time};
             var last = {'type': parameter_type, 'value': min_value, 'time': data.slice(-1)[0].time};
