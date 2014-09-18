@@ -3,6 +3,7 @@
 # Filename: royweb.py
 # pylint: disable=E0611,W0611
 from __future__ import print_function, absolute_import
+
 """
 The ROyWeb tornado webserver startup script.
 
@@ -57,7 +58,7 @@ def main():
             print("Configuration file cannot be accessed. "
                   "Proceeding with defaults...")
 
-    royweb_ip =  options.ip
+    royweb_ip = options.ip
     royweb_port = int(options.port)
     udp_port = int(options.udp_port)
     pid = os.getpid()
@@ -71,35 +72,34 @@ def main():
     print("Running on {0}:{1}".format(royweb_ip, royweb_port))
     print("Listening for UDP data on port {0}".format(udp_port))
 
-    settings = {'debug': True, 
+    settings = {'debug': True,
                 'static_path': os.path.join(root, 'static'),
                 'template_path': os.path.join(root, 'static/templates'),
-               }
+                }
 
     clients = []
 
     application = tornado.web.Application([
-        (r"/", MainHandler, dict(royweb_ip=royweb_ip, royweb_port=royweb_port)),
-        (r"/websocket", EchoWebSocket, {'clients': clients}),
-        (r"/unit_tests", UnitTests),
-        (r"/spec_tests", SpecTests),
-    ], **settings)
+                                              (r"/", MainHandler, dict(royweb_ip=royweb_ip, royweb_port=royweb_port)),
+                                              (r"/websocket", EchoWebSocket, {'clients': clients}),
+                                              (r"/unit_tests", UnitTests),
+                                              (r"/spec_tests", SpecTests),
+                                          ], **settings)
 
     ws_broadcaster = WebSocketBroadcaster(royweb_ip, udp_port, clients)
-    t = threading.Thread(target = ws_broadcaster.run)
+    t = threading.Thread(target=ws_broadcaster.run)
     t.daemon = True
     t.start()
 
-    ## demonise
+    # # demonise
     # import daemon
     # if not options.log_file:
-    #     log_file = "tornado.{0}.log".format(royweb_port)
+    # log_file = "tornado.{0}.log".format(royweb_port)
     # else:
     #     log_file = options.log_file
     # log = open(log_file, 'a+')
     # ctx = daemon.DaemonContext(stdout=log, stderr=log,  working_directory='.')
     # ctx.open()
-    
 
     try:
         application.listen(royweb_port)
@@ -119,28 +119,28 @@ def send_test_parameter():
     while True:
         message = json.dumps({
             'kind': 'parameter',
-             'type': 'foo',
-             'description': 'This is the foo parameters description.',
-	     'value': random()*1.5+0.1,
-            })
+            'type': 'foo',
+            'description': 'This is the foo parameters description.',
+            'value': random() * 1.5 + 0.1,
+        })
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         if sys.version_info >= (3, 0):
             message = bytes(message, 'UTF-8')
         sock.sendto(message, (udp_ip, udp_port))
-        sleep(random()*1.5+0.1)
+        sleep(random() * 1.5 + 0.1)
 
         current_time = int(time.time())
         message = json.dumps({
             'kind': 'parameter',
             'type': 'narf',
             'description': 'This is the narf parameters description.',
-	    'value': random()*1.5+0.1,
-            })
+            'value': random() * 1.5 + 0.1,
+        })
         if sys.version_info >= (3, 0):
             message = bytes(message, 'UTF-8')
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.sendto(message, (udp_ip, udp_port))
-        sleep(random()*1.5+0.1)
+        sleep(random() * 1.5 + 0.1)
 
 
 if __name__ == "__main__":

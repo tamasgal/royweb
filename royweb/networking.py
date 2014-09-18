@@ -29,7 +29,7 @@ class WebSocketBroadcaster(object):
 
     def run(self):
         """Listen for UDP packets and immediately send them to the clients."""
-        while self.is_running == True:
+        while self.is_running:
             #print("Waiting for UDP packets")
             data, addr = self.sock.recvfrom(65535)
             size = sys.getsizeof(data)
@@ -43,9 +43,6 @@ class WebSocketBroadcaster(object):
         decoded_data = json.loads(json_obj.decode('utf-8'))
         decoded_data['time'] = timestamp
         return json.dumps(decoded_data)
-
-
-
 
     def stop(self):
         """Stop the port listener."""
