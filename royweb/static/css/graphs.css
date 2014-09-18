@@ -1,6 +1,7 @@
 div.graph {
     border: 1px solid #268BD3;
     margin: 10px;
+    background-color: #ffffff;
 }
 
 .graph h2 {

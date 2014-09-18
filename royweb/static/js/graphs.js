@@ -16,7 +16,6 @@ function Graph() {
     self.title_field = self.div.append("h2");
     var parameter_selection_div = self.div.append("div")
                                           .attr("class", "parameter_selection")
-
         parameter_selection_div.append("h3")
                                .attr("class", "parameter_selection")
                                .text("Parameters");
@@ -112,9 +111,8 @@ function Graph() {
             });
             data = data.concat(filtered_data);
         });
-        return data;
+        self.data = data;
     }
-    self.data = self.fetch_data();
 
 
 
@@ -134,7 +132,7 @@ function Graph() {
         for(var index in self.parameter_types) {
             //console.log(index);
         }
-        self.data = self.fetch_data();
+        self.fetch_data();
         self.xScale.domain(d3.extent(self.data, function(d) { return d.time; }));
         self.yScale.domain(d3.extent(self.data, function(d) { return d.value; }));
 
