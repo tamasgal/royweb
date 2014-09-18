@@ -1,13 +1,13 @@
 function Graph() {
     // A graph, which automatically adds itself to the content-DIV
+    // a = typeof a !== 'undefined' ? a : 42;
     var self = {};
 
-    self.id = roy.tools.guid_alt();
-
+    self.id = roy.tools.guid();
 
     self.time_limit = 30; // max time offset of parameter to show
-    self.w = 450;
-    self.h = 200;
+    self.w = 400;
+    self.h = 220;
     self.padding = 25;
     self.padding_left = 50;
     self.smoothness = 0; // transition time in ms. Not ready yet
@@ -26,12 +26,8 @@ function Graph() {
                        .attr("height", self.h)
                        .attr("id", self.id);
 
-
-
-    //self.xScale = d3.scale.linear().range([self.padding_left, self.w - self.padding]);
     self.xScale = d3.time.scale().range([self.padding_left, self.w - self.padding]);
     self.yScale = d3.scale.linear().range([self.h - self.padding, self.padding]);
-
 
     var formatAsPercentage = d3.format(".1%");
     var timeFormat = d3.time.format("%X");
@@ -63,8 +59,8 @@ function Graph() {
         .y(function(d) { return self.yScale(d.value); });
 
 
-    self.parameter_types = [];
     self.register_parameter_type = function(parameter_type) {
+        // Add parameter_type to the monitored ones and setup the SVG
         if(!roy.tools.includes(self.parameter_types, parameter_type)) {
             self.parameter_types.push(parameter_type);
             self.lines.append("svg:path").attr("class", "line " + parameter_type);
@@ -72,6 +68,7 @@ function Graph() {
     }
 
     self.unregister_parameter_type = function(parameter_type) {
+        // Delete parameter_type from the monitored ones and cleanup the SVG
         var index = self.parameter_types.indexOf(parameter_type);
         self.parameter_types.splice(index, 1);
         self.svg.selectAll("."+parameter_type).remove();
@@ -86,6 +83,7 @@ function Graph() {
     }
 
     self.refresh_parameter_list = function() {
+        // Update the parameter selection menu
         self.parameter_selection.text("");
         window.parameter_types.forEach(function(parameter_type) {
             var js = "roy.toggle_parameter_type('" + self.id + "', '" + parameter_type + "');"
@@ -103,11 +101,12 @@ function Graph() {
 
 
     self.fetch_data = function() {
+        // Get the parameter data for the last self.time_limit seconds
         var data = [];
         self.parameter_types.forEach(function(parameter_type) {
             var parameter_data = window.parameters[parameter_type];
             var filtered_data = parameter_data.filter(function(parameter) {
-                return (parameter.time / 1000 > Math.round(new Date().getTime() / 1000) - self.time_limit);
+                return (parameter.time > (new Date().getTime()) - self.time_limit*1000);
             });
             data = data.concat(filtered_data);
         });
@@ -127,78 +126,14 @@ function Graph() {
         self.svg.attr("width", width).attr("height", height);
     }
 
+    self.parameter_color = function(parameter_type) {
+        // assign color according to index in global parameter_types                      
+        var index = window.parameter_types.indexOf(parameter_type);
+        return roy.tools.color(index);
+    }
 
-    self.redraw = function() {
-        for(var index in self.parameter_types) {
-            //console.log(index);
-        }
-        self.fetch_data();
-        self.xScale.domain(d3.extent(self.data, function(d) { return d.time; }));
-        self.yScale.domain(d3.extent(self.data, function(d) { return d.value; }));
-
-
-        self.svg.select(".x.axis")
-            .transition()
-            .duration(self.smoothness)
-            .call(self.xAxis)
-        self.svg.select(".y.axis")
-            .transition()
-            .duration(self.smoothness)
-            .call(self.yAxis)
-
-
-        //self.lines.append("svg:path").data([data]).attr("d", self.line_func);
-
-        //self.lines.append("svg:path").attr("d", self.line_func(data));
-        //var linegraph = self.lines.data(self.data, function(d) { return d.time; });
-
-        //self.line.transition().duration(1000).attr('d', self.line_func);
-
-        //linegraph.enter().append("path")
-        //    .attr("class", "line")
-        //    .attr("d", line_func);
-        //linegraph.exit().remove();
-
-
-        var points = self.points.selectAll("circle")
-                      .data(self.data, function(d) { return d.time; })
-
-        points.enter()
-              .append("circle")
-              .attr("cx", function(d) {
-                  return self.xScale(d.time);
-              })
-              .attr("cy", function(d) {
-                  return self.yScale(d.value);
-              })
-              .attr("r", 2)
-              .attr("class", function(d) {
-                  return d.type;
-              })
-              .attr("fill", function(d) {
-                  var index = window.parameter_types.indexOf(d.type);
-                  return roy.tools.color(index);
-              });
-
-
-        points.transition()
-              .duration(self.smoothness)
-              .attr("cx", function(d) {
-                  return self.xScale(d.time);
-              })
-              .attr("cy", function(d) {
-                  return self.yScale(d.value);
-              });
-
-        points.exit()
-              .transition()
-              .duration(self.smoothness)
-              .remove();
-
-        //var slide = self.data.slice(-2)[0].time - self.data.slice(-1)[0].time;
-        //var time_interval =  self.data.slice(-1)[0].time - self.data[0].time;
-        //var slide_px = slide / time_interval * (self.w - self.padding_left - self.padding);
-
+    self.draw_lines = function() {
+        // Draw the lines for each parameter_type
         self.parameter_types.forEach(function(parameter_type) {
             var data = self.data.filter(function(parameter){
                 return parameter.type == parameter_type;
@@ -209,25 +144,65 @@ function Graph() {
             data = [first].concat(data, last);
             self.lines.selectAll("." + parameter_type)
                   .data([data])
-                  //.attr("transform", "translate(" + -slide_px + ")")
                   .attr("transform", "translate(0)")
                   .attr("d", self.line_func)
-                  .attr("stroke", function(d) {
-                      var index = window.parameter_types.indexOf(parameter_type);
-                      return roy.tools.color(index);
-                  })
-                  .attr("fill", function(d) {
-                      var index = window.parameter_types.indexOf(parameter_type);
-                      return roy.tools.color(index);
-                  })
+                  .attr("stroke", self.parameter_color(parameter_type))
+                  .attr("fill", self.parameter_color(parameter_type))
                   .transition()
                   .ease("linear")
                   .duration(self.smoothness)
                   .attr("transform", "translate(0)");
         });
+    };
+
+    self.draw_points = function() {
+        // Draw the points for each parameter_type
+        var points = self.points.selectAll("circle")
+                      .data(self.data, function(d) { return d.time; })
+
+        points.enter()
+              .append("circle")
+              .attr("cx", function(d) { return self.xScale(d.time); })
+              .attr("cy", function(d) { return self.yScale(d.value); })
+              .attr("r", 2)
+              .attr("class", function(d) { return d.type; })
+              .attr("fill", function(d) { return self.parameter_color(d.type); });
+
+        points.transition()
+              .duration(self.smoothness)
+              .attr("cx", function(d) { return self.xScale(d.time); })
+              .attr("cy", function(d) { return self.yScale(d.value); });
+
+        points.exit()
+              .transition()
+              .duration(self.smoothness)
+              .remove();
+    }
+
+    self.draw_axes = function() {
+        // Update scales and draw the axes
+        self.xScale.domain(d3.extent(self.data, function(d) { return d.time; }));
+        self.yScale.domain(d3.extent(self.data, function(d) { return d.value; }));
+
+        self.svg.select(".x.axis")
+            .transition()
+            .duration(self.smoothness)
+            .call(self.xAxis)
+        self.svg.select(".y.axis")
+            .transition()
+            .duration(self.smoothness)
+            .call(self.yAxis)
+    }
+
+    self.redraw = function() {
+        self.fetch_data();
+        self.draw_axes();
+        self.draw_points();
+        self.draw_lines();
     }
 
     window.graphs.push(self);
+    self.parameter_types = [];    
     self.refresh_parameter_list();
     return self;
 }

@@ -7,7 +7,7 @@ var roy = {
             // Return the unix timestamp with milliseconds accuracy.
             return +new Date();
         },
-        guid: function() {
+        guid_alt: function() {
             // Generate a unique ID
             function s4 () {
                 return Math.floor((1 + Math.random()) * 0x10000)
@@ -18,7 +18,7 @@ var roy = {
                 return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
             };
         },
-        guid_alt: function() {
+        guid: function() {
             var s = [];
             var hexDigits = "0123456789abcdef";
             for (var i = 0; i < 36; i++) {
