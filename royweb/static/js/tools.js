@@ -42,8 +42,10 @@ var roy = {
             return colors[i];
         }
     },
-    narf: {
-        ajax_method: function() {}
+    ui: {
+        toggle_menu: function() {
+            //<D-r>$('#sidebar').height(20);
+        }
     },
     toggle_parameter_type: function(graph_id, parameter_type) {
         window.graphs.forEach(function(graph) {
