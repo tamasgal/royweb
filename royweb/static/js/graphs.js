@@ -3,61 +3,72 @@ function Graph() {
     // a = typeof a !== 'undefined' ? a : 42;
     var self = {};
 
-    self.id = roy.tools.guid();
+    self.init = function() {
+        self.id = roy.tools.guid();
+        self.time_limit = 30; // max time offset of parameter to show
+        self.w = 400;
+        self.h = 220;
+        self.padding = 25;
+        self.padding_left = 50;
+        self.smoothness = 0; // transition time in ms. Not ready yet
 
-    self.time_limit = 30; // max time offset of parameter to show
-    self.w = 400;
-    self.h = 220;
-    self.padding = 25;
-    self.padding_left = 50;
-    self.smoothness = 0; // transition time in ms. Not ready yet
+        self.setup_html();
+        self.setup_svg();
 
-    self.div = d3.select("#content").append("div").attr("class", "graph");
-    self.title_field = self.div.append("h2");
-    var parameter_selection_div = self.div.append("div")
-                                          .attr("class", "parameter_selection")
+        window.graphs.push(self);
+        self.parameter_types = [];    
+        self.refresh_parameter_list();
+    }
+
+
+    self.setup_html = function() {
+        self.div = d3.select("#content").append("div").attr("class", "graph");
+        self.title_field = self.div.append("h2");
+        var parameter_selection_div = self.div.append("div")
+                                              .attr("class", "parameter_selection")
         parameter_selection_div.append("h3")
                                .attr("class", "parameter_selection")
                                .text("Parameters");
-    self.parameter_selection = parameter_selection_div.append("ul")
-                                   .attr("class", "parameter_selection");
-    self.svg = self.div.append("svg")
-                       .attr("width", self.w)
-                       .attr("height", self.h)
-                       .attr("id", self.id);
+        self.parameter_selection = parameter_selection_div.append("ul")
+                                       .attr("class", "parameter_selection");
+        self.svg = self.div.append("svg")
+                           .attr("width", self.w)
+                           .attr("height", self.h)
+                           .attr("id", self.id);
+    }
 
-    self.xScale = d3.time.scale().range([self.padding_left, self.w - self.padding]);
-    self.yScale = d3.scale.linear().range([self.h - self.padding, self.padding]);
+    self.setup_svg = function() {
+        self.xScale = d3.time.scale().range([self.padding_left, self.w - self.padding]);
+        self.yScale = d3.scale.linear().range([self.h - self.padding, self.padding]);
 
-    var formatAsPercentage = d3.format(".1%");
-    var timeFormat = d3.time.format("%X");
+        var formatAsPercentage = d3.format(".1%");
+        var timeFormat = d3.time.format("%X");
 
-    self.xAxis = d3.svg.axis().scale(self.xScale).orient("bottom").ticks(5)
-                              .tickSize(-(self.h - 2*self.padding), 0, 0)
-                              .tickPadding(8)
-                              .tickFormat(timeFormat);
-    self.yAxis = d3.svg.axis().scale(self.yScale).orient("left").ticks(5)
-                              .tickSize(-(self.w - self.padding - self.padding_left), 0, 0);
+        self.xAxis = d3.svg.axis().scale(self.xScale).orient("bottom").ticks(5)
+                                  .tickSize(-(self.h - 2*self.padding), 0, 0)
+                                  .tickPadding(8)
+                                  .tickFormat(timeFormat);
+        self.yAxis = d3.svg.axis().scale(self.yScale).orient("left").ticks(5)
+                                  .tickSize(-(self.w - self.padding - self.padding_left), 0, 0);
 
-    self.svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + (self.h - self.padding) + ")")
-        .call(self.xAxis);
-    self.svg.append("g")
-        .attr("class", "y axis")
-        .attr("transform", "translate(" + self.padding_left + ",0)")
-        .call(self.yAxis);
+        self.svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + (self.h - self.padding) + ")")
+            .call(self.xAxis);
+        self.svg.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(" + self.padding_left + ",0)")
+            .call(self.yAxis);
 
-    self.lines = self.svg.append("g")
-        .attr("class", "lines");
-    self.points = self.svg.append("g")
-        .attr("class", "points");
+        self.lines = self.svg.append("g")
+            .attr("class", "lines");
+        self.points = self.svg.append("g")
+            .attr("class", "points");
 
-    self.line_func = d3.svg.line()
-        .x(function(d) { return self.xScale(d.time); })
-        //.x(function(d, i) { return self.xScale(i); })
-        .y(function(d) { return self.yScale(d.value); });
-
+        self.line_func = d3.svg.line()
+            .x(function(d) { return self.xScale(d.time); })
+            .y(function(d) { return self.yScale(d.value); });
+    }
 
     self.register_parameter_type = function(parameter_type) {
         // Add parameter_type to the monitored ones and setup the SVG
@@ -201,9 +212,7 @@ function Graph() {
         self.draw_lines();
     }
 
-    window.graphs.push(self);
-    self.parameter_types = [];    
-    self.refresh_parameter_list();
+    self.init();
     return self;
 }
 
