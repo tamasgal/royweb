@@ -9,12 +9,36 @@ from __future__ import print_function
 
 __author__ = 'Tamas Gal'
 __email__ = 'tamas.gal@physik.uni-erlangen.de'
-__all__ = ('WebSocketBroadcaster', )
+__all__ = ('PacketHandler', 'WebSocketBroadcaster')
 
 import sys
 import socket
 import json
 import time
+
+
+class PacketHandler(object):
+    """A reusable packet handler, which can send parameters via UDP."""
+    def __init__(self, ip, port):
+        self.ip = ip
+        self.port = port
+
+    def send(self, parameter_type, value, description):
+        """Send a parameter with value and description to a ROyWeb"""
+        message = self.json_message(parameter_type, value, description)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.sendto(message, (self.ip, self.port))
+
+    def json_message(self, parameter_type, value, description):
+        """Create a json dump."""
+        message = json.dumps({'kind': 'parameter',
+                              'type': parameter_type,
+                              'description': description,
+                              'value': value})
+        if sys.version_info >= (3, 0):
+            message = bytes(message, 'UTF-8')
+        return message
+
 
 class WebSocketBroadcaster(object):
     """Receives data from UDP and redistributes them via WebSockets."""

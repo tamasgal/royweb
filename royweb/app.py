@@ -17,15 +17,12 @@ from tornado.options import define, options
 
 import os
 import threading
-import sys
 
-import socket
-import time
 from time import sleep
 from random import random
-import json
+import math
 
-from royweb.networking import WebSocketBroadcaster
+from royweb.networking import PacketHandler, WebSocketBroadcaster
 from royweb.webhandler import MainHandler, EchoWebSocket, UnitTests, SpecTests
 
 define("ip", default="127.0.0.1", type=str,
@@ -113,34 +110,23 @@ def main():
 def send_test_parameter():
     udp_ip = "127.0.0.1"
     udp_port = 9999
+
+    ph = PacketHandler(udp_ip, udp_port)
+
     print("UDP target IP: {0}".format(udp_ip))
     print("UDP target port: {0}".format(udp_port))
 
+    i = 100
     while True:
-        message = json.dumps({
-            'kind': 'parameter',
-            'type': 'foo',
-            'description': 'This is the foo parameters description.',
-            'value': random() * 1.5 + 0.1,
-        })
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        if sys.version_info >= (3, 0):
-            message = bytes(message, 'UTF-8')
-        sock.sendto(message, (udp_ip, udp_port))
-        sleep(random() * 1.5 + 0.1)
+        bias = i % 10
+        ph.send('foo', random()*1.5+bias, 'The foo parameter description.',)
+        sleep(random()*1.5+0.1)
 
-        current_time = int(time.time())
-        message = json.dumps({
-            'kind': 'parameter',
-            'type': 'narf',
-            'description': 'This is the narf parameters description.',
-            'value': random() * 1.5 + 0.1,
-        })
-        if sys.version_info >= (3, 0):
-            message = bytes(message, 'UTF-8')
-        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.sendto(message, (udp_ip, udp_port))
-        sleep(random() * 1.5 + 0.1)
+        bias = math.sin(i)*2
+        ph.send('narf', random()*1.5+bias, 'The narf parameter description.',)
+        sleep(random()*1.5+0.1)
+
+        i += 1
 
 
 if __name__ == "__main__":
