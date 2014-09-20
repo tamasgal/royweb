@@ -8,6 +8,7 @@
    :maxdepth: 3
 
    install
+   usage
    api
 
 .. include:: ../README.rst
