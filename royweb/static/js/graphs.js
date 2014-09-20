@@ -20,17 +20,43 @@ function Graph() {
         self.refresh_parameter_list();
     }
 
+    self.close = function() {
+        var index = window.graphs.indexOf(self);
+        console.log(index);
+        if (index > -1) {
+            window.graphs.splice(index, 1);
+            self.div.remove();
+        }
+    }
+
 
     self.setup_html = function() {
         self.div = d3.select("#content").append("div").attr("class", "graph");
         self.title_field = self.div.append("h2");
-        var parameter_selection_div = self.div.append("div")
-                                              .attr("class", "parameter_selection")
+
+        self.menu_div = self.div.append("div").attr("class", "graph_menu");
+
+        var graph_div = self.menu_div.append("div").attr("class", "menu_item");
+        var js = "roy.close_graph('" + self.id + "');";
+        graph_div.append("h3").text("Graph");
+        graph_div.append("div").attr("class", "menu_button").append("a").text("Rename");
+        graph_div.append("div").attr("class", "menu_button").append("a").text("Close")
+            .attr("onclick", js);
+
+        var parameter_selection_div = self.menu_div.append("div")
+                                              .attr("class", "menu_item");
         parameter_selection_div.append("h3")
-                               .attr("class", "parameter_selection")
-                               .text("Parameters");
+            .attr("class", "parameter_selection")
+            .text("Parameters");
         self.parameter_selection = parameter_selection_div.append("ul")
-                                       .attr("class", "parameter_selection");
+            .attr("class", "parameter_selection");
+
+        var settings_div = self.menu_div.append("div")
+            .attr("class", "menu_item");
+        settings_div.append("h3")
+            .attr("class", "graph_settings")
+            .text("Settings");
+
         self.svg = self.div.append("svg")
                            .attr("width", self.w)
                            .attr("height", self.h)

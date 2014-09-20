@@ -16,18 +16,22 @@ div.graph {
     margin-right: 16px;
 }
 
-.graph div.parameter_selection {
+.graph .graph_menu {
     position: absolute;
+    cursor: default;
+}
+
+.graph div.menu_item {
+    /*position: absolute;*/
     display: inline;
     background-color: #FDF6E3;
     margin: 0;
     padding: 0;
-    padding-left: 2px;
-    padding-right: 2px;
-    float:right;
+    padding-left: 4px;
+    padding-right: 4px;
+    float:left;
     text-align: left;
     font-size: 10px;
-    border-bottom: 2px solid #268BD3;
     height: 15px;
     overflow: hidden;
 }
@@ -35,15 +39,29 @@ div.graph {
     margin: 0;
     padding: 0;
     border: 0;
+    /* background-color: #268BD3; */
+    color: #268BD3;
+    font-size: 9px;
+    line-height: 15px;
 }
 .graph ul.parameter_selection {
     margin: 0;
     padding: 0;
 }
-.graph div.parameter_selection:hover {
-    height: 150px;
+.graph div.menu_item:hover {
+    height: auto;
 }
 
+.graph .menu_button {
+    text-decoration: none;
+    border: 0;
+    background-color: #268BD3;
+    color: #ffffff;
+    font-size: 9px;
+    line-height: 15px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
 
 .graph li {
     list-style-type: none;
@@ -52,7 +70,6 @@ div.graph {
 }
 
 .graph svg {
-    /* border: 1px solid #FDF6E3; */
 }
 
 .axis path,

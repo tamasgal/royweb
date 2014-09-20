@@ -53,5 +53,12 @@ var roy = {
                 graph.toggle_parameter_type(parameter_type);
             }
         });
+    },
+    close_graph: function(graph_id) {
+        window.graphs.forEach(function(graph) {
+            if(graph.id == graph_id) {
+                graph.close();
+            }
+        });
     }
 };
