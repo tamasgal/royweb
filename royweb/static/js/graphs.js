@@ -5,7 +5,7 @@ function Graph() {
 
     self.init = function() {
         self.id = roy.tools.guid();
-        self.time_limit = 30; // max time offset of parameter to show
+        self.time_limit = 180; // max time offset of parameter to show
         self.w = 400;
         self.h = 220;
         self.padding = 25;
@@ -32,14 +32,16 @@ function Graph() {
 
     self.setup_html = function() {
         self.div = d3.select("#content").append("div").attr("class", "graph");
-        self.title_field = self.div.append("h2");
+        self.title_field = self.div.append("div").append("input").attr("class", "graph_title")
+            .on("blur", function() {
+                self.set_title(this.value);
+            });
 
         self.menu_div = self.div.append("div").attr("class", "graph_menu");
 
         var graph_div = self.menu_div.append("div").attr("class", "menu_item");
         var js = "roy.close_graph('" + self.id + "');";
         graph_div.append("h3").text("Graph");
-        graph_div.append("div").attr("class", "menu_button").append("a").text("Rename");
         graph_div.append("div").attr("class", "menu_button").append("a").text("Close")
             .attr("onclick", js);
 
@@ -154,7 +156,7 @@ function Graph() {
 
     self.set_title = function(title) {
         // Update the H2 field of the graph.
-        self.title_field.text(title);
+        self.title_field.attr("value", title);
     }
 
 
