@@ -1,4 +1,4 @@
-function Graph() {
+function TimePlot() {
     // A graph, which automatically adds itself to the content-DIV
     // a = typeof a !== 'undefined' ? a : 42;
     var self = {};
@@ -16,9 +16,9 @@ function Graph() {
         self.setup_svg();
 
         window.graphs.push(self);
-        self.parameter_types = [];    
+        self.parameter_types = [];
         self.refresh_parameter_list();
-    }
+    };
 
     self.close = function() {
         var index = window.graphs.indexOf(self);
@@ -27,7 +27,7 @@ function Graph() {
             window.graphs.splice(index, 1);
             self.div.remove();
         }
-    }
+    };
 
 
     self.setup_html = function() {
@@ -63,7 +63,7 @@ function Graph() {
                            .attr("width", self.w)
                            .attr("height", self.h)
                            .attr("id", self.id);
-    }
+    };
 
     self.setup_svg = function() {
         self.xScale = d3.time.scale().range([self.padding_left, self.w - self.padding]);
@@ -96,7 +96,7 @@ function Graph() {
         self.line_func = d3.svg.line()
             .x(function(d) { return self.xScale(d.time); })
             .y(function(d) { return self.yScale(d.value); });
-    }
+    };
 
     self.register_parameter_type = function(parameter_type) {
         // Add parameter_type to the monitored ones and setup the SVG
@@ -104,14 +104,14 @@ function Graph() {
             self.parameter_types.push(parameter_type);
             self.lines.append("svg:path").attr("class", "line " + parameter_type);
         }
-    }
+    };
 
     self.unregister_parameter_type = function(parameter_type) {
         // Delete parameter_type from the monitored ones and cleanup the SVG
         var index = self.parameter_types.indexOf(parameter_type);
         self.parameter_types.splice(index, 1);
         self.svg.selectAll("."+parameter_type).remove();
-    }
+    };
 
     self.toggle_parameter_type = function(parameter_type) {
         if(!roy.tools.includes(self.parameter_types, parameter_type)) {
@@ -119,13 +119,13 @@ function Graph() {
         } else {
             self.unregister_parameter_type(parameter_type);
         }
-    }
+    };
 
     self.refresh_parameter_list = function() {
         // Update the parameter selection menu
         self.parameter_selection.text("");
         window.parameter_types.forEach(function(parameter_type) {
-            var js = "roy.toggle_parameter_type('" + self.id + "', '" + parameter_type + "');"
+            var js = "roy.toggle_parameter_type('" + self.id + "', '" + parameter_type + "');";
             var list_entry = self.parameter_selection.append("li");
             var checkbox = list_entry.append("input")
                     .attr("type", "checkbox")
@@ -138,7 +138,7 @@ function Graph() {
             label.append("span"); // placeholder
             label.append("strong").text(parameter_type);
         });
-    }
+    };
 
 
 
@@ -153,26 +153,26 @@ function Graph() {
             data = data.concat(filtered_data);
         });
         self.data = data;
-    }
+    };
 
 
 
     self.set_title = function(title) {
         // Update the H2 field of the graph.
         self.title_field.attr("value", title);
-    }
+    };
 
 
     self.resize = function(width, height) {
         // Change the width and height of the SVG container.
         self.svg.attr("width", width).attr("height", height);
-    }
+    };
 
     self.parameter_color = function(parameter_type) {
-        // assign color according to index in global parameter_types                      
+        // assign color according to index in global parameter_types
         var index = window.parameter_types.indexOf(parameter_type);
         return roy.tools.color(index);
-    }
+    };
 
     self.draw_lines = function() {
         // Draw the lines for each parameter_type
@@ -180,7 +180,7 @@ function Graph() {
             var data = self.data.filter(function(parameter){
                 return parameter.type == parameter_type;
             });
-            var min_value = d3.min(self.data, function(d) { return d.value; })
+            var min_value = d3.min(self.data, function(d) { return d.value; });
             var first = {'type': parameter_type, 'value': min_value, 'time': data[0].time};
             var last = {'type': parameter_type, 'value': min_value, 'time': data.slice(-1)[0].time};
             data = [first].concat(data, last);
@@ -200,7 +200,7 @@ function Graph() {
     self.draw_points = function() {
         // Draw the points for each parameter_type
         var points = self.points.selectAll("circle")
-                      .data(self.data, function(d) { return d.time; })
+                      .data(self.data, function(d) { return d.time; });
 
         points.enter()
               .append("circle")
@@ -219,7 +219,7 @@ function Graph() {
               .transition()
               .duration(self.smoothness)
               .remove();
-    }
+    };
 
     self.draw_axes = function() {
         // Update scales and draw the axes
@@ -229,19 +229,19 @@ function Graph() {
         self.svg.select(".x.axis")
             .transition()
             .duration(self.smoothness)
-            .call(self.xAxis)
+            .call(self.xAxis);
         self.svg.select(".y.axis")
             .transition()
             .duration(self.smoothness)
             .call(self.yAxis)
-    }
+    };
 
     self.redraw = function() {
         self.fetch_data();
         self.draw_axes();
         self.draw_points();
         self.draw_lines();
-    }
+    };
 
     self.init();
     return self;

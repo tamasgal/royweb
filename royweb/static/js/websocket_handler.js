@@ -84,7 +84,7 @@ function register_new_parameter (parameter) {
         .attr("id", parameter.type + "_rate")
         .text("0");
     window.parameters[parameter.type] = [];
-    var graph = new Graph();
+    var graph = new TimePlot();
     graph.register_parameter_type(parameter.type);
     graph.set_title(parameter.type);
     window.graphs.forEach(function(graph){

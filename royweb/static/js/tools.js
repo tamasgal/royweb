@@ -51,6 +51,7 @@ var roy = {
         window.graphs.forEach(function(graph) {
             if(graph.id == graph_id) {
                 graph.toggle_parameter_type(parameter_type);
+                graph.redraw();
             }
         });
     },
