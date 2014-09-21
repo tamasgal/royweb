@@ -36,15 +36,16 @@
         <div id='cssmenu'>
             <ul>
                 <li class='active'><a href='#' onclick='roy.ui.toggle_menu();'><span>Dashboard</span></a></li>
-                <li class='has-sub'><a href='#'><span>Analysis</span></a>
+                <li class='has-sub'><a href='#'><span>Graphs</span></a>
                     <ul>
-                        <li class='has-sub'><a href='#'><span>Foo</span></a>
-                            <ul>
-                                <li><a href='#'><span>Bar</span></a></li>
-                                <li class='last'><a href='#'><span>Baz</span></a></li>
-                            </ul>
-                        </li>
-                        <li class='has-sub'><a href='#'><span>Narf</span></a>
+                        <li><a onclick="new Graph();"><span>Time Plot</span></a></li>
+                        <li class='last'><span><a>Histogram</span></a></li>
+                    </ul>
+                </li>
+                <li class='has-sub'><a href='#'><span>Session</span></a>
+                    <ul>
+                        <li><a href='#'><span>Save</span></a>
+                        <li class='has-sub'><a href='#'><span>Load</span></a>
                             <ul>
                                 <li><a href='#'><span>Fjoord</span></a></li>
                                 <li class='last'><a href='#'><span>Mooh</span></a></li>
@@ -52,14 +53,13 @@
                         </li>
                     </ul>
                 </li>
-                <li><a href='#'><span>Archive</span></a></li>
                 <li class='has-sub'><a href='#'><span>Tests</span></a>
                     <ul>
                         <li><a id="run_unit_tests"><span>Unit Tests</span></a></li>
                         <li class='last'><a id="run_spec_tests"><span>Spec Tests</span></a></li>
                     </ul>
                 </li>
-                <li class='last'><a href='/'><span>Reconnect</span></a></li>
+                <li class='last'><a href='/'><span>Reset</span></a></li>
             </ul>
         </div>
         <div id='infobar'>

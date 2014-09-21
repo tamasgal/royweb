@@ -129,11 +129,12 @@ function Graph() {
             var list_entry = self.parameter_selection.append("li");
             var checkbox = list_entry.append("input")
                     .attr("type", "checkbox")
+                    .attr("id", self.id + parameter_type)
                     .attr("onclick", js);
             if(roy.tools.includes(self.parameter_types, parameter_type)) {
                 checkbox.property("checked", true);
             }
-            list_entry.append("span").text(parameter_type);
+            list_entry.append("label").text(parameter_type).attr("for", self.id + parameter_type);
         });
     }
 
