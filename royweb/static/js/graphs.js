@@ -1,136 +1,180 @@
-function TimePlot() {
-    // A graph, which automatically adds itself to the content-DIV
-    // a = typeof a !== 'undefined' ? a : 42;
-    var self = {};
+function Graph() {
+    // The one and only Graph. Use it only for prototypes!
 
-    self.init = function() {
-        self.id = roy.tools.guid();
-        self.time_limit = 180; // max time offset of parameter to show
-        self.w = 400;
-        self.h = 220;
-        self.padding = 25;
-        self.padding_left = 50;
-        self.smoothness = 0; // transition time in ms. Not ready yet
+    this.init = function() {
+        this.id = roy.tools.guid();
+        this.time_limit = 180; // max time offset of parameter to show
+        this.w = 450;
+        this.h = 220;
+        this.padding = 25;
+        this.padding_left = 50;
+        this.smoothness = 0; // transition time in ms. Not ready yet
 
-        self.setup_html();
-        self.setup_svg();
+        this.setup_html();
+        this.setup_svg();
+        this.setup_menu();
 
-        window.graphs.push(self);
-        self.parameter_types = [];
-        self.refresh_parameter_list();
+        window.graphs.push(this);
+        this.parameter_types = [];
+        this.refresh_parameter_list();
     };
 
-    self.close = function() {
-        var index = window.graphs.indexOf(self);
-        console.log(index);
+    this.set_title = function(title) {
+        // Update the H2 field of the graph.
+        this.title_field.attr("value", title);
+    };
+
+    this.setup_html = function() {
+        this.div = d3.select("#content").append("div").attr("class", "graph");
+        this.title_field = this.div.append("div").append("input").attr("class", "graph_title")
+            .on("blur", function() {
+                self.set_title(this.value);
+            });
+        this.menu_div = this.div.append("div").attr("class", "graph_menu");
+        this.svg = this.div.append("svg")
+            .attr("width", this.w)
+            .attr("height", this.h)
+            .attr("id", this.id);
+    };
+
+    this.close = function() {
+        var index = window.graphs.indexOf(this);
         if (index > -1) {
             window.graphs.splice(index, 1);
-            self.div.remove();
+            this.div.remove();
         }
     };
 
 
-    self.setup_html = function() {
-        self.div = d3.select("#content").append("div").attr("class", "graph");
-        self.title_field = self.div.append("div").append("input").attr("class", "graph_title")
-            .on("blur", function() {
-                self.set_title(this.value);
-            });
 
-        self.menu_div = self.div.append("div").attr("class", "graph_menu");
-
-        var graph_div = self.menu_div.append("div").attr("class", "menu_item");
-        var js = "roy.close_graph('" + self.id + "');";
+    this.setup_menu = function() {
+        var graph_div = this.menu_div.append("div").attr("class", "menu_item");
+        var js = "roy.close_graph('" + this.id + "');";
         graph_div.append("h3").text("Graph");
         graph_div.append("div").attr("class", "menu_button").append("a").text("Close")
             .attr("onclick", js);
 
-        var parameter_selection_div = self.menu_div.append("div")
-                                              .attr("class", "menu_item");
+        var parameter_selection_div = this.menu_div.append("div")
+            .attr("class", "menu_item");
         parameter_selection_div.append("h3")
             .attr("class", "parameter_selection")
             .text("Parameters");
-        self.parameter_selection = parameter_selection_div.append("ul")
+        this.parameter_selection = parameter_selection_div.append("ul")
             .attr("class", "parameter_selection");
 
-        var settings_div = self.menu_div.append("div")
+        var settings_div = this.menu_div.append("div")
             .attr("class", "menu_item");
         settings_div.append("h3")
             .attr("class", "graph_settings")
             .text("Settings");
-
-        self.svg = self.div.append("svg")
-                           .attr("width", self.w)
-                           .attr("height", self.h)
-                           .attr("id", self.id);
     };
 
-    self.setup_svg = function() {
-        self.xScale = d3.time.scale().range([self.padding_left, self.w - self.padding]);
-        self.yScale = d3.scale.linear().range([self.h - self.padding, self.padding]);
+    this.fetch_data = function() {
+        // Get the parameter data for the last this.time_limit seconds
+        var data = [];
+        this.parameter_types.forEach(function(parameter_type) {
+            var parameter_data = window.parameters[parameter_type];
+            var filtered_data = parameter_data.filter(function(parameter) {
+                return (parameter.time > (new Date().getTime()) - self.time_limit*1000);
+            });
+            data = data.concat(filtered_data);
+        });
+        this.data = data;
+    };
+
+    this.register_parameter_type = function(parameter_type) {
+        // Add parameter_type to the monitored ones and setup the SVG
+        if(!roy.tools.includes(this.parameter_types, parameter_type)) {
+            this.parameter_types.push(parameter_type);
+            this.parameter_setup(parameter_type);
+        }
+    };
+
+    this.unregister_parameter_type = function(parameter_type) {
+        // Delete parameter_type from the monitored ones and cleanup the SVG
+        var index = this.parameter_types.indexOf(parameter_type);
+        this.parameter_types.splice(index, 1);
+        this.svg.selectAll("."+parameter_type).remove();
+        this.parameter_teardown(parameter_type);
+    };
+
+    this.toggle_parameter_type = function(parameter_type) {
+        if(!roy.tools.includes(this.parameter_types, parameter_type)) {
+            this.register_parameter_type(parameter_type);
+        } else {
+            this.unregister_parameter_type(parameter_type);
+        }
+    };
+
+    this.resize = function(width, height) {
+        // Change the width and height of the SVG container.
+        this.svg.attr("width", width).attr("height", height);
+    };
+
+    this.parameter_color = function(parameter_type) {
+        // assign color according to index in global parameter_types
+        var index = window.parameter_types.indexOf(parameter_type);
+        return roy.tools.color(index);
+    };
+}
+
+
+function TimePlot() {
+    // A graph, which automatically adds itself to the content-DIV
+    // a = typeof a !== 'undefined' ? a : 42;
+
+    var self = this;
+
+    this.setup_svg = function() {
+        this.xScale = d3.time.scale().range([this.padding_left, this.w - this.padding]);
+        this.yScale = d3.scale.linear().range([this.h - this.padding, this.padding]);
 
         var formatAsPercentage = d3.format(".1%");
         var timeFormat = d3.time.format("%X");
 
-        self.xAxis = d3.svg.axis().scale(self.xScale).orient("bottom").ticks(5)
-                                  .tickSize(-(self.h - 2*self.padding), 0, 0)
+        this.xAxis = d3.svg.axis().scale(this.xScale).orient("bottom").ticks(5)
+                                  .tickSize(-(this.h - 2*this.padding), 0, 0)
                                   .tickPadding(8)
                                   .tickFormat(timeFormat);
-        self.yAxis = d3.svg.axis().scale(self.yScale).orient("left").ticks(5)
-                                  .tickSize(-(self.w - self.padding - self.padding_left), 0, 0);
+        this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(5)
+                                  .tickSize(-(this.w - this.padding - this.padding_left), 0, 0);
 
-        self.svg.append("g")
+        this.svg.append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + (self.h - self.padding) + ")")
-            .call(self.xAxis);
-        self.svg.append("g")
+            .attr("transform", "translate(0," + (this.h - this.padding) + ")")
+            .call(this.xAxis);
+        this.svg.append("g")
             .attr("class", "y axis")
-            .attr("transform", "translate(" + self.padding_left + ",0)")
-            .call(self.yAxis);
+            .attr("transform", "translate(" + this.padding_left + ",0)")
+            .call(this.yAxis);
 
-        self.lines = self.svg.append("g")
+        this.lines = this.svg.append("g")
             .attr("class", "lines");
-        self.points = self.svg.append("g")
+        this.points = this.svg.append("g")
             .attr("class", "points");
 
-        self.line_func = d3.svg.line()
+        this.line_func = d3.svg.line()
             .x(function(d) { return self.xScale(d.time); })
             .y(function(d) { return self.yScale(d.value); });
     };
 
-    self.register_parameter_type = function(parameter_type) {
-        // Add parameter_type to the monitored ones and setup the SVG
-        if(!roy.tools.includes(self.parameter_types, parameter_type)) {
-            self.parameter_types.push(parameter_type);
-            self.lines.append("svg:path").attr("class", "line " + parameter_type);
-        }
+    this.parameter_setup = function(parameter_type) {
+        this.lines.append("svg:path").attr("class", "line " + parameter_type);
     };
 
-    self.unregister_parameter_type = function(parameter_type) {
-        // Delete parameter_type from the monitored ones and cleanup the SVG
-        var index = self.parameter_types.indexOf(parameter_type);
-        self.parameter_types.splice(index, 1);
-        self.svg.selectAll("."+parameter_type).remove();
+    this.parameter_teardown= function(parameter_type) {
     };
 
-    self.toggle_parameter_type = function(parameter_type) {
-        if(!roy.tools.includes(self.parameter_types, parameter_type)) {
-            self.register_parameter_type(parameter_type);
-        } else {
-            self.unregister_parameter_type(parameter_type);
-        }
-    };
-
-    self.refresh_parameter_list = function() {
+    this.refresh_parameter_list = function() {
         // Update the parameter selection menu
-        self.parameter_selection.text("");
+        this.parameter_selection.text("");
         window.parameter_types.forEach(function(parameter_type) {
             var js = "roy.toggle_parameter_type('" + self.id + "', '" + parameter_type + "');";
             var list_entry = self.parameter_selection.append("li");
             var checkbox = list_entry.append("input")
-                    .attr("type", "checkbox")
-                    .attr("id", self.id + parameter_type)
-                    .attr("onclick", js);
+                .attr("type", "checkbox")
+                .attr("id", self.id + parameter_type)
+                .attr("onclick", js);
             if(roy.tools.includes(self.parameter_types, parameter_type)) {
                 checkbox.property("checked", true);
             }
@@ -141,42 +185,9 @@ function TimePlot() {
     };
 
 
-
-    self.fetch_data = function() {
-        // Get the parameter data for the last self.time_limit seconds
-        var data = [];
-        self.parameter_types.forEach(function(parameter_type) {
-            var parameter_data = window.parameters[parameter_type];
-            var filtered_data = parameter_data.filter(function(parameter) {
-                return (parameter.time > (new Date().getTime()) - self.time_limit*1000);
-            });
-            data = data.concat(filtered_data);
-        });
-        self.data = data;
-    };
-
-
-
-    self.set_title = function(title) {
-        // Update the H2 field of the graph.
-        self.title_field.attr("value", title);
-    };
-
-
-    self.resize = function(width, height) {
-        // Change the width and height of the SVG container.
-        self.svg.attr("width", width).attr("height", height);
-    };
-
-    self.parameter_color = function(parameter_type) {
-        // assign color according to index in global parameter_types
-        var index = window.parameter_types.indexOf(parameter_type);
-        return roy.tools.color(index);
-    };
-
-    self.draw_lines = function() {
+    this.draw_lines = function() {
         // Draw the lines for each parameter_type
-        self.parameter_types.forEach(function(parameter_type) {
+        this.parameter_types.forEach(function(parameter_type) {
             var data = self.data.filter(function(parameter){
                 return parameter.type == parameter_type;
             });
@@ -197,10 +208,11 @@ function TimePlot() {
         });
     };
 
-    self.draw_points = function() {
+
+    this.draw_points = function() {
         // Draw the points for each parameter_type
-        var points = self.points.selectAll("circle")
-                      .data(self.data, function(d) { return d.time; });
+        var points = this.points.selectAll("circle")
+                      .data(this.data, function(d) { return d.time; });
 
         points.enter()
               .append("circle")
@@ -211,39 +223,97 @@ function TimePlot() {
               .attr("fill", function(d) { return self.parameter_color(d.type); });
 
         points.transition()
-              .duration(self.smoothness)
+              .duration(this.smoothness)
               .attr("cx", function(d) { return self.xScale(d.time); })
               .attr("cy", function(d) { return self.yScale(d.value); });
 
         points.exit()
               .transition()
-              .duration(self.smoothness)
+              .duration(this.smoothness)
               .remove();
     };
 
-    self.draw_axes = function() {
+
+    this.draw_axes = function() {
         // Update scales and draw the axes
-        self.xScale.domain(d3.extent(self.data, function(d) { return d.time; }));
-        self.yScale.domain(d3.extent(self.data, function(d) { return d.value; }));
+        this.xScale.domain(d3.extent(self.data, function(d) { return d.time; }));
+        this.yScale.domain(d3.extent(self.data, function(d) { return d.value; }));
 
-        self.svg.select(".x.axis")
+        this.svg.select(".x.axis")
             .transition()
-            .duration(self.smoothness)
-            .call(self.xAxis);
-        self.svg.select(".y.axis")
+            .duration(this.smoothness)
+            .call(this.xAxis);
+        this.svg.select(".y.axis")
             .transition()
-            .duration(self.smoothness)
-            .call(self.yAxis)
+            .duration(this.smoothness)
+            .call(this.yAxis)
     };
 
-    self.redraw = function() {
-        self.fetch_data();
-        self.draw_axes();
-        self.draw_points();
-        self.draw_lines();
+
+    this.redraw = function() {
+        this.fetch_data();
+        this.draw_axes();
+        this.draw_points();
+        this.draw_lines();
     };
 
-    self.init();
-    return self;
+
+    this.init();
 }
+
+TimePlot.prototype = new Graph();
+
+
+function Histogram() {
+    var self = this;
+
+    this.setup_svg = function() {
+        this.xScale = d3.scale.linear().range([this.padding_left, this.w - this.padding]);
+        this.yScale = d3.scale.linear().range([this.h - this.padding, this.padding]);
+
+
+        this.xAxis = d3.svg.axis().scale(this.xScale).orient("bottom").ticks(5)
+            .tickSize(-(this.h - 2*this.padding), 0, 0)
+            .tickPadding(8);
+        this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(5)
+            .tickSize(-(this.w - this.padding - this.padding_left), 0, 0);
+
+        this.svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + (this.h - this.padding) + ")")
+            .call(this.xAxis);
+        this.svg.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(" + this.padding_left + ",0)")
+            .call(this.yAxis);
+
+    };
+
+    this.refresh_parameter_list = function() {
+        // Update the parameter selection menu
+        this.parameter_selection.text("");
+        window.parameter_types.forEach(function(parameter_type) {
+            var js = "roy.toggle_parameter_type('" + self.id + "', '" + parameter_type + "');";
+            var list_entry = self.parameter_selection.append("li");
+            var checkbox = list_entry.append("input")
+                .attr("type", "checkbox")
+                .attr("id", self.id + parameter_type)
+                .attr("onclick", js);
+            if(roy.tools.includes(self.parameter_types, parameter_type)) {
+                checkbox.property("checked", true);
+            }
+            var label = list_entry.append("label").attr("for", self.id + parameter_type);
+            label.append("span"); // placeholder
+            label.append("strong").text(parameter_type);
+        });
+    };
+
+    this.redraw = function() {
+        this.fetch_data();
+    };
+
+    this.init();
+}
+
+Histogram.prototype = new Graph();
 
