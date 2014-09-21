@@ -134,7 +134,9 @@ function Graph() {
             if(roy.tools.includes(self.parameter_types, parameter_type)) {
                 checkbox.property("checked", true);
             }
-            list_entry.append("label").text(parameter_type).attr("for", self.id + parameter_type);
+            var label = list_entry.append("label").attr("for", self.id + parameter_type);
+            label.append("span"); // placeholder
+            label.append("strong").text(parameter_type);
         });
     }
 

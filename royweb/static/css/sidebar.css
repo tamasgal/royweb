@@ -1,0 +1,31 @@
+/* RIGHT SIDEBAR */
+#right-sidebar {
+    width: 200px;
+    min-height: 500px;
+    float: right;
+}
+
+/* PARAMETER TABLE */
+#parameters {
+    width: 180px;
+}
+
+.parameter_type {
+    text-align: left;
+}
+
+.parameter_rate {
+    text-align: right;
+}
+
+td.parameter_type {
+    font-weight: bold;
+}
+
+/* BUTTONS */
+
+input[type="submit"] {
+    color: #FDF6E3;
+    background-color: #2688D3;
+    border: 0;
+}

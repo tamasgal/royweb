@@ -107,3 +107,24 @@ path.line {
     fill-opacity: .5;
 }
 
+/* CHECKBOX */
+input[type="checkbox"] {
+    display:none;
+}
+input[type="checkbox"] + label span {
+    display:inline-block;
+    width:10px;
+    height:10px;
+    background:url(http://localhost:8080/static/img/checkbox.png) left top no-repeat;
+    margin:0;
+    margin-bottom: 2px;
+    vertical-align:middle;
+    cursor:pointer;
+}
+input[type="checkbox"]:checked + label span {
+    background:url(../img/checkbox.png) -20px top no-repeat;
+}
+input[type="checkbox"] + label strong {
+    line-height: 20px;
+    margin-left: 3px;
+}
