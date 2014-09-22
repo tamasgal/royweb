@@ -287,6 +287,11 @@ function Histogram() {
             .attr("transform", "translate(" + this.padding_left + ",0)")
             .call(this.yAxis);
 
+        this.bars = this.svg.append("g")
+            .attr("class", "bars");
+
+        this.smoothness = 200;
+        this.nbins = 20;
     };
 
     this.refresh_parameter_list = function() {
@@ -308,9 +313,60 @@ function Histogram() {
         });
     };
 
+    this.draw_axes = function() {
+        // Update scales and draw the axes
+        this.xScale.domain(d3.extent(this.map));
+        this.yScale.domain([0, d3.max(this.histogram, function(d) { return d.length; })]);
+
+        this.svg.select(".x.axis")
+            .transition()
+            .duration(this.smoothness)
+            .call(this.xAxis);
+        this.svg.select(".y.axis")
+            .transition()
+            .duration(this.smoothness)
+            .call(this.yAxis)
+    };
+
+    this.draw_bars = function() {
+        // Draw the bars for each parameter_type
+        var bars = this.bars.selectAll("rect")
+            .data(this.histogram, function(d, i) { return i; });
+
+        var x_min = d3.min(this.map);
+
+        bars.enter()
+            .append("rect")
+            .attr("x", function(d) { return self.xScale(d.x); })
+            .attr("y", function(d) { return self.yScale(d.y); })
+            .attr("width", function(d) { return self.xScale(x_min) - 2*self.padding_left + self.xScale(x_min + d.dx); })
+            .attr("height", function(d) { return (self.yScale(0) - self.yScale(d.y)); })
+            //.attr("class", function(d) { return d.type; })
+            //.attr("fill", function(d) { return self.parameter_color(d.type); });
+            .attr("fill", "#2688D3");
+
+        bars.transition()
+            .duration(this.smoothness)
+            .attr("x", function(d) { return self.xScale(d.x); })
+            .attr("y", function(d) { return self.yScale(d.y); })
+            .attr("width", function(d) { return self.xScale(x_min) - 2*self.padding_left + self.xScale(x_min + d.dx); })
+            .attr("height", function(d) { return (self.yScale(0) - self.yScale(d.y)); });
+
+        bars.exit()
+            .transition()
+            .duration(this.smoothness)
+            .remove();
+    };
+
     this.redraw = function() {
         this.fetch_data();
+        this.map = self.data.map(function(i) { return i.value; });
+        this.histogram = d3.layout.histogram().bins(this.nbins)(this.map);
+        console.log(this.histogram);
+        this.draw_axes();
+        this.draw_bars();
     };
+
 
     this.init();
 }
