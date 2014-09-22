@@ -16,6 +16,7 @@ function Graph() {
 
         window.graphs.push(this);
         this.parameter_types = [];
+        this.set_title("Untitled");
         this.refresh_parameter_list();
     };
 
