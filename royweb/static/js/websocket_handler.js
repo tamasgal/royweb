@@ -10,6 +10,8 @@ var ws = new WebSocket("ws://" + window.royweb_ip + ":" + window.royweb_port + "
 ws.onopen = function () {
     'use strict';
     ws.send("Hello");
+    var json_obj = {'kind': 'session_list'}; // Get the list of saved session from ROyWeb
+    ws.send(JSON.stringify(json_obj));
 };
 
 
@@ -27,8 +29,40 @@ ws.onmessage = function (evt) {
 
     if (json_obj.kind == "session_load") {
         log_message("Received configuration for session '"+ json_obj.session_name +"'");
-        window.graphs = [];
-        d3.select("#content").text('');
+        roy.clear_session();
+        json_obj.graphs.forEach(function(graph) {
+            log_message("Setting up graph '" + graph.title + "'");
+            switch (graph.type) {
+                case "timeplot":
+                    var new_graph = new TimePlot();
+                    break;
+                case "histogram":
+                    var new_graph = new Histogram();
+                    break;
+                default:
+                    console.log("Invalid graph type '" + graph.type + "'");
+            }
+
+            new_graph.set_title(graph.title);
+            graph.parameter_types.forEach(function(parameter_type) {
+                new_graph.register_parameter_type(parameter_type);
+            });
+            new_graph.refresh_parameter_list();
+        });
+    }
+    if (json_obj.kind == "session_list") {
+        log_message("Updating session list.");
+        var session_menu = d3.select("#session_list");
+        session_menu.text("");
+        json_obj['sessions'].forEach(function(session_name){
+            session_menu.append("li").append("a").text(session_name)
+                .on("click", function(){
+                    var session_name = this.innerHTML;
+                    roy.load_session(session_name);
+                });
+        });
+        session_menu.append("li").attr("class", "last").append("a").text("Empty Session")
+            .on("click", roy.clear_session);
     }
 };
 

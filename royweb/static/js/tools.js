@@ -88,7 +88,11 @@ var roy = {
     load_session: function(session_name) {
         var json_data = {};
         json_data['kind'] = 'session_load';
-        json_data['session_name'] = "Fjoord";
+        json_data['session_name'] = session_name;
         ws.send(JSON.stringify(json_data));
+    },
+    clear_session: function() {
+        window.graphs = [];
+        d3.select("#content").text('');
     }
 };

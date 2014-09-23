@@ -57,11 +57,18 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
                 json_session = json.dumps({
                         'kind': 'session_load',
                         'session_name': json_message['session_name'],
-                        'graphs':['graph1', 'graph2']
+                        'graphs':[
+                            {'title': 'graph1', 'type': 'timeplot', 'parameter_types': ['foo']},
+                            {'title': 'graph2', 'type': 'timeplot', 'parameter_types': ['narf']},
+                            {'title': 'graph3', 'type': 'histogram', 'parameter_types': ['narf']}
+                            ]
                         })
                 self.write_message(json_session)
+            elif json_message['kind'] == 'session_list':
+                json_session_list = json.dumps({'kind':'session_list', 'sessions': ['Session1', 'Session2']})
+                self.write_message(json_session_list)
             else:
-                print(u"Bad formatted JSON package received from client: {0}"
+                print(u"Badly formatted JSON package received from client: {0}"
                       .format(message))
 
         except ValueError:
