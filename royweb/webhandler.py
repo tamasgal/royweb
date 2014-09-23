@@ -42,7 +42,25 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
         self.clients.append(self)
 
     def on_message(self, message):
-        self.send_json_message(u"Client said '{0}'".format(message))
+        try:
+            json_message = json.loads(message)
+            if json_message['kind'] == 'session_save':
+                print(u"Client wants to save a session with name '{0}'"
+                      .format(json_message['session_name']))
+                self.send_json_message(u"Saving session '{0}'..."
+                                       .format(json_message['session_name']))
+            elif json_message['kind'] == 'session_load':
+                print(u"Client wants to load a session with name '{0}'"
+                      .format(json_message['session_name']))
+                self.send_json_message(u"Loading session '{0}'."
+                                       .format(json_message['session_name']))
+            else:
+                print(u"Bad formatted JSON package received from client: {0}"
+                      .format(message))
+
+        except ValueError:
+            self.send_json_message(u"Client said '{0}'".format(message))
+
 
     def on_close(self):
         print("WebSocket closed")

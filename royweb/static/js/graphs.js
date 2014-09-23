@@ -25,12 +25,19 @@ function Graph() {
         this.title_field.attr("value", title);
     };
 
+    this.get_title = function() {
+        return this.title_field[0][0].value; // WHY??
+    };
+
     this.setup_html = function() {
         this.div = d3.select("#content").append("div").attr("class", "graph");
-        this.title_field = this.div.append("div").append("input").attr("class", "graph_title")
-            .on("blur", function() {
-                self.set_title(this.value);
-            });
+        this.title_field = this.div.append("div")
+            .append("input")
+            .attr("class", "graph_title");
+            //.attr("id", this.id + "-" + "title");
+            //.on("blur", function() {
+            //    self.set_title(this.value);
+            //});
         this.menu_div = this.div.append("div").attr("class", "graph_menu");
         this.svg = this.div.append("svg")
             .attr("width", this.w)
@@ -125,6 +132,7 @@ function TimePlot() {
     // a = typeof a !== 'undefined' ? a : 42;
 
     var self = this;
+    self.type = "timeplot";
 
     this.setup_svg = function() {
         this.xScale = d3.time.scale().range([this.padding_left, this.w - this.padding]);
@@ -267,6 +275,7 @@ TimePlot.prototype = new Graph();
 
 function Histogram() {
     var self = this;
+    self.type = "histogram";
 
     this.setup_svg = function() {
         this.xScale = d3.scale.linear().range([this.padding_left, this.w - this.padding]);

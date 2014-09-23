@@ -64,5 +64,25 @@ var roy = {
                 graph.close();
             }
         });
+    },
+    save_session: function() {
+        var session_name = prompt("Please enter a name for the session.", "");
+        if (session_name != null) {
+            console.log("Saving session \"" + session_name + "\"");
+            var json_data = {};
+            json_data['kind'] = "session_save";
+            json_data['session_name'] = session_name;
+            json_data['graphs'] = [];
+            window.graphs.forEach(function(graph) {
+                var graph_data = {};
+                graph_data['title'] = graph.get_title();
+                graph_data['type'] = graph.type;
+                graph_data['parameter_types'] = graph.parameter_types;
+                json_data['graphs'].push(graph_data);
+                console.log("Saving " + graph.type);
+            });
+            console.log(json_data);
+            ws.send(JSON.stringify(json_data));
+        }
     }
 };
