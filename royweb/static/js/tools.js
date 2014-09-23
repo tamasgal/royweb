@@ -84,5 +84,11 @@ var roy = {
             console.log(json_data);
             ws.send(JSON.stringify(json_data));
         }
+    },
+    load_session: function(session_name) {
+        var json_data = {};
+        json_data['kind'] = 'session_load';
+        json_data['session_name'] = "Fjoord";
+        ws.send(JSON.stringify(json_data));
     }
 };

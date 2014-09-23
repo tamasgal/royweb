@@ -24,6 +24,12 @@ ws.onmessage = function (evt) {
     if (json_obj.kind === "message") {
         log_message("Server message: " + json_obj.text);
     }
+
+    if (json_obj.kind == "session_load") {
+        log_message("Received configuration for session '"+ json_obj.session_name +"'");
+        window.graphs = [];
+        d3.select("#content").text('');
+    }
 };
 
 

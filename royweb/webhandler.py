@@ -54,6 +54,12 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
                       .format(json_message['session_name']))
                 self.send_json_message(u"Loading session '{0}'."
                                        .format(json_message['session_name']))
+                json_session = json.dumps({
+                        'kind': 'session_load',
+                        'session_name': json_message['session_name'],
+                        'graphs':['graph1', 'graph2']
+                        })
+                self.write_message(json_session)
             else:
                 print(u"Bad formatted JSON package received from client: {0}"
                       .format(message))
