@@ -81,7 +81,7 @@ function register_new_parameter (parameter) {
         .text(parameter.type);
     table_row.append("td")
         .attr("class", "parameter_rate")
-        .attr("id", parameter.type + "_rate")
+        .attr("id", roy.tools.escaped(parameter.type) + "_rate")
         .text("0");
     window.parameters[parameter.type] = [];
     var graph = new TimePlot();
@@ -112,7 +112,7 @@ function clean_up_parameter_cache (parameter) {
 
 function update_parameter_rate (parameter) {
     var rate = calculate_parameter_rate(parameter);
-    d3.select("#" + parameter.type + "_rate").text(rate);
+    d3.select("#" + roy.tools.escaped(parameter.type) + "_rate").text(rate);
 }
 
 
