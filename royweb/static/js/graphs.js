@@ -160,7 +160,7 @@ function TimePlot() {
     };
 
     this.parameter_setup = function(parameter_type) {
-        this.lines.append("svg:path").attr("class", "line " + parameter_type);
+        this.lines.append("svg:path").attr("class", "line " + roy.tools.escaped(parameter_type));
     };
 
     this.parameter_teardown= function(parameter_type) {
@@ -196,7 +196,7 @@ function TimePlot() {
             var first = {'type': parameter_type, 'value': min_value, 'time': data[0].time};
             var last = {'type': parameter_type, 'value': min_value, 'time': data.slice(-1)[0].time};
             data = [first].concat(data, last);
-            self.lines.selectAll("." + parameter_type)
+            self.lines.selectAll("." + roy.tools.escaped(parameter_type))
                   .data([data])
                   .attr("transform", "translate(0)")
                   .attr("d", self.line_func)

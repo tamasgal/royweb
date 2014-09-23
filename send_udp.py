@@ -24,4 +24,8 @@ while True:
     ph.send('narf', random()*1.5+bias, 'The narf parameter description.',)
     sleep(random()*1.5+0.1)
 
+    bias = math.sin(i)*2
+    ph.send('bar.baz', random()*1.5+bias, 'The narf parameter description.',)
+    sleep(random()*1.5+0.1)
+
     i += 1

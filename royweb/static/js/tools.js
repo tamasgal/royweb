@@ -31,6 +31,9 @@ var roy = {
             var uuid = s.join("");
             return uuid;
         },
+        escaped: function(string) {
+            return string.replace(/\./g,'_')
+        },
         color: function(i) {
             // http://tools.medialab.sciences-po.fr/iwanthue/
             var colors = ["#315E88", "#CE26A3", "#36B136", 
