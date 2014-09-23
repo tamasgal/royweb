@@ -36,8 +36,7 @@
         <div id='sidebar'>
         <div id='cssmenu'>
             <ul>
-                <li class='active'><a href='#' onclick='roy.ui.toggle_menu();'><span>Dashboard</span></a></li>
-                <li class='has-sub'><a href='#'><span>Graphs</span></a>
+                <li class='active has-sub'><a href='#'><span>Graphs</span></a>
                     <ul>
                         <li><a onclick="new TimePlot();"><span>Time Plot</span></a></li>
                         <li class='last'><span><a onclick="new Histogram();">Histogram</span></a></li>
@@ -58,6 +57,14 @@
                     <ul>
                         <li><a id="run_unit_tests"><span>Unit Tests</span></a></li>
                         <li class='last'><a id="run_spec_tests"><span>Spec Tests</span></a></li>
+                    </ul>
+                </li>
+                <li class='has-sub'><a href='#'><span>Help</span></a>
+                    <ul>
+                        <li><a href="http://royweb.readthedocs.org"><span>Documentation</span></a></li>
+                        <li><a href="https://github.com/tamasgal/royweb"><span>Source</span></a></li>
+                        <li><a href="https://github.com/tamasgal/royweb/issues"><span>Issues</span></a></li>
+                        <li class='last'><a href="http://royweb.km3net.de"><span>Demo</span></a></li>
                     </ul>
                 </li>
                 <li class='last'><a href='/'><span>Reset</span></a></li>
