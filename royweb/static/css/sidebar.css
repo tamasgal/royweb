@@ -1,13 +1,13 @@
 /* RIGHT SIDEBAR */
 #right-sidebar {
-    width: 200px;
+    width: 250px;
     min-height: 500px;
     float: right;
 }
 
 /* PARAMETER TABLE */
 #parameters {
-    width: 180px;
+    width: 230px;
 }
 
 .parameter_color {
@@ -16,7 +16,9 @@
 .parameter_type {
     text-align: left;
 }
-
+.parameter_unit {
+    text-align: center;
+}
 .parameter_rate {
     text-align: right;
 }

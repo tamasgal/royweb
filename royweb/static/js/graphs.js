@@ -4,14 +4,15 @@ function Graph() {
     this.init = function() {
         this.id = roy.tools.guid();
         this.time_limit = 180; // max time offset of parameter to show
-        this.w = 450;
-        this.h = 220;
-        this.padding = 25;
-        this.padding_left = 50;
+        this.w = 480;
+        this.h = 250;
+        this.padding = 37;
+        this.padding_left = 75;
         this.smoothness = 0; // transition time in ms. Not ready yet
 
         this.setup_html();
         this.setup_svg();
+        this.setup_labels();
         this.setup_menu();
         this.setup();
 
@@ -97,6 +98,23 @@ function Graph() {
             });
     };
 
+    this.setup_labels = function() {
+        this.x_label = this.svg.append("text")
+            .attr("y", this.h - 5)
+            .attr("x", parseInt(this.w /2))
+            .attr("dx", "1em")
+            .style("text-anchor", "middle")
+            .style("fill", "#647B83")
+            .text("X-label");
+        this.y_label = this.svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 5)
+            .attr("x", -parseInt(this.h / 2))
+            .attr("dy", "1em")
+            .style("fill", "#647B83")
+            .style("text-anchor", "middle");
+    };
+
     this.fetch_data = function() {
         // Get the parameter data for the last this.time_limit seconds
         var data = [];
@@ -163,11 +181,14 @@ function TimePlot() {
         self.points_enabled = false;
         self.fill_enabled = false;
         self.line_enabled = true;
+
+        self.x_label.text("time");
     };
 
     this.setup_svg = function() {
         this.xScale = d3.time.scale().range([this.padding_left, this.w - this.padding]);
         this.yScale = d3.scale.linear().range([this.h - this.padding, this.padding]);
+
 
         var formatAsPercentage = d3.format(".1%");
         var timeFormat = d3.time.format("%X");
@@ -308,6 +329,9 @@ function TimePlot() {
         if(this.line_enabled) {
             this.draw_lines();
         }
+        self.parameter_types.forEach(function(parameter_type) {
+            self.y_label.text(window.parameters[parameter_type][0].unit);
+        });
     };
 
 
@@ -335,7 +359,7 @@ function Histogram() {
                 self.set_nbins(parseInt(this.value));
             });
 
-
+        this.y_label.text("Count");
     };
 
     this.set_nbins = function(nbins) {
@@ -456,6 +480,9 @@ function Histogram() {
         this.histogram = d3.layout.histogram().bins(this.nbins)(this.map);
         this.draw_axes();
         this.draw_bars();
+        self.parameter_types.forEach(function(parameter_type) {
+            self.x_label.text(window.parameters[parameter_type][0].unit);
+        });
     };
 
 

@@ -23,16 +23,17 @@ class PacketHandler(object):
         self.ip = ip
         self.port = port
 
-    def send(self, parameter_type, value, description):
+    def send(self, parameter_type, value, unit, description):
         """Send a parameter with value and description to a ROyWeb"""
-        message = self.json_message(parameter_type, value, description)
+        message = self.json_message(parameter_type, value, unit, description)
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.sendto(message, (self.ip, self.port))
 
-    def json_message(self, parameter_type, value, description):
+    def json_message(self, parameter_type, value, unit, description):
         """Create a json dump."""
         message = json.dumps({'kind': 'parameter',
                               'type': parameter_type,
+                              'unit': unit,
                               'description': description,
                               'value': value})
         if sys.version_info >= (3, 0):

@@ -119,11 +119,15 @@ function register_new_parameter (parameter) {
         .append("input")
         .attr("type", "submit")
         .attr("value", "")
-        .attr("class", "parameter_type")
+        .attr("class", "parameter_color")
         .style("background-color", roy.parameter_color(parameter.type))
         .text();
     table_row.append("td")
+        .text("class", "parameter_type")
         .text(parameter.type);
+    table_row.append("td")
+        .attr("class", "parameter_unit")
+        .text(parameter.unit);
     table_row.append("td")
         .attr("class", "parameter_rate")
         .attr("id", roy.tools.escaped(parameter.type) + "_rate")

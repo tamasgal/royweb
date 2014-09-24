@@ -17,15 +17,15 @@ print("UDP target port: {0}".format(udp_port))
 i = 100
 while True:
     value = 100000 - 1000 + random()*2000
-    ph.send('foo', value, 'The foo parameter description.',)
+    ph.send('foo', value, 'MHz', 'The foo parameter description.',)
     sleep(random()*0.2+0.1)
 
     bias = math.sin(i)*2
-    ph.send('narf', random()*1.5+bias, 'The narf parameter description.',)
+    ph.send('narf', random()*1.5+bias, 'kHz', 'The narf parameter description.',)
     sleep(random()*0.2+0.1)
 
     bias = (math.sin(i) + 100)*2
-    ph.send('bar.baz', random()*1.5+bias, 'The narf parameter description.',)
+    ph.send('bar.baz', random()*1.5+bias, 'm', 'The narf parameter description.',)
     sleep(random()*0.2+0.1)
 
     i += 1

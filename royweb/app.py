@@ -119,11 +119,11 @@ def send_test_parameter():
     i = 100
     while True:
         bias = i % 10
-        ph.send('foo', random()*1.5+bias, 'The foo parameter description.',)
+        ph.send('foo', random()*1.5+bias, 'MHz', 'The foo parameter description.',)
         sleep(random()*1.5+0.1)
 
         bias = math.sin(i)*2
-        ph.send('narf', random()*1.5+bias, 'The narf parameter description.',)
+        ph.send('narf', random()*1.5+bias, 'ms', 'The narf parameter description.',)
         sleep(random()*1.5+0.1)
 
         i += 1
