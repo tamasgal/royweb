@@ -157,6 +157,12 @@ function TimePlot() {
     var self = this;
     self.type = "timeplot";
 
+    this.setup = function() {
+        self.points_enabled = false;
+        self.fill_enabled = false;
+        self.line_enabled = true;
+    };
+
     this.setup_svg = function() {
         this.xScale = d3.time.scale().range([this.padding_left, this.w - this.padding]);
         this.yScale = d3.scale.linear().range([this.h - this.padding, this.padding]);
@@ -224,16 +230,24 @@ function TimePlot() {
             var data = self.data.filter(function(parameter){
                 return parameter.type == parameter_type;
             });
-            var min_value = d3.min(self.data, function(d) { return d.value; });
-            var first = {'type': parameter_type, 'value': min_value, 'time': data[0].time};
-            var last = {'type': parameter_type, 'value': min_value, 'time': data.slice(-1)[0].time};
-            data = [first].concat(data, last);
+            if (self.fill_enabled) {
+                var min_value = d3.min(self.data, function(d) { return d.value; });
+                var first = {'type': parameter_type, 'value': min_value, 'time': data[0].time};
+                var last = {'type': parameter_type, 'value': min_value, 'time': data.slice(-1)[0].time};
+                data = [first].concat(data, last);
+            }
             self.lines.selectAll("." + roy.tools.escaped(parameter_type))
                   .data([data])
                   .attr("transform", "translate(0)")
                   .attr("d", self.line_func)
                   .attr("stroke", self.parameter_color(parameter_type))
-                  .attr("fill", self.parameter_color(parameter_type))
+                  .attr("fill", function(d) {
+                      if (self.fill_enabled) {
+                          return self.parameter_color(parameter_type);
+                      } else {
+                          return "none";
+                      }
+                  })
                   .transition()
                   .ease("linear")
                   .duration(self.smoothness)
@@ -286,8 +300,12 @@ function TimePlot() {
     this.redraw = function() {
         this.fetch_data();
         this.draw_axes();
-        this.draw_points();
-        this.draw_lines();
+        if(this.points_enabled) {
+            this.draw_points();
+        }
+        if(this.line_enabled) {
+            this.draw_lines();
+        }
     };
 
 
