@@ -50,6 +50,11 @@ var roy = {
             //<D-r>$('#sidebar').height(20);
         }
     },
+    parameter_color: function(parameter_type) {
+        // assign color according to index in global parameter_types
+        var index = window.parameter_types.indexOf(parameter_type);
+        return roy.tools.color(index);
+    },
     toggle_parameter_type: function(graph_id, parameter_type) {
         window.graphs.forEach(function(graph) {
             if(graph.id == graph_id) {

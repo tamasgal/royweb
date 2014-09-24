@@ -10,6 +10,9 @@
     width: 180px;
 }
 
+.parameter_color {
+    text-align: left;
+}
 .parameter_type {
     text-align: left;
 }

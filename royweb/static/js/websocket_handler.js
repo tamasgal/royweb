@@ -117,8 +117,11 @@ function register_new_parameter (parameter) {
     table_row.append("td")
         .append("input")
         .attr("type", "submit")
-        .attr("value", parameter.type)
+        .attr("value", "")
         .attr("class", "parameter_type")
+        .style("background-color", roy.parameter_color(parameter.type))
+        .text();
+    table_row.append("td")
         .text(parameter.type);
     table_row.append("td")
         .attr("class", "parameter_rate")
