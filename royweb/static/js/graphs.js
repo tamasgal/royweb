@@ -90,6 +90,8 @@ function Graph() {
         this.data = data;
     };
 
+    this.parameter_setup = function() { };
+
     this.register_parameter_type = function(parameter_type) {
         // Add parameter_type to the monitored ones and setup the SVG
         if(!roy.tools.includes(this.parameter_types, parameter_type)) {
@@ -372,7 +374,6 @@ function Histogram() {
         this.fetch_data();
         this.map = self.data.map(function(i) { return i.value; });
         this.histogram = d3.layout.histogram().bins(this.nbins)(this.map);
-        console.log(this.histogram);
         this.draw_axes();
         this.draw_bars();
     };

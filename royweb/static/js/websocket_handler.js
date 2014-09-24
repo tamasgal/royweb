@@ -40,14 +40,14 @@ ws.onmessage = function (evt) {
                     var new_graph = new Histogram();
                     break;
                 default:
-                    console.log("Invalid graph type '" + graph.type + "'");
+                    log_message("Received invalid graph type '" + graph.type + "'");
             }
 
             new_graph.set_title(graph.title);
             graph.parameter_types.forEach(function(parameter_type) {
                 new_graph.register_parameter_type(parameter_type);
+                new_graph.refresh_parameter_list();
             });
-            new_graph.refresh_parameter_list();
         });
     }
     if (json_obj.kind == "session_list") {

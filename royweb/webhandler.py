@@ -12,6 +12,10 @@ __email__ = 'tamas.gal@physik.uni-erlangen.de'
 __all__ = ('MainHandler', 'EchoWebSocket', 'NoCacheStaticFileHandler',
            'UnitTests', 'SpecTests')
 
+import os
+import glob
+from os.path import basename
+
 import tornado.web
 import tornado.websocket
 
@@ -49,23 +53,27 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
                       .format(json_message['session_name']))
                 self.send_json_message(u"Saving session '{0}'..."
                                        .format(json_message['session_name']))
+                json_message['kind'] = 'session_load'
+                session_directory = "sessions"
+                if not os.path.exists(session_directory):
+                    os.makedirs(session_directory)
+                with open(session_directory + '/' + json_message['session_name'] + '.json', 'w') as outfile:
+                    outfile.write(json.dumps(json_message))
+                # TODO: Refactor this! Sends the updated session list to all clients
+                session_names = [os.path.splitext(basename(filename))[0] for filename in glob.glob("sessions/*.json")]
+                json_session_list = json.dumps({'kind':'session_list', 'sessions': session_names})
+                self.write_message(json_session_list)
             elif json_message['kind'] == 'session_load':
                 print(u"Client wants to load a session with name '{0}'"
                       .format(json_message['session_name']))
                 self.send_json_message(u"Loading session '{0}'."
                                        .format(json_message['session_name']))
-                json_session = json.dumps({
-                        'kind': 'session_load',
-                        'session_name': json_message['session_name'],
-                        'graphs':[
-                            {'title': 'graph1', 'type': 'timeplot', 'parameter_types': ['foo']},
-                            {'title': 'graph2', 'type': 'timeplot', 'parameter_types': ['narf']},
-                            {'title': 'graph3', 'type': 'histogram', 'parameter_types': ['narf']}
-                            ]
-                        })
-                self.write_message(json_session)
+                session_directory = "sessions"
+                with open(session_directory + '/' + json_message['session_name'] + '.json', 'r') as infile:
+                    self.write_message(json.load(infile))
             elif json_message['kind'] == 'session_list':
-                json_session_list = json.dumps({'kind':'session_list', 'sessions': ['Session1', 'Session2']})
+                session_names = [os.path.splitext(basename(filename))[0] for filename in glob.glob("sessions/*.json")]
+                json_session_list = json.dumps({'kind':'session_list', 'sessions': session_names})
                 self.write_message(json_session_list)
             else:
                 print(u"Badly formatted JSON package received from client: {0}"
