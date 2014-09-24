@@ -77,6 +77,9 @@ var roy = {
                 var graph_data = {};
                 graph_data['title'] = graph.get_title();
                 graph_data['type'] = graph.type;
+                if (graph.type == "histogram") {
+                    graph_data['nbins'] = graph.nbins;
+                }
                 graph_data['parameter_types'] = graph.parameter_types;
                 json_data['graphs'].push(graph_data);
                 console.log("Saving " + graph.type);

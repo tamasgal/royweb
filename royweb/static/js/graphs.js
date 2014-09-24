@@ -13,12 +13,15 @@ function Graph() {
         this.setup_html();
         this.setup_svg();
         this.setup_menu();
+        this.setup();
 
         window.graphs.push(this);
         this.parameter_types = [];
         this.set_title("Untitled");
         this.refresh_parameter_list();
     };
+
+    this.setup = function() {};
 
     this.set_title = function(title) {
         // Update the H2 field of the graph.
@@ -75,6 +78,7 @@ function Graph() {
         settings_div.append("h3")
             .attr("class", "graph_settings")
             .text("Settings");
+        this.settings_menu = settings_div.append("div");
     };
 
     this.fetch_data = function() {
@@ -279,6 +283,20 @@ function Histogram() {
     var self = this;
     self.type = "histogram";
 
+    this.setup = function() {
+        this.smoothness = 400;
+        this.nbins = 20;
+        this.bar_spacing = 1; // pixels
+
+        this.settings_menu.append("div").append("span").text("Bins:");
+        this.settings_menu.append("input").attr("value", this.nbins).on("input", function() {
+            var value = parseInt(this.value);
+            if(value > 1) {
+                self.nbins = value;
+            }
+        });
+    };
+
     this.setup_svg = function() {
         this.xScale = d3.scale.linear().range([this.padding_left, this.w - this.padding]);
         this.yScale = d3.scale.linear().range([this.h - this.padding, this.padding]);
@@ -301,9 +319,6 @@ function Histogram() {
 
         this.bars = this.svg.append("g")
             .attr("class", "bars");
-
-        this.smoothness = 200;
-        this.nbins = 20;
     };
 
     this.refresh_parameter_list = function() {
@@ -351,7 +366,7 @@ function Histogram() {
             .append("rect")
             .attr("x", function(d) { return self.xScale(d.x); })
             .attr("y", function(d) { return self.yScale(d.y); })
-            .attr("width", function(d) { return self.xScale(x_min) - 2*self.padding_left + self.xScale(x_min + d.dx); })
+            .attr("width", function(d) { return self.xScale(x_min) - 2*self.padding_left + self.xScale(x_min + d.dx) - self.bar_spacing; })
             .attr("height", function(d) { return (self.yScale(0) - self.yScale(d.y)); })
             //.attr("class", function(d) { return d.type; })
             //.attr("fill", function(d) { return self.parameter_color(d.type); });
@@ -361,7 +376,7 @@ function Histogram() {
             .duration(this.smoothness)
             .attr("x", function(d) { return self.xScale(d.x); })
             .attr("y", function(d) { return self.yScale(d.y); })
-            .attr("width", function(d) { return self.xScale(x_min) - 2*self.padding_left + self.xScale(x_min + d.dx); })
+            .attr("width", function(d) { return self.xScale(x_min) - 2*self.padding_left + self.xScale(x_min + d.dx) - self.bar_spacing; })
             .attr("height", function(d) { return (self.yScale(0) - self.yScale(d.y)); });
 
         bars.exit()
