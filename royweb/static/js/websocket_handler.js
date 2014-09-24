@@ -38,7 +38,7 @@ ws.onmessage = function (evt) {
                     break;
                 case "histogram":
                     var new_graph = new Histogram();
-                    new_graph.nbins = graph.nbins;
+                    new_graph.set_nbins(graph.nbins);
                     break;
                 default:
                     log_message("Received invalid graph type '" + graph.type + "'");

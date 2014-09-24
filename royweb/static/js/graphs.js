@@ -290,12 +290,18 @@ function Histogram() {
         this.y_scale_type = "linear";
 
         this.settings_menu.append("div").append("span").text("Bins:");
-        this.settings_menu.append("input").attr("value", this.nbins).on("input", function() {
-            var value = parseInt(this.value);
-            if(value > 1 && value < 1000) {
-                self.nbins = value;
-            }
-        });
+        this.nbins_input = this.settings_menu.append("input")
+            .attr("value", this.nbins)
+            .on("input", function() {
+                self.set_nbins(parseInt(this.value));
+            });
+    };
+
+    this.set_nbins = function(nbins) {
+        if(nbins > 1 && nbins < 1000) {
+            self.nbins = nbins;
+            self.nbins_input.attr("value", nbins);
+        }
     };
 
     this.reset_scales = function() {
@@ -356,7 +362,7 @@ function Histogram() {
     this.draw_axes = function() {
         // Update scales and draw the axes
         this.xScale.domain(d3.extent(this.map));
-        this.yScale.domain([1, d3.max(this.histogram, function(d) { return d.length; })]).nice();
+        this.yScale.domain([0, d3.max(this.histogram, function(d) { return d.length; })]);
 
         this.svg.select(".x.axis")
             .transition()
@@ -374,6 +380,9 @@ function Histogram() {
             .data(this.histogram, function(d, i) { return i; });
 
         var bar_width = (self.w - self.padding_left - self.padding) / self.nbins - self.bar_spacing;
+        if (bar_width < 1) {
+            bar_width = 1;
+        }
 
         bars.enter()
             .append("rect")
