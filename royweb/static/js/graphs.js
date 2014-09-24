@@ -103,10 +103,12 @@ function Graph() {
         var self = this;
         this.parameter_types.forEach(function(parameter_type) {
             var parameter_data = window.parameters[parameter_type];
-            var filtered_data = parameter_data.filter(function(parameter) {
-                return (parameter.time > (new Date().getTime()) - self.time_limit*1000);
-            });
-            data = data.concat(filtered_data);
+            if (parameter_data) {
+                var filtered_data = parameter_data.filter(function(parameter) {
+                    return (parameter.time > (new Date().getTime()) - self.time_limit*1000);
+                });
+                data = data.concat(filtered_data);
+            }
         });
         this.data = data;
     };

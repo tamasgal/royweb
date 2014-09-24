@@ -85,6 +85,7 @@ var roy = {
                 if (graph.type == "histogram") {
                     graph_data['nbins'] = graph.nbins;
                 }
+                graph_data['time_limit'] = graph.time_limit;
                 graph_data['parameter_types'] = graph.parameter_types;
                 json_data['graphs'].push(graph_data);
                 console.log("Saving " + graph.type);
