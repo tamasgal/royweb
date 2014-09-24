@@ -284,14 +284,14 @@ function Histogram() {
     self.type = "histogram";
 
     this.setup = function() {
-        this.smoothness = 400;
+        this.smoothness = 100;
         this.nbins = 20;
         this.bar_spacing = 1; // pixels
 
         this.settings_menu.append("div").append("span").text("Bins:");
         this.settings_menu.append("input").attr("value", this.nbins).on("input", function() {
             var value = parseInt(this.value);
-            if(value > 1) {
+            if(value > 1 && value < 1000) {
                 self.nbins = value;
             }
         });
