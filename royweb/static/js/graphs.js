@@ -287,6 +287,7 @@ function Histogram() {
         this.smoothness = 100;
         this.nbins = 20;
         this.bar_spacing = 1; // pixels
+        this.y_scale_type = "linear";
 
         this.settings_menu.append("div").append("span").text("Bins:");
         this.settings_menu.append("input").attr("value", this.nbins).on("input", function() {
@@ -297,10 +298,22 @@ function Histogram() {
         });
     };
 
-    this.setup_svg = function() {
+    this.reset_scales = function() {
+        switch (this.y_scale_type) {
+            case "linear":
+                this.yScale = d3.scale.linear().range([this.h - this.padding, this.padding]);
+                break;
+            case "log":
+                this.yScale = d3.scale.log().range([this.h - this.padding, this.padding]);
+                break;
+        }
         this.xScale = d3.scale.linear().range([this.padding_left, this.w - this.padding]);
-        this.yScale = d3.scale.linear().range([this.h - this.padding, this.padding]);
+    };
 
+    this.setup_svg = function() {
+        //this.reset_scales();
+        this.yScale = d3.scale.log().range([this.h - this.padding, this.padding]);
+        this.xScale = d3.scale.linear().range([this.padding_left, this.w - this.padding]);
 
         this.xAxis = d3.svg.axis().scale(this.xScale).orient("bottom").ticks(5)
             .tickSize(-(this.h - 2*this.padding), 0, 0)
@@ -343,7 +356,7 @@ function Histogram() {
     this.draw_axes = function() {
         // Update scales and draw the axes
         this.xScale.domain(d3.extent(this.map));
-        this.yScale.domain([0, d3.max(this.histogram, function(d) { return d.length; })]);
+        this.yScale.domain([1, d3.max(this.histogram, function(d) { return d.length; })]).nice();
 
         this.svg.select(".x.axis")
             .transition()
