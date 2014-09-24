@@ -306,7 +306,7 @@ function Histogram() {
         this.nbins = 20;
         this.bar_spacing = 1; // pixels
         this.y_scale_type = "linear";
-        this.set_time_limit(10);
+        this.set_time_limit(600);
 
         this.settings_menu.append("div").append("span").text("Bins:");
         this.nbins_input = this.settings_menu.append("input")

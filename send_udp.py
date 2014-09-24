@@ -18,14 +18,14 @@ i = 100
 while True:
     bias = i % 10
     ph.send('foo', random()*1.5+bias, 'The foo parameter description.',)
-    sleep(random()*1.5+0.1)
+    sleep(random()*0.3+0.1)
 
     bias = math.sin(i)*2
     ph.send('narf', random()*1.5+bias, 'The narf parameter description.',)
-    sleep(random()*1.5+0.1)
+    sleep(random()*0.2+0.1)
 
-    bias = math.sin(i)*2
+    bias = (math.sin(i) + 100)*2
     ph.send('bar.baz', random()*1.5+bias, 'The narf parameter description.',)
-    sleep(random()*1.5+0.1)
+    sleep(random()*0.2+0.1)
 
     i += 1
