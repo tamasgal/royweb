@@ -450,7 +450,7 @@ function Histogram() {
 
     this.redraw = function() {
         this.fetch_data();
-        this.map = self.data.map(function(i) { return i.value; });
+        this.map = self.data.map(function(i) { return parseFloat(i.value); });
         this.histogram = d3.layout.histogram().bins(this.nbins)(this.map);
         this.draw_axes();
         this.draw_bars();
