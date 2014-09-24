@@ -32,6 +32,13 @@ function Graph() {
         return this.title_field[0][0].value; // WHY??
     };
 
+    this.set_time_limit = function(time_limit) {
+        if(time_limit > 1) {
+            this.time_limit = time_limit;
+            this.time_limit_input.attr("value", time_limit);
+        }
+    };
+
     this.setup_html = function() {
         this.div = d3.select("#content").append("div").attr("class", "graph");
         this.title_field = this.div.append("div")
@@ -59,6 +66,8 @@ function Graph() {
 
 
     this.setup_menu = function() {
+        var self = this;
+
         var graph_div = this.menu_div.append("div").attr("class", "menu_item");
         var js = "roy.close_graph('" + this.id + "');";
         graph_div.append("h3").text("Graph");
@@ -79,11 +88,19 @@ function Graph() {
             .attr("class", "graph_settings")
             .text("Settings");
         this.settings_menu = settings_div.append("div");
+
+        this.settings_menu.append("div").append("span").text("Time limit:");
+        this.time_limit_input = this.settings_menu.append("input")
+            .attr("value", this.time_limit)
+            .on("input", function() {
+                self.set_time_limit(parseInt(this.value));
+            });
     };
 
     this.fetch_data = function() {
         // Get the parameter data for the last this.time_limit seconds
         var data = [];
+        var self = this;
         this.parameter_types.forEach(function(parameter_type) {
             var parameter_data = window.parameters[parameter_type];
             var filtered_data = parameter_data.filter(function(parameter) {
@@ -171,6 +188,7 @@ function TimePlot() {
         this.line_func = d3.svg.line()
             .x(function(d) { return self.xScale(d.time); })
             .y(function(d) { return self.yScale(d.value); });
+
     };
 
     this.parameter_setup = function(parameter_type) {
@@ -288,6 +306,7 @@ function Histogram() {
         this.nbins = 20;
         this.bar_spacing = 1; // pixels
         this.y_scale_type = "linear";
+        this.set_time_limit(10);
 
         this.settings_menu.append("div").append("span").text("Bins:");
         this.nbins_input = this.settings_menu.append("input")
@@ -295,6 +314,8 @@ function Histogram() {
             .on("input", function() {
                 self.set_nbins(parseInt(this.value));
             });
+
+
     };
 
     this.set_nbins = function(nbins) {
@@ -303,6 +324,8 @@ function Histogram() {
             self.nbins_input.attr("value", nbins);
         }
     };
+
+
 
     this.reset_scales = function() {
         switch (this.y_scale_type) {

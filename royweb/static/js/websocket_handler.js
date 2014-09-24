@@ -1,5 +1,5 @@
-window.limit = 1000; // maximum number of parameters to cache
-window.time_limit = 100; // maximum seconds to cache parameters
+window.limit = 5000; // maximum number of parameters to cache
+window.time_limit = 60*60*24; // maximum seconds to cache parameters
 window.graphs = [];
 window.parameter_types = [];
 window.parameters = new Object();
