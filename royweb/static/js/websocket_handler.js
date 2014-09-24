@@ -1,4 +1,4 @@
-window.limit = 5000; // maximum number of parameters to cache
+window.limit = 10000; // maximum number of parameters to cache
 window.time_limit = 60*60*24; // maximum seconds to cache parameters
 window.graphs = [];
 window.parameter_types = [];
