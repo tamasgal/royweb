@@ -193,7 +193,7 @@ function TimePlot() {
 
         this.line_func = d3.svg.line()
             .x(function(d) { return self.xScale(d.time); })
-            .y(function(d) { return self.yScale(d.value); });
+            .y(function(d) { return self.yScale(parseFloat(d.value)); });
 
     };
 
@@ -231,7 +231,7 @@ function TimePlot() {
                 return parameter.type == parameter_type;
             });
             if (self.fill_enabled) {
-                var min_value = d3.min(self.data, function(d) { return d.value; });
+                var min_value = d3.min(self.data, function(d) { return parseFloat(d.value); });
                 var first = {'type': parameter_type, 'value': min_value, 'time': data[0].time};
                 var last = {'type': parameter_type, 'value': min_value, 'time': data.slice(-1)[0].time};
                 data = [first].concat(data, last);
@@ -284,7 +284,7 @@ function TimePlot() {
     this.draw_axes = function() {
         // Update scales and draw the axes
         this.xScale.domain(d3.extent(self.data, function(d) { return d.time; }));
-        this.yScale.domain(d3.extent(self.data, function(d) { return d.value; }));
+        this.yScale.domain(d3.extent(self.data, function(d) { return parseFloat(d.value); }));
 
         this.svg.select(".x.axis")
             .transition()
