@@ -219,7 +219,7 @@ function TimePlot() {
             }
             var label = list_entry.append("label").attr("for", self.id + parameter_type);
             label.append("span"); // placeholder
-            label.append("strong").text(parameter_type);
+            label.append("strong").text(parameter_type).style("color", roy.parameter_color(parameter_type));
         });
     };
 
@@ -396,7 +396,7 @@ function Histogram() {
             }
             var label = list_entry.append("label").attr("for", self.id + parameter_type);
             label.append("span"); // placeholder
-            label.append("strong").text(parameter_type);
+            label.append("strong").text(parameter_type).style("color", roy.parameter_color(parameter_type));
         });
     };
 
