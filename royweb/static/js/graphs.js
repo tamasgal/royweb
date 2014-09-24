@@ -312,7 +312,7 @@ function Histogram() {
 
     this.setup_svg = function() {
         //this.reset_scales();
-        this.yScale = d3.scale.log().range([this.h - this.padding, this.padding]);
+        this.yScale = d3.scale.linear().range([this.h - this.padding, this.padding]);
         this.xScale = d3.scale.linear().range([this.padding_left, this.w - this.padding]);
 
         this.xAxis = d3.svg.axis().scale(this.xScale).orient("bottom").ticks(5)
