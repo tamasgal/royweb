@@ -366,7 +366,11 @@ function Histogram() {
             .append("rect")
             .attr("x", function(d) { return self.xScale(d.x); })
             .attr("y", function(d) { return self.yScale(d.y); })
-            .attr("width", function(d) { return self.xScale(x_min) - 2*self.padding_left + self.xScale(x_min + d.dx) - self.bar_spacing; })
+            .attr("width", function(d) {
+                var width =  self.xScale(x_min) - 2*self.padding_left + self.xScale(x_min + d.dx) - self.bar_spacing;
+                console.log("Bar width: " + width);
+                return width;
+            })
             .attr("height", function(d) { return (self.yScale(0) - self.yScale(d.y)); })
             //.attr("class", function(d) { return d.type; })
             //.attr("fill", function(d) { return self.parameter_color(d.type); });
@@ -376,11 +380,7 @@ function Histogram() {
             .duration(this.smoothness)
             .attr("x", function(d) { return self.xScale(d.x); })
             .attr("y", function(d) { return self.yScale(d.y); })
-            .attr("width", function(d) {
-                var width =  self.xScale(x_min) - 2*self.padding_left + self.xScale(x_min + d.dx) - self.bar_spacing;
-                console.log("Bar width: " + width);
-                return width;
-            })
+            .attr("width", function(d) { return self.xScale(x_min) - 2*self.padding_left + self.xScale(x_min + d.dx) - self.bar_spacing; })
             .attr("height", function(d) { return (self.yScale(0) - self.yScale(d.y)); });
 
         bars.exit()
