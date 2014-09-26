@@ -181,8 +181,47 @@ function TimePlot() {
         self.points_enabled = false;
         self.fill_enabled = false;
         self.line_enabled = true;
+        self.y_scale_type = "lin";
+
+        this.settings_menu.append("div").append("span").text("y-axis scale:");
+        this.y_scale_type_input = this.settings_menu.append("input")
+            .attr("value", this.y_scale_type)
+            .attr("type", "submit")
+            .on("click", function() {
+                self.switch_y_scale_type();
+                self.set_y_scale_type(this.value);
+            });
+
 
         self.x_label.text("time");
+    };
+
+    this.set_y_scale_type = function(scale_type) {
+        switch (scale_type) {
+            case "lin":
+                this.yScale = d3.scale.linear().range([this.h - this.padding, this.padding]);
+                this.y_scale_type = "lin";
+                this.y_scale_type_input.attr("value", "lin");
+                break;
+            case "log":
+                this.yScale = d3.scale.log().range([this.h - this.padding, this.padding]);
+                this.y_scale_type = "log";
+                this.y_scale_type_input.attr("value", "log");
+                break;
+        }
+        this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(5)
+            .tickSize(-(this.w - this.padding - this.padding_left), 0, 0);
+    };
+
+    this.switch_y_scale_type = function() {
+        switch (this.y_scale_type) {
+            case "lin":
+                this.set_y_scale_type("log");
+                break;
+            case "log":
+                this.set_y_scale_type("lin");
+                break;
+        }
     };
 
     this.setup_svg = function() {
@@ -349,7 +388,6 @@ function Histogram() {
         this.smoothness = 100;
         this.nbins = 20;
         this.bar_spacing = 1; // pixels
-        this.y_scale_type = "linear";
         this.set_time_limit(600);
 
         this.settings_menu.append("div").append("span").text("Bins:");
@@ -369,19 +407,6 @@ function Histogram() {
         }
     };
 
-
-
-    this.reset_scales = function() {
-        switch (this.y_scale_type) {
-            case "linear":
-                this.yScale = d3.scale.linear().range([this.h - this.padding, this.padding]);
-                break;
-            case "log":
-                this.yScale = d3.scale.log().range([this.h - this.padding, this.padding]);
-                break;
-        }
-        this.xScale = d3.scale.linear().range([this.padding_left, this.w - this.padding]);
-    };
 
     this.setup_svg = function() {
         //this.reset_scales();
