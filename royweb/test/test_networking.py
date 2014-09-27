@@ -19,8 +19,8 @@ class TestPacketHandler(unittest.TestCase):
 
     def test_json_message(self):
         ph = PacketHandler(ip='127.0.0.1', port=1)
-        message = ph.json_message("foo", 1, "desc")
-        expected = ('{"kind": "parameter", '
-                    '"type": "foo", "description": "desc", "value": 1}')
+        message = ph.json_message("foo", 1, "m", "desc")
+        expected = ('{"value": 1, "kind": "parameter", "type": "foo", '
+                    '"description": "desc", "unit": "m"}')
         assert(expected == message)
 
