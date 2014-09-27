@@ -209,7 +209,7 @@ function TimePlot() {
                 this.y_scale_type_input.attr("value", "log");
                 break;
         }
-        this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(5)
+        this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(8)
             .tickSize(-(this.w - this.padding - this.padding_left), 0, 0);
     };
 
@@ -236,7 +236,7 @@ function TimePlot() {
                                   .tickSize(-(this.h - 2*this.padding), 0, 0)
                                   .tickPadding(8)
                                   .tickFormat(timeFormat);
-        this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(5)
+        this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(8)
                                   .tickSize(-(this.w - this.padding - this.padding_left), 0, 0);
 
         this.svg.append("g")
@@ -416,7 +416,7 @@ function Histogram() {
         this.xAxis = d3.svg.axis().scale(this.xScale).orient("bottom").ticks(5)
             .tickSize(-(this.h - 2*this.padding), 0, 0)
             .tickPadding(8);
-        this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(5)
+        this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(8)
             .tickSize(-(this.w - this.padding - this.padding_left), 0, 0);
 
         this.svg.append("g")
