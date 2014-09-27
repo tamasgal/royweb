@@ -368,9 +368,14 @@ function TimePlot() {
         if(this.line_enabled) {
             this.draw_lines();
         }
+        var units = [];
         self.parameter_types.forEach(function(parameter_type) {
-            self.y_label.text(window.parameters[parameter_type][0].unit);
+            var unit = window.parameters[parameter_type][0].unit;
+            if(!roy.tools.includes(units, unit)) {
+                units.push(window.parameters[parameter_type][0].unit);
+            }
         });
+        self.y_label.text(units.join(', '));
     };
 
 
@@ -505,9 +510,16 @@ function Histogram() {
         this.histogram = d3.layout.histogram().bins(this.nbins)(this.map);
         this.draw_axes();
         this.draw_bars();
+
+        var units = [];
         self.parameter_types.forEach(function(parameter_type) {
-            self.x_label.text(window.parameters[parameter_type][0].unit);
+            var unit = window.parameters[parameter_type][0].unit;
+            if(!roy.tools.includes(units, unit)) {
+                units.push(window.parameters[parameter_type][0].unit);
+            }
         });
+        self.x_label.text(units.join(', '));
+
     };
 
 
