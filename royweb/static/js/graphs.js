@@ -54,6 +54,13 @@ function Graph() {
             .attr("width", this.w)
             .attr("height", this.h)
             .attr("id", this.id);
+
+        this.tooltip = this.div.append('div')
+            .style('position', 'absolute')
+            .style('background', '#000000')
+            .style('padding', '3px')
+            .style('color', '#ffffff')
+            .style('opacity', .0);
     };
 
     this.close = function() {
@@ -310,6 +317,17 @@ function TimePlot() {
                           return "none";
                       }
                   })
+                  .on('mouseover', function(d) {
+                      self.tooltip.text(parameter_type)
+                          .style('opacity', 0.9)
+                          .style('left', (d3.event.pageX - 190) + 'px')
+                          .style('top', (d3.event.pageY - 60) + 'px');
+                      d3.select(this).style("stroke-width", 3);
+                  })
+                  .on('mouseout', function(d) {
+                      self.tooltip.style('opacity', 0.0);
+                      d3.select(this).style("stroke-width", 1);
+                  })
                   .transition()
                   .ease("linear")
                   .duration(self.smoothness)
@@ -492,9 +510,17 @@ function Histogram() {
             .attr("fill", "#2688D3")
             .on('mouseover', function(d) {
                 d3.select(this).style('opacity', 0.5);
+                self.tooltip.text(d.y)
+                    .style('opacity', 0.9)
+                    .style('left', (d3.event.pageX - 190) + 'px')
+                    .style('top', (d3.event.pageY - 60) + 'px');
             })
             .on('mouseout', function(d) {
                 d3.select(this).style('opacity', 1.0);
+                self.tooltip.style('opacity', 0.0);
+            })
+            .on('click', function() {
+
             });
 
         bars.transition()
