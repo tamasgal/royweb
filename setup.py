@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='royweb',
-      version='0.6.2',
+      version='0.6.3',
       url='http://github.com/tamasgal/royweb/',
       description='Restless Oyster online monitoring tool',
       author='Tamas Gal',
