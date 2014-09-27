@@ -10,6 +10,9 @@ function Graph() {
         this.padding_left = 75;
         this.smoothness = 0; // transition time in ms. Not ready yet
 
+        this.y_min = null;
+        this.y_max = null;
+
         this.setup_html();
         this.setup_svg();
         this.setup_labels();
@@ -18,19 +21,19 @@ function Graph() {
 
         window.graphs.push(this);
         this.parameter_types = [];
-        this.set_title("Untitled");
+        this.set_title("untitled");
         this.refresh_parameter_list();
     };
 
     this.setup = function() {};
 
     this.set_title = function(title) {
-        // Update the H2 field of the graph.
+        // update the h2 field of the graph.
         this.title_field.attr("value", title);
     };
 
     this.get_title = function() {
-        return this.title_field[0][0].value; // WHY??
+        return this.title_field[0][0].value; // why??
     };
 
     this.set_time_limit = function(time_limit) {
@@ -39,6 +42,8 @@ function Graph() {
             this.time_limit_input.attr("value", time_limit);
         }
     };
+    this.set_y_min = function(y_min) {};
+    this.set_y_max = function(y_max) {};
 
     this.setup_html = function() {
         this.div = d3.select("#content").append("div").attr("class", "graph");
@@ -199,6 +204,18 @@ function TimePlot() {
                 self.set_y_scale_type(this.value);
             });
 
+        this.settings_menu.append('div').append('span').text('y-min:');
+        this.y_min_input = this.settings_menu.append('input')
+            .attr('value', this.y_min)
+            .on('input', function() {
+                self.set_y_min(this.value);
+            });
+        this.settings_menu.append('div').append('span').text('y-max:');
+        this.y_max_input = this.settings_menu.append('input')
+            .attr('value', this.y_max)
+            .on('input', function() {
+                self.set_y_max(this.value);
+            });
 
         self.x_label.text("time");
     };
@@ -229,6 +246,14 @@ function TimePlot() {
                 this.set_y_scale_type("lin");
                 break;
         }
+    };
+
+    this.set_y_min = function(y_min) {
+        this.y_min = parseFloat(y_min);
+    };
+
+    this.set_y_max = function(y_max) {
+        this.y_max = parseFloat(y_max);
     };
 
     this.setup_svg = function() {
@@ -364,7 +389,10 @@ function TimePlot() {
     this.draw_axes = function() {
         // Update scales and draw the axes
         this.xScale.domain(d3.extent(self.data, function(d) { return d.time; }));
-        this.yScale.domain(d3.extent(self.data, function(d) { return parseFloat(d.value); }));
+        //this.yScale.domain(d3.extent(self.data, function(d) { return parseFloat(d.value); }));
+        var y_min = parseFloat(this.y_min) || d3.min(self.data, function(d) { return parseFloat(d.value) });
+        var y_max = parseFloat(this.y_max) || d3.max(self.data, function(d) { return parseFloat(d.value) });
+        this.yScale.domain([y_min, y_max]);
 
         this.svg.select(".x.axis")
             .transition()
