@@ -489,7 +489,13 @@ function Histogram() {
             .attr("height", function(d) { return (self.yScale(0) - self.yScale(d.y)); })
             //.attr("class", function(d) { return d.type; })
             //.attr("fill", function(d) { return self.parameter_color(d.type); });
-            .attr("fill", "#2688D3");
+            .attr("fill", "#2688D3")
+            .on('mouseover', function(d) {
+                d3.select(this).style('opacity', 0.5);
+            })
+            .on('mouseout', function(d) {
+                d3.select(this).style('opacity', 1.0);
+            });
 
         bars.transition()
             .duration(this.smoothness)
