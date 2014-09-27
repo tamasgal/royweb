@@ -509,18 +509,19 @@ function Histogram() {
             //.attr("fill", function(d) { return self.parameter_color(d.type); });
             .attr("fill", "#2688D3")
             .on('mouseover', function(d) {
-                d3.select(this).style('opacity', 0.5);
+                d3.select(this).attr('fill', '#FF5179');
+                //d3.select(this).style('opacity', 0.5);
                 self.tooltip.text(d.y)
                     .style('opacity', 0.9)
                     .style('left', (d3.event.pageX - 190) + 'px')
                     .style('top', (d3.event.pageY - 60) + 'px');
             })
             .on('mouseout', function(d) {
-                d3.select(this).style('opacity', 1.0);
+                d3.select(this).attr('fill', '#2688D3');
+                //d3.select(this).style('opacity', 1.0);
                 self.tooltip.style('opacity', 0.0);
             })
             .on('click', function() {
-
             });
 
         bars.transition()
