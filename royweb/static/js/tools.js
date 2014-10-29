@@ -86,6 +86,7 @@ var roy = {
                     graph_data['nbins'] = graph.nbins;
                 }
                 graph_data['time_limit'] = graph.time_limit;
+                graph_data['y_scale_type'] = graph.y_scale_type;
                 graph_data['parameter_types'] = graph.parameter_types;
                 json_data['graphs'].push(graph_data);
                 console.log("Saving " + graph.type);

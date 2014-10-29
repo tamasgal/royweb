@@ -45,6 +45,7 @@ ws.onmessage = function (evt) {
             }
 
             new_graph.set_title(graph.title);
+            new_graph.set_y_scale_type(graph.y_scale_type);
             new_graph.set_time_limit(graph.time_limit);
             graph.parameter_types.forEach(function(parameter_type) {
                 new_graph.register_parameter_type(parameter_type);

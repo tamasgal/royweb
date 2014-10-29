@@ -1,5 +1,5 @@
 function Graph() {
-    // The one and only Graph. Use it only for prototypes!
+    // The one and only Graph. Use it only as prototype!
 
     this.init = function() {
         this.id = roy.tools.guid();
@@ -183,7 +183,7 @@ function Graph() {
 
 
 function TimePlot() {
-    // A graph, which automatically adds itself to the content-DIV
+    // A simple value vs. time plot
     // a = typeof a !== 'undefined' ? a : 42;
 
     var self = this;
@@ -440,12 +440,22 @@ function Histogram() {
         this.nbins = 20;
         this.bar_spacing = 1; // pixels
         this.set_time_limit(600);
+        self.y_scale_type = "lin";
 
         this.settings_menu.append("div").append("span").text("Bins:");
         this.nbins_input = this.settings_menu.append("input")
             .attr("value", this.nbins)
             .on("input", function() {
                 self.set_nbins(parseInt(this.value));
+            });
+
+        this.settings_menu.append("div").append("span").text("y-axis scale:");
+        this.y_scale_type_input = this.settings_menu.append("input")
+            .attr("value", this.y_scale_type)
+            .attr("type", "submit")
+            .on("click", function() {
+                self.switch_y_scale_type();
+                self.set_y_scale_type(this.value);
             });
 
         this.y_label.text("Count");
@@ -502,10 +512,49 @@ function Histogram() {
         });
     };
 
+
+    this.set_y_scale_type = function(scale_type) {
+        switch (scale_type) {
+            case "lin":
+                this.yScale = d3.scale.linear().range([this.h - this.padding, this.padding]);
+                this.y_scale_type = "lin";
+                this.y_scale_type_input.attr("value", "lin");
+                break;
+            case "log":
+                this.yScale = d3.scale.log().range([this.h - this.padding, this.padding]);
+                this.y_scale_type = "log";
+                this.y_scale_type_input.attr("value", "log");
+                break;
+        }
+        this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(8)
+            .tickSize(-(this.w - this.padding - this.padding_left), 0, 0);
+    };
+
+    this.switch_y_scale_type = function() {
+        switch (this.y_scale_type) {
+            case "lin":
+                this.set_y_scale_type("log");
+                break;
+            case "log":
+                this.set_y_scale_type("lin");
+                break;
+        }
+    };
+
+
     this.draw_axes = function() {
         // Update scales and draw the axes
         this.xScale.domain(d3.extent(this.map));
-        this.yScale.domain([0, d3.max(this.histogram, function(d) { return d.length; })]);
+        if (this.y_scale_type == 'lin') {
+            this.yScale.domain([0, d3.max(this.histogram, function(d) {
+                return d.length;
+            })]);
+        }
+        if (this.y_scale_type == 'log') {
+            this.yScale.domain([1, d3.max(this.histogram, function(d) {
+                return d.length;
+            })]);
+        }
 
         this.svg.select(".x.axis")
             .transition()
@@ -516,6 +565,22 @@ function Histogram() {
             .duration(this.smoothness)
             .call(this.yAxis)
     };
+
+    this.histo_y = function(d) {
+        if (d.y < 1) {
+            return this.h - this.padding;
+        } else {
+            return self.yScale(d.y);
+        }
+    }
+
+    this.histo_height = function(d) {
+        if (d.y < 1) {
+            return 0;
+        } else {
+            return (this.h - this.padding - self.yScale(d.y));
+        }
+    }
 
     this.draw_bars = function() {
         // Draw the bars for each parameter_type
@@ -530,9 +595,9 @@ function Histogram() {
         bars.enter()
             .append("rect")
             .attr("x", function(d) { return self.xScale(d.x); })
-            .attr("y", function(d) { return self.yScale(d.y); })
+            .attr("y", function(d) { return self.histo_y(d); })
             .attr("width", bar_width)
-            .attr("height", function(d) { return (self.yScale(0) - self.yScale(d.y)); })
+            .attr("height", function(d) { return self.histo_height(d); })
             //.attr("class", function(d) { return d.type; })
             //.attr("fill", function(d) { return self.parameter_color(d.type); });
             .attr("fill", "#2688D3")
@@ -555,9 +620,9 @@ function Histogram() {
         bars.transition()
             .duration(this.smoothness)
             .attr("x", function(d) { return self.xScale(d.x); })
-            .attr("y", function(d) { return self.yScale(d.y); })
+            .attr("y", function(d) { return self.histo_y(d); })
             .attr("width", bar_width)
-            .attr("height", function(d) { return (self.yScale(0) - self.yScale(d.y)); });
+            .attr("height", function(d) { return self.histo_height(d); });
 
         bars.exit()
             .transition()
