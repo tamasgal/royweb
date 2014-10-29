@@ -20,12 +20,16 @@ while True:
     ph.send('foo', value, 'MHz', 'The foo parameter description.',)
     sleep(random()*0.2+0.1)
 
-    bias = math.sin(i)*2
-    ph.send('narf', random()*1.5+bias, 'kHz', 'The narf parameter description.',)
+    value = 50000 - 10 + random()*20
+    ph.send('bar', value, 'kHz', 'The bar parameter description.',)
     sleep(random()*0.2+0.1)
 
-    bias = (math.sin(i) + 100)*2
-    ph.send('bar.baz', random()*1.5+bias, 'm', 'The narf parameter description.',)
+    value = 1000 - 500 + random()*500
+    ph.send('narf', value, 'kHz', 'The narf parameter description.',)
+    sleep(random()*0.2+0.1)
+
+    value = 100 - 50 + random()*50
+    ph.send('bar.baz', value, 'm', 'The narf parameter description.',)
     sleep(random()*0.2+0.1)
 
     i += 1
