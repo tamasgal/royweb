@@ -10,6 +10,8 @@ function Graph() {
         this.padding_left = 75;
         this.smoothness = 0; // transition time in ms. Not ready yet
 
+        this.x_min = null;
+        this.x_max = null;
         this.y_min = null;
         this.y_max = null;
 
@@ -42,6 +44,8 @@ function Graph() {
             this.time_limit_input.attr("value", time_limit);
         }
     };
+    this.set_x_min = function(x_min) {};
+    this.set_x_max = function(x_max) {};
     this.set_y_min = function(y_min) {};
     this.set_y_max = function(y_max) {};
 
@@ -449,6 +453,32 @@ function Histogram() {
                 self.set_nbins(parseInt(this.value));
             });
 
+        this.settings_menu.append('div').append('span').text('x-min:');
+        this.x_min_input = this.settings_menu.append('input')
+            .attr('value', this.x_min)
+            .on('input', function() {
+                self.set_x_min(this.value);
+            });
+        this.settings_menu.append('div').append('span').text('x-max:');
+        this.x_max_input = this.settings_menu.append('input')
+            .attr('value', this.x_max)
+            .on('input', function() {
+                self.set_x_max(this.value);
+            });
+
+        this.settings_menu.append('div').append('span').text('y-min:');
+        this.y_min_input = this.settings_menu.append('input')
+            .attr('value', this.y_min)
+            .on('input', function() {
+                self.set_y_min(this.value);
+            });
+        this.settings_menu.append('div').append('span').text('y-max:');
+        this.y_max_input = this.settings_menu.append('input')
+            .attr('value', this.y_max)
+            .on('input', function() {
+                self.set_y_max(this.value);
+            });
+
         this.settings_menu.append("div").append("span").text("y-axis scale:");
         this.y_scale_type_input = this.settings_menu.append("input")
             .attr("value", this.y_scale_type)
@@ -466,6 +496,22 @@ function Histogram() {
             self.nbins = nbins;
             self.nbins_input.attr("value", nbins);
         }
+    };
+
+    this.set_x_min = function(x_min) {
+        this.x_min = parseFloat(x_min);
+    };
+
+    this.set_x_max = function(x_max) {
+        this.x_max = parseFloat(x_max);
+    };
+
+    this.set_y_min = function(y_min) {
+        this.y_min = parseFloat(y_min);
+    };
+
+    this.set_y_max = function(y_max) {
+        this.y_max = parseFloat(y_max);
     };
 
 
@@ -544,16 +590,31 @@ function Histogram() {
 
     this.draw_axes = function() {
         // Update scales and draw the axes
-        this.xScale.domain(d3.extent(this.map));
+        
+        var x_min = parseFloat(this.x_min) || d3.min(this.map);
+        var x_max = parseFloat(this.x_max) || d3.max(this.map);
+        this.xScale.domain(d3.extent([x_min, x_max]));
         if (this.y_scale_type == 'lin') {
-            this.yScale.domain([0, d3.max(this.histogram, function(d) {
-                return d.length;
-            })]);
+            var y_min = parseFloat(this.y_min) || 0;
+            var y_max = parseFloat(this.y_max) || d3.max(this.histogram, function(d) { return d.length; }); 
+            if (y_min < 0) {
+                y_min = 1;
+            }
+            if (y_max < y_min) {
+                y_max = y_min + 1;
+            } 
+            this.yScale.domain([y_min, y_max]); 
         }
         if (this.y_scale_type == 'log') {
-            this.yScale.domain([1, d3.max(this.histogram, function(d) {
-                return d.length;
-            })]);
+            var y_min = parseFloat(this.y_min) || 1;
+            var y_max = parseFloat(this.y_max) || d3.max(this.histogram, function(d) { return d.length; }); 
+            if (y_min < 1) {
+                y_min = 1;
+            }
+            if (y_max < y_min) {
+                y_max = y_min + 1;
+            } 
+            this.yScale.domain([y_min, y_max]);
         }
 
         this.svg.select(".x.axis")
@@ -575,7 +636,7 @@ function Histogram() {
     }
 
     this.histo_height = function(d) {
-        if (d.y < 1) {
+        if (d.y < 1 || self.xScale(d.x) < this.padding_left)  {
             return 0;
         } else {
             return (this.h - this.padding - self.yScale(d.y));
@@ -632,7 +693,9 @@ function Histogram() {
 
     this.redraw = function() {
         this.fetch_data();
-        this.map = self.data.map(function(i) { return parseFloat(i.value); });
+        this.map = self.data.map(function(i) {
+            return parseFloat(i.value);
+        });
         this.histogram = d3.layout.histogram().bins(this.nbins)(this.map);
         this.draw_axes();
         this.draw_bars();
