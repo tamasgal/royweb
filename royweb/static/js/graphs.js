@@ -654,3 +654,122 @@ function Histogram() {
 
 Histogram.prototype = new Graph();
 
+
+function Equaliser() {
+    var self = this;
+    self.type = "equaliser";
+
+    this.setup = function() {
+        this.smoothness = 100;
+        this.bar_spacing = 1; // pixels
+        this.set_time_limit(600);
+        this.y_label.text('');
+    };
+
+
+    this.setup_svg = function() {
+        //this.reset_scales();
+        this.yScale = d3.scale.linear().range([this.h - this.padding, this.padding]);
+        this.xScale = d3.scale.linear().range([this.padding_left, this.w - this.padding]);
+
+        this.xAxis = d3.svg.axis().scale(this.xScale).orient("bottom").ticks(5)
+            .tickSize(-(this.h - 2*this.padding), 0, 0)
+            .tickPadding(8);
+        this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(8)
+            .tickSize(-(this.w - this.padding - this.padding_left), 0, 0);
+
+        this.svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + (this.h - this.padding) + ")")
+            .call(this.xAxis);
+        this.svg.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(" + this.padding_left + ",0)")
+            .call(this.yAxis);
+
+        this.bars = this.svg.append("g")
+            .attr("class", "bars");
+    };
+
+    this.refresh_parameter_list = function() {
+        // Update the parameter selection menu
+        this.parameter_selection.text("");
+        window.parameter_types.forEach(function(parameter_type) {
+            var js = "roy.toggle_parameter_type('" + self.id + "', '" + parameter_type + "');";
+            var list_entry = self.parameter_selection.append("li");
+            var checkbox = list_entry.append("input")
+                .attr("type", "checkbox")
+                .attr("id", self.id + parameter_type)
+                .attr("onclick", js);
+            if(roy.tools.includes(self.parameter_types, parameter_type)) {
+                checkbox.property("checked", true);
+            }
+            var label = list_entry.append("label").attr("for", self.id + parameter_type);
+            label.append("span"); // placeholder
+            label.append("strong").text(parameter_type).style("color", roy.parameter_color(parameter_type));
+        });
+    };
+
+
+
+    this.draw_axes = function() {
+        // Update scales and draw the axes
+        this.xScale.domain([0, 10]);
+        this.yScale.domain([0, 10]);
+
+        this.svg.select(".x.axis")
+            .transition()
+            .duration(this.smoothness)
+            .call(this.xAxis);
+        this.svg.select(".y.axis")
+            .transition()
+            .duration(this.smoothness)
+            .call(this.yAxis)
+    };
+
+
+    this.draw_bars = function() {
+        // Draw the bars for each parameter_type
+
+        bars.enter()
+            .append("rect")
+            .attr("x", function(d) { return self.xScale(d.x); })
+            .attr("y", function(d) { return self.histo_y(d); })
+            .attr("width", bar_width)
+            .attr("height", function(d) { return self.histo_height(d); })
+            .attr("fill", function(d) { return self.parameter_color(d.type); });
+
+        bars.transition()
+            .duration(this.smoothness)
+            .attr("x", function(d) { return self.xScale(d.x); })
+            .attr("y", function(d) { return self.histo_y(d); })
+            .attr("width", bar_width)
+            .attr("height", function(d) { return self.histo_height(d); });
+
+        bars.exit()
+            .transition()
+            .duration(this.smoothness)
+            .remove();
+    };
+
+    this.redraw = function() {
+        this.fetch_data();
+        this.draw_axes();
+        this.draw_bars();
+
+        var units = [];
+        self.parameter_types.forEach(function(parameter_type) {
+            var unit = window.parameters[parameter_type][0].unit;
+            if(!roy.tools.includes(units, unit)) {
+                units.push(window.parameters[parameter_type][0].unit);
+            }
+        });
+        self.y_label.text(units.join(', '));
+
+    };
+
+
+    this.init();
+}
+
+Equaliser.prototype = new Graph();
