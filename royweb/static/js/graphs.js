@@ -711,16 +711,9 @@ function Equaliser() {
         this.yScale = d3.scale.linear().range([this.h - this.padding, this.padding]);
         this.xScale = d3.scale.linear().range([this.padding_left, this.w - this.padding]);
 
-        this.xAxis = d3.svg.axis().scale(this.xScale).orient("bottom").ticks(5)
-            .tickSize(-(this.h - 2*this.padding), 0, 0)
-            .tickPadding(8);
         this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(8)
             .tickSize(-(this.w - this.padding - this.padding_left), 0, 0);
 
-        this.svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + (this.h - this.padding) + ")")
-            .call(this.xAxis);
         this.svg.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate(" + this.padding_left + ",0)")
@@ -756,10 +749,6 @@ function Equaliser() {
         this.xScale.domain([0, self.data.length]);
         this.yScale.domain(d3.extent(self.data, function(d) { return parseFloat(d.value); }));
 
-        this.svg.select(".x.axis")
-            .transition()
-            .duration(this.smoothness)
-            .call(this.xAxis);
         this.svg.select(".y.axis")
             .transition()
             .duration(this.smoothness)
