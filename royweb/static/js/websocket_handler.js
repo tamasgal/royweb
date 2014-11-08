@@ -40,6 +40,9 @@ ws.onmessage = function (evt) {
                     var new_graph = new Histogram();
                     new_graph.set_nbins(graph.nbins);
                     break;
+                case "equaliser":
+                    var new_graph = new Equaliser();
+                    break;
                 default:
                     log_message("Received invalid graph type '" + graph.type + "'");
             }
