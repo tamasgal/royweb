@@ -663,9 +663,48 @@ function Equaliser() {
         this.smoothness = 100;
         this.bar_spacing = 1; // pixels
         this.set_time_limit(600);
+        self.y_scale_type = "lin";
         this.y_label.text('');
+        self.x_label.text('Parameters');
+
+        this.settings_menu.append("div").append("span").text("y-axis scale:");
+        this.y_scale_type_input = this.settings_menu.append("input")
+            .attr("value", this.y_scale_type)
+            .attr("type", "submit")
+            .on("click", function() {
+                self.switch_y_scale_type();
+                self.set_y_scale_type(this.value);
+            });
     };
 
+
+    this.set_y_scale_type = function(scale_type) {
+        switch (scale_type) {
+            case "lin":
+                this.yScale = d3.scale.linear().range([this.h - this.padding, this.padding]);
+                this.y_scale_type = "lin";
+                this.y_scale_type_input.attr("value", "lin");
+                break;
+            case "log":
+                this.yScale = d3.scale.log().range([this.h - this.padding, this.padding]);
+                this.y_scale_type = "log";
+                this.y_scale_type_input.attr("value", "log");
+                break;
+        }
+        this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(8)
+            .tickSize(-(this.w - this.padding - this.padding_left), 0, 0);
+    };
+
+    this.switch_y_scale_type = function() {
+        switch (this.y_scale_type) {
+            case "lin":
+                this.set_y_scale_type("log");
+                break;
+            case "log":
+                this.set_y_scale_type("lin");
+                break;
+        }
+    };
 
     this.setup_svg = function() {
         //this.reset_scales();
@@ -714,8 +753,8 @@ function Equaliser() {
 
     this.draw_axes = function() {
         // Update scales and draw the axes
-        this.xScale.domain([0, 10]);
-        this.yScale.domain([0, 10]);
+        this.xScale.domain([0, self.data.length]);
+        this.yScale.domain(d3.extent(self.data, function(d) { return parseFloat(d.value); }));
 
         this.svg.select(".x.axis")
             .transition()
@@ -727,25 +766,47 @@ function Equaliser() {
             .call(this.yAxis)
     };
 
+    this.bar_y = function(d) {
+        if (d.value < 1) {
+            return this.h - this.padding;
+        } else {
+            return self.yScale(d.value);
+        }
+    }
+
+    this.bar_height = function(d) {
+        if (d.value < 1) {
+            return 0;
+        } else {
+            return (this.h - this.padding - self.yScale(d.value));
+        }
+    }
 
     this.draw_bars = function() {
         // Draw the bars for each parameter_type
+        var bars = this.bars.selectAll("rect")
+            .data(this.data, function(d, i) { return i; });
+
+        var bar_width = (self.w - self.padding_left - self.padding) / self.data.length - self.bar_spacing;
+        if (bar_width < 1) {
+            bar_width = 1;
+        }
 
         bars.enter()
             .append("rect")
-            .attr("x", function(d) { return self.xScale(d.x); })
-            .attr("y", function(d) { return self.histo_y(d); })
+            .attr("x", function(d, i) { return self.xScale(i); })
+            .attr("y", function(d) { return self.bar_y(d); })
             .attr("width", bar_width)
-            .attr("height", function(d) { return self.histo_height(d); })
+            .attr("height", function(d) { return self.bar_height(d); })
             .attr("fill", function(d) { return self.parameter_color(d.type); });
 
         bars.transition()
             .duration(this.smoothness)
-            .attr("x", function(d) { return self.xScale(d.x); })
-            .attr("y", function(d) { return self.histo_y(d); })
+            .attr("x", function(d, i) { return self.xScale(i); })
+            .attr("y", function(d) { return self.bar_y(d); })
             .attr("width", bar_width)
-            .attr("height", function(d) { return self.histo_height(d); });
-
+            .attr("height", function(d) { return self.bar_height(d); })
+            .attr("fill", function(d) { return self.parameter_color(d.type); });
         bars.exit()
             .transition()
             .duration(this.smoothness)
@@ -768,6 +829,18 @@ function Equaliser() {
 
     };
 
+    this.fetch_data = function() {
+        var data = [];
+        var self = this;
+        this.parameter_types.forEach(function(parameter_type) {
+            var parameter_data = window.parameters[parameter_type];
+            if (parameter_data) {
+                var last_parameter_data = parameter_data.slice(-1)[0]
+                data = data.concat(last_parameter_data);
+            }
+        });
+        this.data = data;
+    };
 
     this.init();
 }
