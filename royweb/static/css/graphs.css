@@ -80,9 +80,6 @@ div.graph {
 
 .axis path,
 .axis line {
-        fill: none;
-        stroke: black;
-        shape-rendering: crispEdges;
 }
 
 .axis text {
@@ -91,19 +88,19 @@ div.graph {
 
 .x.axis line,
 .y.axis line {
-    stroke: lightgrey;
+    /*stroke: lightgrey;*/
 }
 
 .x.axis .minor,
 .x.axis .minor {
-    stroke-opacity: .5;
+    /*stroke-opacity: .5;*/
 }
 
 path.line {
-    stroke-width: 1px;
+/*    stroke-width: 1px; */
 /*    stroke: #FDF6E3; */
 /*    fill: none; */
-    fill-opacity: .5;
+/*    fill-opacity: .5; */
 }
 
 /* CHECKBOX */
