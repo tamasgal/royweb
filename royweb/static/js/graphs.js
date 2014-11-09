@@ -667,6 +667,19 @@ function Equaliser() {
         this.y_label.text('');
         self.x_label.text('Parameters');
 
+        this.settings_menu.append('div').append('span').text('y-min:');
+        this.y_min_input = this.settings_menu.append('input')
+            .attr('value', this.y_min)
+            .on('input', function() {
+                self.set_y_min(this.value);
+            });
+        this.settings_menu.append('div').append('span').text('y-max:');
+        this.y_max_input = this.settings_menu.append('input')
+            .attr('value', this.y_max)
+            .on('input', function() {
+                self.set_y_max(this.value);
+            });
+
         this.settings_menu.append("div").append("span").text("y-axis scale:");
         this.y_scale_type_input = this.settings_menu.append("input")
             .attr("value", this.y_scale_type)
@@ -705,6 +718,16 @@ function Equaliser() {
                 break;
         }
     };
+
+
+    this.set_y_min = function(y_min) {
+        this.y_min = parseFloat(y_min);
+    };
+
+    this.set_y_max = function(y_max) {
+        this.y_max = parseFloat(y_max);
+    };
+
 
     this.setup_svg = function() {
         //this.reset_scales();
@@ -747,7 +770,11 @@ function Equaliser() {
     this.draw_axes = function() {
         // Update scales and draw the axes
         this.xScale.domain([0, self.data.length]);
-        this.yScale.domain(d3.extent(self.data, function(d) { return parseFloat(d.value); }));
+        //this.yScale.domain(d3.extent(self.data, function(d) { return parseFloat(d.value); }));
+
+        var y_min = parseFloat(this.y_min) || d3.min(self.data, function(d) { return parseFloat(d.value) });
+        var y_max = parseFloat(this.y_max) || d3.max(self.data, function(d) { return parseFloat(d.value) });
+        this.yScale.domain([y_min, y_max]);
 
         this.svg.select(".y.axis")
             .transition()
