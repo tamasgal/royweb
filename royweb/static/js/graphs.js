@@ -58,7 +58,9 @@ function Graph() {
         this.svg = this.div.append("svg")
             .attr("width", this.w)
             .attr("height", this.h)
-            .attr("id", this.id);
+            .attr("id", 'svg' + this.id)
+            .style('font-family', 'sans-serif')
+            .style('font-size', '10px');
 
         this.tooltip = this.div.append('div')
             .style('position', 'absolute')
@@ -82,10 +84,14 @@ function Graph() {
         var self = this;
 
         var graph_div = this.menu_div.append("div").attr("class", "menu_item");
-        var js = "roy.close_graph('" + this.id + "');";
+        var js_close_graph = "roy.close_graph('" + this.id + "');";
         graph_div.append("h3").text("Graph");
         graph_div.append("div").attr("class", "menu_button").append("a").text("Close")
-            .attr("onclick", js);
+            .attr("onclick", js_close_graph);
+        var js_export_graph = "roy.export_graph('" + this.id + "');";
+        this.export_button = graph_div.append("div").attr("class", "menu_button").append("a").text("Export")
+            .attr("onmouseover", js_export_graph)
+            .attr("id", 'export_button' + this.id);
 
         var parameter_selection_div = this.menu_div.append("div")
             .attr("class", "menu_item");
@@ -271,14 +277,27 @@ function TimePlot() {
         this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(8)
                                   .tickSize(-(this.w - this.padding - this.padding_left), 0, 0);
 
-        this.svg.append("g")
+        var x_axis_dom = this.svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + (this.h - this.padding) + ")")
             .call(this.xAxis);
-        this.svg.append("g")
+
+        var y_axis_dom = this.svg.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate(" + this.padding_left + ",0)")
             .call(this.yAxis);
+
+        x_axis_dom.selectAll('.domain')
+            .attr('stroke', 'black')
+            .attr('shape-rendering', 'crispEdges');
+        x_axis_dom.selectAll('line')
+            .attr('stroke', 'red')
+            .attr('stroke-width', '2px')
+            .attr('stroke-opacity', 1.0);
+
+        y_axis_dom.selectAll('.domain')
+            .attr('stroke', 'black')
+            .attr('shape-rendering', 'crispEdges');
 
         this.lines = this.svg.append("g")
             .attr("class", "lines");
@@ -480,14 +499,22 @@ function Histogram() {
         this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(8)
             .tickSize(-(this.w - this.padding - this.padding_left), 0, 0);
 
-        this.svg.append("g")
+        var x_axis_dom = this.svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + (this.h - this.padding) + ")")
             .call(this.xAxis);
-        this.svg.append("g")
+        var y_axis_dom = this.svg.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate(" + this.padding_left + ",0)")
             .call(this.yAxis);
+
+        x_axis_dom.selectAll('.domain')
+            .attr('stroke', 'black')
+            .attr('shape-rendering', 'crispEdges');
+
+        y_axis_dom.selectAll('.domain')
+            .attr('stroke', 'black')
+            .attr('shape-rendering', 'crispEdges');
 
         this.bars = this.svg.append("g")
             .attr("class", "bars");
@@ -737,10 +764,14 @@ function Equaliser() {
         this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(8)
             .tickSize(-(this.w - this.padding - this.padding_left), 0, 0);
 
-        this.svg.append("g")
+        var y_axis_dom = this.svg.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate(" + this.padding_left + ",0)")
             .call(this.yAxis);
+
+        y_axis_dom.selectAll('.domain')
+            .attr('stroke', 'black')
+            .attr('shape-rendering', 'crispEdges');
 
         this.bars = this.svg.append("g")
             .attr("class", "bars");

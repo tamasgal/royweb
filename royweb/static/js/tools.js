@@ -71,6 +71,33 @@ var roy = {
             }
         });
     },
+    export_graph: function(graph_id) {
+        window.graphs.forEach(function(graph) {
+            if(graph.id == graph_id) {
+                //get svg element.
+                var svg = document.getElementById('svg' + graph_id);
+
+                //get svg source.
+                var serializer = new XMLSerializer();
+                var source = serializer.serializeToString(svg);
+
+                //add name spaces.
+                if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
+                    source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+                }
+                if(!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)){
+                    source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+                }
+
+                //add xml declaration
+                source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+
+                //convert svg source to URI data scheme.
+                var url = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(source);
+                document.getElementById('export_button' + graph_id).href = url;
+            }
+        });
+    },
     save_session: function() {
         var session_name = prompt("Please enter a name for the session.", "");
         if (session_name != null) {
