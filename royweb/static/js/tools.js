@@ -32,6 +32,7 @@ var roy = {
             return uuid;
         },
         escaped: function(string) {
+            // Escapes . with _ to be able to use it as HTML-id
             return string.replace(/\./g,'_')
         },
         color: function(i) {
