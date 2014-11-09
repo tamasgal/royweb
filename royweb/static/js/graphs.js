@@ -814,7 +814,18 @@ function Equaliser() {
             .attr("y", function(d) { return self.bar_y(d); })
             .attr("width", bar_width)
             .attr("height", function(d) { return self.bar_height(d); })
-            .attr("fill", function(d) { return self.parameter_color(d.type); });
+            .attr("fill", function(d) { return self.parameter_color(d.type); })
+            .on('mouseover', function(d) {
+                d3.select(this).style('opacity', 0.8);
+                self.tooltip.text(d.type)
+                    .style('opacity', 1.0)
+                    .style('left', (d3.event.pageX - 190) + 'px')
+                    .style('top', (d3.event.pageY - 60) + 'px');
+            })
+            .on('mouseout', function(d) {
+                d3.select(this).style('opacity', 1.0);
+                self.tooltip.style('opacity', 0.0);
+            });
 
         bars.transition()
             .duration(this.smoothness)
