@@ -44,6 +44,9 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
         self.clients = kwargs.pop('clients')
         super(EchoWebSocket, self).__init__(*args, **kwargs)
 
+    def check_origin(self, origin):
+        return True
+
     def open(self):
         print("WebSocket opened")
         self.send_json_message(u"WebSocket opened")
