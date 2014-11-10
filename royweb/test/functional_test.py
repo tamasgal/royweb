@@ -1,10 +1,14 @@
 import unittest
+import selenium
 from selenium import webdriver
 
 
 class NewVisitorTest(unittest.TestCase):
     def setUp(self):
-        self.browser = webdriver.Firefox()
+        try:
+            self.browser = webdriver.Chrome()
+        except:
+            self.browser = webdriver.Firefox()
 
     def tearDown(self):
         self.browser.quit()
