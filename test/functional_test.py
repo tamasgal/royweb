@@ -5,10 +5,7 @@ from selenium import webdriver
 
 class NewVisitorTest(unittest.TestCase):
     def setUp(self):
-        try:
-            self.browser = webdriver.Chrome()
-        except:
-            self.browser = webdriver.Firefox()
+        self.browser = webdriver.Firefox()
 
     def tearDown(self):
         self.browser.quit()
