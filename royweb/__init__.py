@@ -13,4 +13,3 @@ __version__ = "0.7.5"
 __maintainer__ = "Tamas Gal"
 __email__ = "tgal@km3net.de"
 __status__ = "Development"
-
