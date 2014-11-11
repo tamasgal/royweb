@@ -16,6 +16,8 @@ import os
 import glob
 from os.path import basename
 
+import royweb
+
 import tornado.web
 import tornado.websocket
 
@@ -31,7 +33,9 @@ class MainHandler(tornado.web.RequestHandler):
 
     def get(self):
         self.render("index.html",
-                    royweb_ip=self.royweb_ip, royweb_port=self.royweb_port)
+                    royweb_ip=self.royweb_ip,
+                    royweb_port=self.royweb_port,
+                    version=royweb.__version__)
 
 
 class EchoWebSocket(tornado.websocket.WebSocketHandler):
@@ -39,6 +43,9 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
     def __init__(self, *args, **kwargs):
         self.clients = kwargs.pop('clients')
         super(EchoWebSocket, self).__init__(*args, **kwargs)
+
+    def check_origin(self, origin):
+        return True
 
     def open(self):
         print("WebSocket opened")

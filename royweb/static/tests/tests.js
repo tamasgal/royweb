@@ -1,4 +1,3 @@
 test( "QUnit test", function() {
-    ok( 1 == "1", "Passed!" );
-
+    ok( 1 == "1", "QUnit test working!" );
 });

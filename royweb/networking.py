@@ -65,6 +65,9 @@ class WebSocketBroadcaster(object):
                     client.write_message(self.with_timestamp(data))
             except ValueError:
                 print("Invalid JSON message received: '{0}'".format(data))
+            except WebSocketClosedError:
+                print("WebSocket was closed due to an error, while sending "
+                      "the following JSON message: '{0}'".format(data))
 
     def with_timestamp(self, json_obj):
         """Returns a copy of a json obj with an additional time property."""

@@ -2,13 +2,16 @@ royweb
 ======
 
 Restless Oyster Web is an online monitoring tool. It provides a graphical user interface which can be accessed by any WebSocket-capable web browser. Although it's designed for the KM3NeT neutrino detector, it provides a simple interface to let you monitor other kinds of parameters.
-The current status is alpha and I'm redesigning the parameter format to add more flexibility for other use cases.
+The current status is beta and is already used by many people. Thanks for you feedback so far!
 
 .. image:: http://tamasgal.com/km3net/ROyWeb_Screenshot.png
     :alt: Restless Oyster online monitoring tool
     :width: 700
     :align: center
 
+
+Future Plans
+============
 
 The main goal is to create a tool which runs a web interface and monitors several types of parameters sent via UDP packets. The visualisation of the data is done by the d3.js framework and the parameters are sent as JSON objects.
 Monitoring a specific parameter should be as easy as sending a JSON object through UDP to the webserver. Any connected client should then receive the packet and the user will be able to create live graphs or histograms with the desired parameters.

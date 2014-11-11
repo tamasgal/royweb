@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Restless Oyster</title>
+        <title>Restless Oyster (v{{ version }})</title>
         <link rel="stylesheet" type="text/css" href="/static/css/main.css">
         <link rel="stylesheet" type="text/css" href="/static/css/menu.css">
         <link rel="stylesheet" type="text/css" href="/static/css/sidebar.css">
@@ -39,7 +39,8 @@
                 <li class='active has-sub'><a href='#'><span>Graphs</span></a>
                     <ul>
                         <li><a onclick="new TimePlot();"><span>Time Plot</span></a></li>
-                        <li class='last'><span><a onclick="new Histogram();">Histogram</span></a></li>
+                        <li><a onclick="new Histogram();"><span>Histogram</span></a></li>
+                        <li class='last'><a onclick="new Equaliser();"><span>Equaliser</span></a></li>
                     </ul>
                 </li>
                 <li class='has-sub'><a href='#'><span>Session</span></a>

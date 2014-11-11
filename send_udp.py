@@ -32,4 +32,16 @@ while True:
     ph.send('bar.baz', value, 'm', 'The narf parameter description.',)
     sleep(random()*0.2+0.1)
 
+    value = 1000 - 100 + random()*50
+    ph.send('fjord', value, 'kHz', 'The bar parameter description.',)
+    sleep(random()*0.2+0.1)
+
+    value = 1000 - 200 + random()*30
+    ph.send('puppa', value, 'kHz', 'The narf parameter description.',)
+    sleep(random()*0.2+0.1)
+
+    value = 100 - 30 + random()*50
+    ph.send('sarh', value, 'm', 'The narf parameter description.',)
+    sleep(random()*0.2+0.1)
+
     i += 1
