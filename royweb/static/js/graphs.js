@@ -473,18 +473,6 @@ function Histogram() {
                 self.set_nbins(parseInt(this.value));
             });
 
-        this.settings_menu.append('div').append('span').text('x-min:');
-        this.x_min_input = this.settings_menu.append('input')
-            .attr('value', this.x_min)
-            .on('input', function() {
-                self.set_x_min(this.value);
-            });
-        this.settings_menu.append('div').append('span').text('x-max:');
-        this.x_max_input = this.settings_menu.append('input')
-            .attr('value', this.x_max)
-            .on('input', function() {
-                self.set_x_max(this.value);
-            });
 
         this.settings_menu.append('div').append('span').text('y-min:');
         this.y_min_input = this.settings_menu.append('input')
@@ -618,30 +606,30 @@ function Histogram() {
 
     this.draw_axes = function() {
         // Update scales and draw the axes
-        
+
         var x_min = parseFloat(this.x_min) || d3.min(this.map);
         var x_max = parseFloat(this.x_max) || d3.max(this.map);
         this.xScale.domain(d3.extent([x_min, x_max]));
         if (this.y_scale_type == 'lin') {
             var y_min = parseFloat(this.y_min) || 0;
-            var y_max = parseFloat(this.y_max) || d3.max(this.histogram, function(d) { return d.length; }); 
+            var y_max = parseFloat(this.y_max) || d3.max(this.histogram, function(d) { return d.length; });
             if (y_min < 0) {
                 y_min = 1;
             }
             if (y_max < y_min) {
                 y_max = y_min + 1;
-            } 
-            this.yScale.domain([y_min, y_max]); 
+            }
+            this.yScale.domain([y_min, y_max]);
         }
         if (this.y_scale_type == 'log') {
             var y_min = parseFloat(this.y_min) || 1;
-            var y_max = parseFloat(this.y_max) || d3.max(this.histogram, function(d) { return d.length; }); 
+            var y_max = parseFloat(this.y_max) || d3.max(this.histogram, function(d) { return d.length; });
             if (y_min < 1) {
                 y_min = 1;
             }
             if (y_max < y_min) {
                 y_max = y_min + 1;
-            } 
+            }
             this.yScale.domain([y_min, y_max]);
         }
 
