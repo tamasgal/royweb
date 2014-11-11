@@ -406,6 +406,7 @@ function TimePlot() {
         var y_min = parseFloat(this.y_min) || d3.min(self.data, function(d) { return parseFloat(d.value) });
         var y_max = parseFloat(this.y_max) || d3.max(self.data, function(d) { return parseFloat(d.value) });
         this.yScale.domain([y_min, y_max]);
+        this.yScale.clamp(true);
 
         this.svg.select(".x.axis")
             .transition()
@@ -582,6 +583,8 @@ function Histogram() {
                 return d.length;
             })]);
         }
+
+        this.yScale.clamp(true);
 
         this.svg.select(".x.axis")
             .transition()
@@ -812,6 +815,7 @@ function Equaliser() {
         var y_min = parseFloat(this.y_min) || d3.min(self.data, function(d) { return parseFloat(d.value) });
         var y_max = parseFloat(this.y_max) || d3.max(self.data, function(d) { return parseFloat(d.value) });
         this.yScale.domain([y_min, y_max]);
+        this.yScale.clamp(true);
 
         this.svg.select(".y.axis")
             .transition()
