@@ -164,6 +164,19 @@ function Graph() {
             .on("input", function() {
                 self.set_time_limit(parseInt(this.value));
             });
+
+        this.settings_menu.append("div").append("span").text("Width:");
+        this.size_width_input = this.settings_menu.append("input")
+            .attr("value", this.w)
+            .on("input", function() {
+                self.resize(parseInt(this.value), this.h);
+            });
+        this.settings_menu.append("div").append("span").text("Height:");
+        this.size_width_input = this.settings_menu.append("input")
+            .attr("value", this.h)
+            .on("input", function() {
+                self.resize(this.w, parseInt(this.value));
+            });
     };
 
     this.setup_labels = function() {
@@ -182,6 +195,7 @@ function Graph() {
             .style("fill", "#647B83")
             .style("text-anchor", "middle");
     };
+
 
     this.fetch_data = function() {
         // Get the parameter data for the last this.time_limit seconds
@@ -229,8 +243,29 @@ function Graph() {
     };
 
     this.resize = function(width, height) {
-        // Change the width and height of the SVG container.
-        this.svg.attr("width", width).attr("height", height);
+        // Change the width and height of the graph.
+        var self = this;
+        self.w = width || self.w;
+        self.h = height || self.h;
+        if (self.w < 250) { self.w = 250; }
+        if (self.h < 180) { self.h = 180; }
+        self.svg.attr("width", self.w).attr("height", self.h);
+        self.xScale.range([self.padding_left, self.w - self.padding]);
+        self.yScale.range([self.h - self.padding, self.padding]);
+        if(self.x_axis_dom) {
+            self.x_axis_dom.attr("transform", "translate(0," + (self.h - self.padding) + ")");
+        }
+        self.x_label.attr("y", self.h - 5).attr("x", parseInt(self.w /2));
+        self.y_label.attr("y", 5).attr("x", -parseInt(this.h / 2));
+        if(self.xAxis) {
+            self.xAxis.ticks(parseInt(self.w / 100))
+                      .tickSize(-(self.h - 2*self.padding), 0, 0)
+                      .tickPadding(8);
+        }
+        self.yAxis.ticks(parseInt(self.h / 30))
+                  .tickSize(-(self.w - self.padding - self.padding_left), 0, 0);
+        self.update_parameter_labels();
+        self.redraw();
     };
 
     this.parameter_color = function(parameter_type) {
