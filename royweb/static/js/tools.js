@@ -129,6 +129,7 @@ var roy = {
                 graph_data['parameter_types'] = graph.parameter_types;
                 graph_data['width'] = graph.w;
                 graph_data['height'] = graph.h;
+                graph_data['line_of_attention'] = graph.line_of_attention_value;
                 json_data['graphs'].push(graph_data);
                 console.log("Saving " + graph.type);
             });

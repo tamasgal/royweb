@@ -55,6 +55,7 @@ ws.onmessage = function (evt) {
                 new_graph.refresh_parameter_list();
             });
             new_graph.resize(graph.width, graph.height);
+            new_graph.set_line_of_attention(graph['line_of_attention']);
         });
     }
     if (json_obj.kind == "session_list") {

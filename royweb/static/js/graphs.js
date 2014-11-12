@@ -177,6 +177,13 @@ function Graph() {
             .on("input", function() {
                 self.resize(this.w, parseInt(this.value));
             });
+
+        this.settings_menu.append("div").append("span").text("Line of attention:");
+        this.line_of_attention_value_input = this.settings_menu.append("input")
+            .attr("value", '')
+            .on("input", function() {
+                self.set_line_of_attention_value(parseFloat(this.value));
+            });
     };
 
     this.setup_labels = function() {
@@ -267,6 +274,36 @@ function Graph() {
         self.update_parameter_labels();
         self.redraw();
     };
+
+    this.set_line_of_attention_value = function(value) {
+        if(value) {
+            this.line_of_attention_value = parseFloat(value);
+            this.line_of_attention.attr('opacity', 1);
+        } else {
+            this.line_of_attention.attr('opacity', 0);
+        }
+    };
+
+    this.set_line_of_attention = function(value) {
+        if(value) {
+            this.line_of_attention_value = value;
+            this.line_of_attention_value_input.attr("value", value);
+        }
+    };
+
+    this.draw_line_of_attention = function() {
+        var self = this;
+        if(self.line_of_attention_value) {
+            self.line_of_attention
+                .style("stroke-dasharray", ("3, 3"))
+                .attr("stroke", 'red')
+                .attr('shape-rendering', 'crispEdges')
+                .attr("x1", self.xScale.range()[0])
+                .attr("y1", self.yScale(self.line_of_attention_value))
+                .attr("x2", self.xScale.range()[1])
+                .attr("y2", self.yScale(self.line_of_attention_value));
+        }
+    }
 
     this.parameter_color = function(parameter_type) {
         // assign color according to index in global parameter_types
@@ -386,6 +423,8 @@ function TimePlot() {
         this.points = this.svg.append("g")
             .attr("class", "points");
 
+        this.line_of_attention = this.svg.append("line");
+
         this.line_func = d3.svg.line()
             .x(function(d) { return self.xScale(d.time); })
             .y(function(d) { return self.yScale(parseFloat(d.value)); });
@@ -494,7 +533,7 @@ function TimePlot() {
         var y_min = parseFloat(this.y_min) || d3.min(self.data, function(d) { return parseFloat(d.value) });
         var y_max = parseFloat(this.y_max) || d3.max(self.data, function(d) { return parseFloat(d.value) });
         this.yScale.domain([y_min, y_max]);
-        this.yScale.clamp(true);
+        this.yScale.clamp(false);
 
         this.svg.select(".x.axis")
             .transition()
@@ -530,7 +569,10 @@ function TimePlot() {
             }
         });
         self.y_label.text(units.join(', '));
+
+        self.draw_line_of_attention();
     };
+
 
 
     this.init();
@@ -638,6 +680,8 @@ function Histogram() {
 
         this.bars = this.svg.append("g")
             .attr("class", "bars");
+
+        this.line_of_attention = this.svg.append("line");
     };
 
     this.refresh_parameter_list = function() {
@@ -817,7 +861,7 @@ function Histogram() {
             }
         });
         self.x_label.text(units.join(', '));
-
+        self.draw_line_of_attention();
     };
 
 
@@ -920,6 +964,8 @@ function Equaliser() {
 
         this.bars = this.svg.append("g")
             .attr("class", "bars");
+
+        this.line_of_attention = this.svg.append("line");
     };
 
     this.refresh_parameter_list = function() {
@@ -1036,7 +1082,7 @@ function Equaliser() {
             }
         });
         self.y_label.text(units.join(', '));
-
+        self.draw_line_of_attention();
     };
 
     this.fetch_data = function() {
