@@ -77,6 +77,8 @@ function Graph() {
     this.update_parameter_labels = function () {
         var self = this;
 
+        d3.select("#labels" + self.id).remove();
+
         var param_height = 12;
         var labels_width = 16 + 7 * self.parameter_types.longest().length;
         var labels_width = 16 + 7 * 10;
@@ -85,6 +87,7 @@ function Graph() {
         var labels_pos_y = self.padding;
         var labels_field = self.svg
             .append("g")
+            .attr("id", 'labels' + self.id)
             .style('font-family', 'monospace')
             .attr("transform", "translate(" + labels_pos_x + ", " + labels_pos_y + ")");
         labels_field.append("rect")
