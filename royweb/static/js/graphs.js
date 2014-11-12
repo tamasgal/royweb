@@ -619,20 +619,20 @@ function Histogram() {
         this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(8)
             .tickSize(-(this.w - this.padding - this.padding_left), 0, 0);
 
-        var x_axis_dom = this.svg.append("g")
+        this.x_axis_dom = this.svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + (this.h - this.padding) + ")")
             .call(this.xAxis);
-        var y_axis_dom = this.svg.append("g")
+        this.y_axis_dom = this.svg.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate(" + this.padding_left + ",0)")
             .call(this.yAxis);
 
-        x_axis_dom.selectAll('.domain')
+        this.x_axis_dom.selectAll('.domain')
             .attr('stroke', 'black')
             .attr('shape-rendering', 'crispEdges');
 
-        y_axis_dom.selectAll('.domain')
+        this.y_axis_dom.selectAll('.domain')
             .attr('stroke', 'black')
             .attr('shape-rendering', 'crispEdges');
 
@@ -909,12 +909,12 @@ function Equaliser() {
         this.yAxis = d3.svg.axis().scale(this.yScale).orient("left").ticks(8)
             .tickSize(-(this.w - this.padding - this.padding_left), 0, 0);
 
-        var y_axis_dom = this.svg.append("g")
+        this.y_axis_dom = this.svg.append("g")
             .attr("class", "y axis")
             .attr("transform", "translate(" + this.padding_left + ",0)")
             .call(this.yAxis);
 
-        y_axis_dom.selectAll('.domain')
+        this.y_axis_dom.selectAll('.domain')
             .attr('stroke', 'black')
             .attr('shape-rendering', 'crispEdges');
 
