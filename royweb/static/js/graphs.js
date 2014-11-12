@@ -194,6 +194,7 @@ function Graph() {
     };
 
     this.parameter_setup = function() { };
+    this.parameter_teardown = function() { };
 
     this.register_parameter_type = function(parameter_type) {
         // Add parameter_type to the monitored ones and setup the SVG
