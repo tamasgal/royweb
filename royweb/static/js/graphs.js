@@ -74,6 +74,43 @@ function Graph() {
             .style('opacity', .0);
     };
 
+    this.update_parameter_labels = function () {
+        var self = this;
+
+        var param_height = 12;
+        var labels_width = 16 + 7 * self.parameter_types.longest().length;
+        var labels_width = 16 + 7 * 10;
+        var labels_height = param_height * self.parameter_types.length + param_height / 2;
+        var labels_pos_x = self.w - labels_width - self.padding;
+        var labels_pos_y = self.padding;
+        var labels_field = self.svg
+            .append("g")
+            .style('font-family', 'monospace')
+            .attr("transform", "translate(" + labels_pos_x + ", " + labels_pos_y + ")");
+        labels_field.append("rect")
+            .attr("width", labels_width)
+            .attr("height", labels_height)
+            .attr("fill", "white")
+            .style("opacity", 0.5)
+            .attr("stroke", "black")
+            .attr('shape-rendering', 'crispEdges');
+
+        var labels = labels_field.append("text");
+        var count = 0;
+        self.parameter_types.forEach(function(parameter_type) {
+            labels_field.append("rect")
+                .attr("transform", "translate(3, " + (4 + count * param_height) + ")")
+                .attr("fill", self.parameter_color(parameter_type))
+                .attr("width", 9)
+                .attr("height", 9);
+            labels.append("tspan")
+                .attr("x", 16)
+                .attr("dy", param_height)
+                .text(parameter_type);
+            count += 1;
+        });
+    };
+
     this.close = function() {
         var index = window.graphs.indexOf(this);
         if (index > -1) {
@@ -160,6 +197,7 @@ function Graph() {
         if(!roy.tools.includes(this.parameter_types, parameter_type)) {
             this.parameter_types.push(parameter_type);
             this.parameter_setup(parameter_type);
+            this.update_parameter_labels();
         }
     };
 
@@ -169,6 +207,7 @@ function Graph() {
         this.parameter_types.splice(index, 1);
         this.svg.selectAll("."+parameter_type).remove();
         this.parameter_teardown(parameter_type);
+        this.update_parameter_labels();
     };
 
     this.toggle_parameter_type = function(parameter_type) {

@@ -37,7 +37,7 @@ var roy = {
         },
         color: function(i) {
             // http://tools.medialab.sciences-po.fr/iwanthue/
-            var colors = ["#315E88", "#CE26A3", "#36B136", 
+            var colors = ["#315E88", "#CE26A3", "#36B136",
                           "#8C1E0B", "#445809", "#70095B", "#F5750A",
                           "#78B4B0", "#8F95FD", "#FB6D74", "#C4AB68",
                           "#4F373E", "#9E6613", "#A27B90", "#E5689F",
@@ -75,6 +75,15 @@ var roy = {
         window.graphs.forEach(function(graph) {
             if(graph.id == graph_id) {
                 //get svg element.
+                var title_field = d3.select('#svg' + graph.id)
+                     .append("text")
+                     .attr("x", (graph.w / 2))
+                     .attr("y", 0 + (graph.padding / 2))
+                     .attr("text-anchor", "middle")
+                     .style("font-size", "14px")
+                     .attr("fill", "#268BD3")
+                     .text(graph.get_title());
+
                 var svg = document.getElementById('svg' + graph_id);
 
                 //get svg source.
@@ -95,6 +104,8 @@ var roy = {
                 //convert svg source to URI data scheme.
                 var url = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(source);
                 document.getElementById('export_button' + graph_id).href = url;
+
+                title_field.remove();
             }
         });
     },
@@ -134,3 +145,13 @@ var roy = {
         d3.select("#content").text('');
     }
 };
+
+Array.prototype.longest=function() {
+    return this.sort(
+      function(a,b) {
+        if (a.length > b.length) return -1;
+        if (a.length < b.length) return 1;
+          return 0
+      }
+    )[0];
+}
