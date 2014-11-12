@@ -54,6 +54,7 @@ ws.onmessage = function (evt) {
                 new_graph.register_parameter_type(parameter_type);
                 new_graph.refresh_parameter_list();
             });
+            new_graph.resize(graph.width, graph.height);
         });
     }
     if (json_obj.kind == "session_list") {
