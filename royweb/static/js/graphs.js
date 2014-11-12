@@ -10,6 +10,8 @@ function Graph() {
         this.padding_left = 75;
         this.smoothness = 0; // transition time in ms. Not ready yet
 
+        this.show_parameter_labels = true;
+
         this.x_min = null;
         this.x_max = null;
         this.y_min = null;
@@ -78,6 +80,10 @@ function Graph() {
         var self = this;
 
         d3.select("#labels" + self.id).remove();
+
+        if (!self.show_parameter_labels) {
+            return;
+        }
 
         var param_height = 12;
         var labels_width = 16 + 7 * self.parameter_types.longest().length;
@@ -508,6 +514,7 @@ function Histogram() {
         this.bar_spacing = 1; // pixels
         this.set_time_limit(600);
         self.y_scale_type = "lin";
+        this.show_parameter_labels = false;
 
         this.settings_menu.append("div").append("span").text("Bins:");
         this.nbins_input = this.settings_menu.append("input")
