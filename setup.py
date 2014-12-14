@@ -16,8 +16,8 @@ setup(name='royweb',
       ],
       entry_points={
           'console_scripts': [
-              'royweb=royweb.app:main',
-              'royweb_tester=royweb.app:send_test_parameter',
+              'royweb=royweb.__main__:main',
+              'royweb_tester=royweb.__main__:send_test_parameter',
           ],
       },
       classifiers=[
