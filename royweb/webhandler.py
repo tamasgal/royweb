@@ -65,7 +65,7 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
                 session_directory = "sessions"
                 if not os.path.exists(session_directory):
                     os.makedirs(session_directory)
-                with open(session_directory + '/' + json_message['session_name'] + '.json', 'w') as outfile:
+                with open(os.path.join(session_directory, json_message['session_name']) + '.json', 'w') as outfile:
                     outfile.write(json.dumps(json_message))
                 # TODO: Refactor this! Sends the updated session list to all clients
                 session_names = [os.path.splitext(basename(filename))[0] for filename in glob.glob("sessions/*.json")]
@@ -77,7 +77,7 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
                 self.send_json_message(u"Loading session '{0}'."
                                        .format(json_message['session_name']))
                 session_directory = "sessions"
-                with open(session_directory + '/' + json_message['session_name'] + '.json', 'r') as infile:
+                with open(os.path.join(session_directory, json_message['session_name']) + '.json', 'r') as infile:
                     self.write_message(json.load(infile))
             elif json_message['kind'] == 'session_list':
                 session_names = [os.path.splitext(basename(filename))[0] for filename in glob.glob("sessions/*.json")]
