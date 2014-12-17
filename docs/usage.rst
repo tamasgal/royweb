@@ -22,9 +22,9 @@ The UDP packet which contains the data to plot later on should only include a st
         'kind': 'parameter',
         'type': 'parameter_short_name',
  	'unit': 'desired_unit',
-        'description': 'This is longer description of the parameter.',
+        'description': 'This is a longer description of the parameter.',
 	'value': 'the_value'
     }
 
-The ``kind`` field is required and should always be ``"parameter"``. The value can be of any type, but it will will determine which types of graphs you can plot. For ``TimePlots`` and ``Histograms``, simply use a ``string`` and it will be converted to float on the fly.
+The ``kind`` field is required and should always be ``"parameter"`` (ROyWeb uses the same JSON format for other "kinds" communications). The value can be of any type, but it will actually determine which types of graphs you can plot later on. For ``TimePlots``, ``Histograms`` and ``Equalisers``, simply use a ``string`` for example, it will be converted to float on the fly.
 
