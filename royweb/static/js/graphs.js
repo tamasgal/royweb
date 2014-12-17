@@ -293,15 +293,16 @@ function Graph() {
 
     this.draw_line_of_attention = function() {
         var self = this;
-        if(typeof self.line_of_attention_value === 'number') {
+        var value = self.line_of_attention_value;
+        if(typeof value === 'number' && isFinite(value)) {
             self.line_of_attention
                 .style("stroke-dasharray", ("3, 3"))
                 .attr("stroke", 'red')
                 .attr('shape-rendering', 'crispEdges')
                 .attr("x1", self.xScale.range()[0])
-                .attr("y1", self.yScale(self.line_of_attention_value))
+                .attr("y1", self.yScale(value))
                 .attr("x2", self.xScale.range()[1])
-                .attr("y2", self.yScale(self.line_of_attention_value));
+                .attr("y2", self.yScale(value));
         }
     }
 
