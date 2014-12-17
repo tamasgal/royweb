@@ -17,6 +17,7 @@ import glob
 from os.path import basename
 
 import royweb
+from royweb import version
 
 import tornado.web
 import tornado.websocket
@@ -48,7 +49,7 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
         return True
 
     def open(self):
-        welcome = u"WebSocket opened. Welcome to ROyWeb {}!".format(royweb.version)
+        welcome = u"WebSocket opened. Welcome to ROyWeb {}!".format(version)
         print(welcome)
         self.send_json_message(welcome)
         self.clients.append(self)

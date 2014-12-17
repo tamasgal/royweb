@@ -6,7 +6,7 @@ The Restless Oyster online monitoring utility.
 """
 from __future__ import absolute_import
 
-from .__version__ import version, version_info
+from royweb.__version__ import version, version_info
 
 __author__ = "Tamas Gal"
 __copyright__ = ("Copyright 2014, Tamas Gal and the KM3NeT collaboration "
@@ -18,4 +18,5 @@ __maintainer__ = "Tamas Gal"
 __email__ = "tgal@km3net.de"
 __status__ = "Development"
 
-from .networking import PacketHandler
+from royweb.networking import PacketHandler
+from royweb import version
