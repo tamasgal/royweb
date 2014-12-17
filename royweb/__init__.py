@@ -19,4 +19,3 @@ __email__ = "tgal@km3net.de"
 __status__ = "Development"
 
 from royweb.networking import PacketHandler
-from royweb import version
