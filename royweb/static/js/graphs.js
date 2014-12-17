@@ -276,8 +276,9 @@ function Graph() {
     };
 
     this.set_line_of_attention_value = function(value) {
-        if(typeof value !== 'undefined') {
-            this.line_of_attention_value = parseFloat(value);
+        value = parseFloat(value)
+        if(isFinite(value)) {
+            this.line_of_attention_value = value;
             this.line_of_attention.attr('opacity', 1);
         } else {
             this.line_of_attention.attr('opacity', 0);
@@ -285,7 +286,7 @@ function Graph() {
     };
 
     this.set_line_of_attention = function(value) {
-        if(typeof value === 'number') {
+        if(value) {
             this.line_of_attention_value = value;
             this.line_of_attention_value_input.attr("value", value);
         }
@@ -294,7 +295,7 @@ function Graph() {
     this.draw_line_of_attention = function() {
         var self = this;
         var value = self.line_of_attention_value;
-        if(typeof value === 'number' && isFinite(value)) {
+        if(value && typeof value === 'number' && isFinite(value)) {
             self.line_of_attention
                 .style("stroke-dasharray", ("3, 3"))
                 .attr("stroke", 'red')
