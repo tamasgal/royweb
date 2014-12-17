@@ -48,7 +48,7 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
         return True
 
     def open(self):
-        welcome = u"WebSocket opened. Welcome to ROyWeb {}!".format(royweb.version)
+        welcome = u"WebSocket opened. Welcome to ROyWeb {0}!".format(royweb.version)
         print(welcome)
         self.send_json_message(welcome)
         self.clients.append(self)
