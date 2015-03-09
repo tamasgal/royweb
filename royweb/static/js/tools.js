@@ -43,7 +43,8 @@ var roy = {
                           "#4F373E", "#9E6613", "#A27B90", "#E5689F",
                           "#01687A", "#BDA1DA", "#D0B53B", "#59CEAB",
                           "#601D3C", "#4D419A"];
-            return colors[i];
+
+            return colors[i % colors.length];
         }
     },
     ui: {
