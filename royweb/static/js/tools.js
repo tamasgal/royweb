@@ -36,15 +36,9 @@ var roy = {
             return string.replace(/\./g,'_')
         },
         color: function(i) {
-            // http://tools.medialab.sciences-po.fr/iwanthue/
-            var colors = ["#315E88", "#CE26A3", "#36B136",
-                          "#8C1E0B", "#445809", "#70095B", "#F5750A",
-                          "#78B4B0", "#8F95FD", "#FB6D74", "#C4AB68",
-                          "#4F373E", "#9E6613", "#A27B90", "#E5689F",
-                          "#01687A", "#BDA1DA", "#D0B53B", "#59CEAB",
-                          "#601D3C", "#4D419A"];
-
-            return colors[i % colors.length];
+            var scale = chroma.scale('Set1');
+            var color = scale(0.02 * (i % 50)).hex();
+            return color;
         }
     },
     ui: {
