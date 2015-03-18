@@ -36,8 +36,8 @@ var roy = {
             return string.replace(/\./g,'_')
         },
         color: function(i) {
-            var scale = chroma.scale('Set1');
-            var color = scale(0.02 * (i % 50)).hex();
+            var scale = chroma.scale('Dark2');
+            var color = scale(0.05 * (i % 20)).hex();
             return color;
         }
     },
