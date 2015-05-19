@@ -3,7 +3,7 @@ from time import sleep
 from random import random
 import math
 
-from royweb.networking import PacketHandler
+from royweb import PacketHandler
 
 udp_ip = "127.0.0.1"
 udp_port = 9999
