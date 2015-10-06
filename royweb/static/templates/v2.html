@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Restless Oyster (v{{ version }})</title>
+        <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/menu.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/sidebar.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/graphs.css">
+        <link rel="stylesheet" href="/static/css/smoothness/jquery-ui-1.10.4.custom.min.css">
+        <link rel="stylesheet" href="/static/js/external/qunit/qunit-1.14.0.css">
+
+        <script type="text/javascript">
+            // Settings
+            window.royweb_ip = "{{ royweb_ip }}";
+            window.royweb_port = "{{ royweb_port }}";
+        </script>
+
+        <script type="text/javascript" src="/static/js/external/jquery-1.11.0.min.js"></script>
+        <script type="text/javascript" src="/static/js/external/jquery-ui-1.10.4.custom.min.js"></script>
+        <script type="text/javascript" src="/static/js/external/d3.v3.min.js"></script>
+        <script type="text/javascript" src="/static/js/external/chroma.min.js"></script>
+
+        <script type="text/javascript" src="/static/js/menu.js"></script>
+        <script type="text/javascript" src="/static/js/navigation.js"></script>
+        <script type="text/javascript" src="/static/js/websocket_handler.js"></script>
+        <script type="text/javascript" src="/static/js/tools.js"></script>
+        <script type="text/javascript" src="/static/js/graphs.js"></script>
+        <script type="text/javascript" src="/static/js/ui.js"></script>
+    </head>
+    <body>
+    <div id='header'>
+        <img src="/static/img/km3net_logo.png" />
+        <img src="/static/img/roy_logo.png" />
+    </div>
+    <div id='wrapper'>
+        <div id='sidebar'>
+        <div id='cssmenu'>
+            <ul>
+                <li class='active has-sub'><a href='#'><span>Graphs</span></a>
+                    <ul>
+                        <li><a onclick="new TimePlot();"><span>Time Plot</span></a></li>
+                        <li><a onclick="new Histogram();"><span>Histogram</span></a></li>
+                        <li class='last'><a onclick="new Equaliser();"><span>Equaliser</span></a></li>
+                    </ul>
+                </li>
+                <li class='has-sub'><a href='#'><span>Session</span></a>
+                    <ul>
+                        <li><a onclick="roy.save_session();"><span>Save</span></a>
+                        <li class='has-sub'><a href='#'><span>Load</span></a>
+                            <ul id="session_list">
+                                <li><a onclick="roy.load_session('Fjoord');"><span>Fjoord</span></a></li>
+                                <li class='last'><a href='#'><span>Mooh</span></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li class='has-sub'><a href='#'><span>Tests</span></a>
+                    <ul>
+                        <li><a id="run_unit_tests"><span>Unit Tests</span></a></li>
+                        <li class='last'><a id="run_spec_tests"><span>Spec Tests</span></a></li>
+                    </ul>
+                </li>
+                <li class='has-sub'><a href='#'><span>Help</span></a>
+                    <ul>
+                        <li><a href="http://royweb.readthedocs.org"><span>Documentation</span></a></li>
+                        <li><a href="https://github.com/tamasgal/royweb"><span>Source</span></a></li>
+                        <li><a href="https://github.com/tamasgal/royweb/issues"><span>Issues</span></a></li>
+                        <li class='last'><a href="http://royweb.km3net.de"><span>Demo</span></a></li>
+                    </ul>
+                </li>
+                <li class='last'><a href='/'><span>Reset</span></a></li>
+            </ul>
+        </div>
+        <div id='infobar'>
+            <div>
+                <h3>Event rate</h3>
+                <span id="event_rate"></span><span id="event_rate_indicator">&nbsp;</span>
+            </div>
+        </div>
+        </div>
+
+
+
+	<div id="right-sidebar">
+		<h3>Parameters</h3>
+                <table id="parameters">
+                    <tr>
+                        <th class="parameter_color">Color</th>
+                        <th class="parameter_type">Type</th>
+                        <th class="parameter_unit">Unit</th>
+                        <th class="parameter_rate">Rate [Hz]</th>
+                    </tr>
+                </table>
+                <div id="parameter_types"></div>
+	</div>
+
+        <div id="content"></div>
+    </div>
+
+    <div id="console">
+        <div class="window_title minimized_window">Console Log</div>
+        <div id="console_log"></div>
+    </div>
+    </body>
+</html>
+

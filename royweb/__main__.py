@@ -23,7 +23,8 @@ from random import random
 import math
 
 from royweb.networking import PacketHandler, WebSocketBroadcaster
-from royweb.webhandler import MainHandler, EchoWebSocket, UnitTests, SpecTests
+from royweb.webhandler import (V2Handler, MainHandler, EchoWebSocket,
+                               UnitTests, SpecTests)
 
 define("ip", default="127.0.0.1", type=str,
        help="The WAN IP of this machine. You can use 127 for local tests.")
@@ -78,6 +79,7 @@ def main():
 
     application = tornado.web.Application([
         (r"/", MainHandler, dict(royweb_ip=royweb_ip, royweb_port=royweb_port)),
+        (r"/v2", V2Handler, dict(royweb_ip=royweb_ip, royweb_port=royweb_port)),
         (r"/websocket", EchoWebSocket, {'clients': clients}),
         (r"/unit_tests", UnitTests),
         (r"/spec_tests", SpecTests),
