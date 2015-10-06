@@ -77,26 +77,16 @@ def main():
     clients = []
 
     application = tornado.web.Application([
-                                              (r"/", MainHandler, dict(royweb_ip=royweb_ip, royweb_port=royweb_port)),
-                                              (r"/websocket", EchoWebSocket, {'clients': clients}),
-                                              (r"/unit_tests", UnitTests),
-                                              (r"/spec_tests", SpecTests),
-                                          ], **settings)
+        (r"/", MainHandler, dict(royweb_ip=royweb_ip, royweb_port=royweb_port)),
+        (r"/websocket", EchoWebSocket, {'clients': clients}),
+        (r"/unit_tests", UnitTests),
+        (r"/spec_tests", SpecTests),
+    ], **settings)
 
     ws_broadcaster = WebSocketBroadcaster(royweb_ip, udp_port, clients)
     t = threading.Thread(target=ws_broadcaster.run)
     t.daemon = True
     t.start()
-
-    # # demonise
-    # import daemon
-    # if not options.log_file:
-    # log_file = "tornado.{0}.log".format(royweb_port)
-    # else:
-    #     log_file = options.log_file
-    # log = open(log_file, 'a+')
-    # ctx = daemon.DaemonContext(stdout=log, stderr=log,  working_directory='.')
-    # ctx.open()
 
     try:
         application.listen(royweb_port)
