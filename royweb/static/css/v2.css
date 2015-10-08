@@ -2,3 +2,24 @@ body { padding-top: 60px; }
 @media screen and (max-width: 768px) {
     body { padding-top: 60px; }
 }
+
+#sidebar {
+    position: absolute;
+    right: 0;
+    width: 200px;
+    border: 1px solid #c1c1c1;
+    padding: 10px;
+}
+
+#sidebar h3 {
+    color: #c1c1c1;
+    background-color: white;
+}
+
+#parameters table {
+    width: 100%;
+}
+
+#parameters table th {
+    text-align: center;
+}
