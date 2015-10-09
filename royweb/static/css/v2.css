@@ -6,6 +6,9 @@ body { padding-top: 60px; }
 /* Content */
 #content {
 }
+#content .graph {
+    float: left;
+}
 
 /* Sidebar */
 #sidebar {
