@@ -126,8 +126,11 @@
     <script src="/static/js/external/jquery-1.11.0.min.js"></script>
     <script src="/static/js/external/d3.v3.min.js"></script>
     <script src="/static/js/external/bootstrap.min.js"></script>
+    <script src="/static/js/external/chroma.min.js"></script>
     <script src="/static/js/external/angular-1.4.7.min.js"></script>
     <script src="/static/js/websocket_v2.js"></script>
+    <script src="/static/js/tools.js"></script>
+    <script src="/static/js/graphs_v2.js"></script>
 
     <script>
         angular.module('ROyWeb', []).controller('ParametersController',
@@ -142,6 +145,11 @@
             };
 
         }]);
+
+//        angular.module('ROyWeb', []).controller('GraphController',
+//                ['$scope', function($scope) {
+//            $scope.foo = "foo";
+//        }]);
     </script>
   </body>
 </html>

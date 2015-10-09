@@ -1,7 +1,8 @@
-window.cache_limit = 10000; // maximum number of parameters to cache
+window.cache_limit = 1000; // maximum number of parameters to cache
 window.time_limit = 60*60*24; // maximum seconds to cache parameters
 window.parameter_types = [];
 window.parameters = new Object();
+window.graphs = [];
 
 var ws = new WebSocket("ws://" + window.royweb_ip + ":"
                                + window.royweb_port + "/websocket");
@@ -29,6 +30,7 @@ function process_parameter(parameter) {
     }
     clean_up_parameter_cache(parameter);
     record_parameter(parameter);
+    update_graphs(parameter);
 }
 
 function register_new_parameter (parameter) {
@@ -38,6 +40,11 @@ function register_new_parameter (parameter) {
     });
     window.parameter_types.push(parameter.type);
     window.parameters[parameter.type] = [];
+
+//  Automatically create a new graph for each registered parameter type.
+    var graph = new TimePlot();
+    graph.register_parameter_type(parameter.type);
+    graph.set_title(parameter.type);
 }
 
 function parameter_is_registered (parameter) {
@@ -56,7 +63,7 @@ function clean_up_parameter_cache (parameter) {
     }
 }
 
-// Update parameter table 
+// Update parameter table
 window.setInterval(function(){
     var scope = angular.element(document.getElementById("parameters")).scope();
         scope.$apply(function() {
@@ -67,7 +74,7 @@ window.setInterval(function(){
             if (!isNaN(value)) {
                 parameter.value = parseFloat(value.toFixed(2));
             } else {
-                parameter.value = ''; 
+                parameter.value = '';
             }
         });
     });
@@ -85,3 +92,10 @@ function calculate_parameter_rate (parameter) {
     return parseFloat(parameter_rate);
 }
 
+function update_graphs (parameter) {
+    window.graphs.forEach(function(graph) {
+        if (graph.parameter_types.indexOf(parameter.type) != -1) {
+            graph.redraw();
+        }
+    });
+}
