@@ -84,39 +84,8 @@
         <div class="row">
             <div id="content" class="col-sm-9"></div>
             <div id="sidebar" class="col-sm-3">
-                <div id="parameters" data-ng-controller="ParametersController">
-                    <input type="text"
-                           data-ng-model="filter"
-                           class="form-control"
-                           placeholder="filter" />
-                    <table id="parameters-table">
-                        <tr>
-                            <th class="first-col">
-                                <a href="#" ng-click="order('type')">Parameter</a>
-                                <span class="sortorder"
-                                      ng-show="predicate === 'type'"
-                                      ng-class="{reverse:reverse}"></span>
-                            </th>
-                            <th class="second-col">
-                                <a href="#" ng-click="order('value')">Value</a>
-                                <span class="sortorder"
-                                      ng-show="predicate === 'value'"
-                                      ng-class="{reverse:reverse}"></span>
-                            </th>
-                            <th class="third-col">
-                                <a href="#" ng-click="order('rate')">Rate</a>
-                                <span class="sortorder"
-                                      ng-show="predicate === 'rate'"
-                                      ng-class="{reverse:reverse}"></span>
-                            </th>
-                        </tr>
-                        <tr data-ng-repeat="parameter in parameters | filter:filter | orderBy:predicate:reverse">
-                            <td class="first-col">{{! parameter.type }}</td>
-                            <td class="second-col">{{! parameter.value }}</td>
-                            <td class="third-col">{{! parameter.rate }} Hz</td>
-                        </tr>
-                    </table>
-                </div>
+                {% include "settings.html" %}
+                {% include "parameters.html" %}
             </div>
         </div>
     </div>
@@ -133,7 +102,9 @@
     <script src="/static/js/graphs_v2.js"></script>
 
     <script>
-        angular.module('ROyWeb', []).controller('ParametersController',
+        app = angular.module('ROyWeb', []);
+
+        app.controller('ParametersController',
                 ['$scope', function($scope) {
 
             $scope.parameters = [];
@@ -146,10 +117,16 @@
 
         }]);
 
-//        angular.module('ROyWeb', []).controller('GraphController',
-//                ['$scope', function($scope) {
-//            $scope.foo = "foo";
-//        }]);
+        app.controller('SettingsController',
+                ['$scope', function($scope) {
+        }]);
+
+
+        app.factory('GraphSettingsFactory', function () {
+            var factory = {};
+
+            return factory;
+        });
     </script>
   </body>
 </html>
