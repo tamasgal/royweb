@@ -24,11 +24,6 @@ Documentation
 
 Read the docs at http://royweb.readthedocs.org
 
-Live Demo
----------
-
-A very basic demonstration can be seen at http://royweb.km3net.de
-Please note that the server is not always running the latest build.
 
 Installation
 ------------
