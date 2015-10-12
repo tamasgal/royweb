@@ -3,6 +3,7 @@ window.time_limit = 60*60*24; // maximum seconds to cache parameters
 window.parameter_types = [];
 window.parameters = new Object();
 window.graphs = [];
+window.db = []
 
 var ws = new WebSocket("ws://" + window.royweb_ip + ":"
                                + window.royweb_port + "/websocket");
@@ -40,6 +41,7 @@ function register_new_parameter (parameter) {
     });
     window.parameter_types.push(parameter.type);
     window.parameters[parameter.type] = [];
+    window.db[parameter.type] = [];
 
 //  Automatically create a new graph for each registered parameter type.
     var graph = new TimePlot();
@@ -52,9 +54,11 @@ function parameter_is_registered (parameter) {
 }
 
 function record_parameter (parameter) {
-    window.parameters[parameter.type].push(parameter);
-
-
+    //window.parameters[parameter.type].push(parameter);
+    var db_entry = {};
+    db_entry[parameter.type] = parameter.value;
+    db_entry['time'] = parameter.time; //new Date(parameter.time);
+    window.db[parameter.type].push(db_entry);
 }
 
 function clean_up_parameter_cache (parameter) {
