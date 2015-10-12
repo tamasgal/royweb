@@ -52,8 +52,8 @@ function Graph() {
     this.setup_html = function() {
         this.div = d3.select("#content").append("div")
                                         .attr("data-ng-controller", "GraphController")
-                                        .attr("class", "graph")
-                                        .text("{{ foo }}");
+                                        .attr("class", "graph");
+                                        //.text("{{ foo }}");
         this.title_field = this.div.append("div")
             .append("input")
             .attr("class", "graph_title");
