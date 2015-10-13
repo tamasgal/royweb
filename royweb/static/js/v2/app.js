@@ -62,6 +62,7 @@
         $scope.datapoints = [];
         $scope.datacolumns = [{"id":"bar","type":"line"}];
         $scope.datax = {"id": "time", "name": "NARF"}
+        $scope.bindto = Math.random().toString(36).substring(7);
 
         $scope.timeFormat = function(timestamp) {
             return d3.time.format("%X")(new Date(timestamp));
@@ -69,7 +70,7 @@
 
         $interval(function(){
             var data = window.db['bar'];
-            $scope.datapoints = data.slice(Math.max(data.length - 5, 1));
+            $scope.datapoints = data.slice(Math.max(data.length - 35, 1));
         }, 1000);
     });
 }());
