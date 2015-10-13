@@ -83,7 +83,14 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div id="content" class="col-sm-9"></div>
+            <div id="content" class="col-sm-9">
+                <div ng-controller="GraphCtrl">
+                    {% include "graph.html" %}
+                </div>
+                <div ng-controller="GraphCtrl">
+                    {% include "graph.html" %}
+                </div>
+            </div>
             <div id="sidebar" class="col-sm-3">
                 {% include "settings.html" %}
                 {% include "parameters.html" %}
@@ -100,9 +107,8 @@
     <script src="/static/js/external/chroma.min.js"></script>
     <script src="/static/js/external/angular-1.4.7.min.js"></script>
     <script src="/static/js/external/c3-angular.js"></script>
-    <script src="/static/js/websocket_v2.js"></script>
+    <script src="/static/js/v2/websocket.js"></script>
     <script src="/static/js/tools.js"></script>
-    <script src="/static/js/graphs_v2.js"></script>
     <script src="/static/js/v2/app.js"></script>
 
   </body>
