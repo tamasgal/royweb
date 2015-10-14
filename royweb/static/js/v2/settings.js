@@ -11,5 +11,12 @@
 
         return factory;
     });
+
+    module.run(function($rootScope, settings){
+        $rootScope.settings = settings;
+        $rootScope.$watch('settings', function(){
+            //alert('Watch');
+        }, true);
+    });
 }());
 
