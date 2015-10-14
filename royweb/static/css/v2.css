@@ -1,0 +1,37 @@
+body { padding-top: 60px; }
+@media screen and (max-width: 768px) {
+    body { padding-top: 60px; }
+}
+
+/* Content */
+#content {
+}
+#content .graph {
+    float: left;
+}
+
+/* Sidebar */
+#sidebar {
+    padding: 10px;
+}
+#parameters table {
+    width: 100%;
+    font-family: Monaco, monospace;
+    font-size: 7pt;
+    margin-top: 5px;
+}
+#parameters table th.first-col {
+    text-align: left;
+}
+#parameters table th.second-col,
+            table th.third-col {
+    text-align: center;
+}
+#parameters table td.first-col {
+    width: 50%;
+}
+#parameters table td.second-col,
+            table td.third-col {
+    width: 25%;
+    text-align: right;
+}

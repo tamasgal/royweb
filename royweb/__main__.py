@@ -23,7 +23,8 @@ from random import random
 import math
 
 from royweb.networking import PacketHandler, WebSocketBroadcaster
-from royweb.webhandler import MainHandler, EchoWebSocket, UnitTests, SpecTests
+from royweb.webhandler import (V2Handler, MainHandler, EchoWebSocket,
+                               UnitTests, SpecTests)
 
 define("ip", default="127.0.0.1", type=str,
        help="The WAN IP of this machine. You can use 127 for local tests.")
@@ -77,26 +78,17 @@ def main():
     clients = []
 
     application = tornado.web.Application([
-                                              (r"/", MainHandler, dict(royweb_ip=royweb_ip, royweb_port=royweb_port)),
-                                              (r"/websocket", EchoWebSocket, {'clients': clients}),
-                                              (r"/unit_tests", UnitTests),
-                                              (r"/spec_tests", SpecTests),
-                                          ], **settings)
+        (r"/", MainHandler, dict(royweb_ip=royweb_ip, royweb_port=royweb_port)),
+        (r"/v2", V2Handler, dict(royweb_ip=royweb_ip, royweb_port=royweb_port)),
+        (r"/websocket", EchoWebSocket, {'clients': clients}),
+        (r"/unit_tests", UnitTests),
+        (r"/spec_tests", SpecTests),
+    ], **settings)
 
     ws_broadcaster = WebSocketBroadcaster(royweb_ip, udp_port, clients)
     t = threading.Thread(target=ws_broadcaster.run)
     t.daemon = True
     t.start()
-
-    # # demonise
-    # import daemon
-    # if not options.log_file:
-    # log_file = "tornado.{0}.log".format(royweb_port)
-    # else:
-    #     log_file = options.log_file
-    # log = open(log_file, 'a+')
-    # ctx = daemon.DaemonContext(stdout=log, stderr=log,  working_directory='.')
-    # ctx.open()
 
     try:
         application.listen(royweb_port)

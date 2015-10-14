@@ -1,0 +1,37 @@
+<div id="parameters" data-ng-controller="ParametersController">
+    <input type="search"
+           data-ng-model="filter"
+           class="form-control"
+           placeholder="filter" />
+    <table id="parameters-table">
+        <thead>
+            <tr>
+                <th class="first-col">
+                    <a href="#" ng-click="order('type')">Parameter</a>
+                    <span class="sortorder"
+                          ng-show="predicate === 'type'"
+                          ng-class="{reverse:reverse}"></span>
+                </th>
+                <th class="second-col">
+                    <a href="#" ng-click="order('value')">Value</a>
+                    <span class="sortorder"
+                          ng-show="predicate === 'value'"
+                          ng-class="{reverse:reverse}"></span>
+                </th>
+                <th class="third-col">
+                    <a href="#" ng-click="order('rate')">Rate</a>
+                    <span class="sortorder"
+                          ng-show="predicate === 'rate'"
+                          ng-class="{reverse:reverse}"></span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="parameter in parameters | filter:filter | orderBy:predicate:reverse">
+                <td class="first-col">{{! parameter.type }}</td>
+                <td class="second-col">{{! parameter.value }}</td>
+                <td class="third-col">{{! parameter.rate }} Hz</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

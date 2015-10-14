@@ -38,6 +38,20 @@ class MainHandler(tornado.web.RequestHandler):
                     version=royweb.__version__)
 
 
+class V2Handler(tornado.web.RequestHandler):
+    """The main request handler for ROyWeb"""
+    #pylint: disable=arguments-differ
+    def initialize(self, royweb_ip, royweb_port):
+        self.royweb_ip = royweb_ip
+        self.royweb_port = royweb_port
+
+    def get(self):
+        self.render("v2.html",
+                    royweb_ip=self.royweb_ip,
+                    royweb_port=self.royweb_port,
+                    version=royweb.__version__)
+
+
 class EchoWebSocket(tornado.websocket.WebSocketHandler):
     """An echo handler for client/server messaging and debugging"""
     def __init__(self, *args, **kwargs):
