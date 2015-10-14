@@ -6,7 +6,7 @@
         $scope.datapoints = [];
         $scope.datacolumns = [{"id":"bar","type":"line"}];
         $scope.datax = {"id": "time", "name": "NARF"}
-        $scope.bindto = tools.random_guid();
+        $scope.guid = tools.random_guid();
 
         $scope.timeFormat = function(timestamp) {
             return d3.time.format("%X")(new Date(timestamp));
