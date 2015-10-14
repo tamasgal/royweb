@@ -7,13 +7,14 @@
         $scope.datacolumns = [{"id":"bar","type":"line"}];
         $scope.datax = {"id": "time", "name": "NARF"}
         $scope.guid = tools.random_guid();
+        $scope.width = 400;
 
         $scope.timeFormat = function(timestamp) {
             return d3.time.format("%X")(new Date(timestamp));
         };
 
         $scope.changeState = function() {
-            settings.state = "narf";
+            settings.state = $scope.guid;
         };
 
         $interval(function(){
