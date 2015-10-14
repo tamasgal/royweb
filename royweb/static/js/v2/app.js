@@ -1,3 +1,3 @@
 (function () {
-    angular.module('ROyWeb', ['gridshore.c3js.chart']);
+    angular.module('ROyWeb', ['ngTouch', 'gridshore.c3js.chart']);
  }());
