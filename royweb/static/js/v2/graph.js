@@ -13,8 +13,13 @@
             return d3.time.format("%X")(new Date(timestamp));
         };
 
-        $scope.changeState = function() {
-            settings.state = $scope.guid;
+        $scope.selected = function() {
+            return settings.selected_graph === $scope.guid;
+        };
+
+        $scope.selectGraph = function() {
+            console.log("Select graph: " + $scope.guid);
+            settings.selected_graph = $scope.guid;
         };
 
         $interval(function(){
