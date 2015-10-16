@@ -1,3 +1,9 @@
-<div id="settings" ng-controller="ControlPanelController">
-    Current state: {{! state }}
+<div id="settings" ng-controller="ControlPanelController" ng-show="selected_graph">
+    <h3>Graph settings</h3>
+    <table>
+        <tr>
+            <td>Show points</td>
+            <td><input type="checkbox" ng-model="show_point"></td>
+        </tr>
+    </table>
 </div>
