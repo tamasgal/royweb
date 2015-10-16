@@ -19,9 +19,9 @@
 
 
   </head>
-  <body>
+  <body ng-controller="MainController">
 
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top" ng-click="reset_graph_selection()">
       <div class="container">
         <div class="navbar-header">
           <button type="button"
@@ -84,10 +84,10 @@
     <div class="container-fluid">
         <div class="row">
             <div id="content" class="col-sm-9">
-                <div class="graph" ng-controller="GraphCtrl" ng-style="{width: {{! width }} + 'px'}" ng-click="changeState()">
+                <div class="graph" ng-controller="GraphCtrl" ng-style="{width: {{! width }} + 'px'}" ng-click="selectGraph()" ng-class="{'active-graph' : selected() }">
                     {% include "graph.html" %}
                 </div>
-                <div class="graph" ng-controller="GraphCtrl" ng-style="{width: {{! width }} + 'px'}" ng-click="changeState()">
+                <div class="graph" ng-controller="GraphCtrl" ng-style="{width: {{! width }} + 'px'}" ng-click="selectGraph()" ng-class="{'active-graph' : selected() }">
                     {% include "graph.html" %}
                 </div>
             </div>
