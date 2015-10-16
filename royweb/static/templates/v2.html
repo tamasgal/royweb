@@ -84,10 +84,10 @@
     <div class="container-fluid">
         <div class="row">
             <div id="content" class="col-sm-9">
-                <div class="graph" ng-controller="GraphCtrl" ng-style="{width: {{! width }} + 'px'}" ng-click="selectGraph()" ng-class="{'active-graph' : selected() }">
+                <div class="graph" ng-controller="GraphCtrl" ng-style="{width: {{! width }} + 'px'}" ng-click="selectGraph()" ng-class="{'active-graph' : is_selected() }">
                     {% include "graph.html" %}
                 </div>
-                <div class="graph" ng-controller="GraphCtrl" ng-style="{width: {{! width }} + 'px'}" ng-click="selectGraph()" ng-class="{'active-graph' : selected() }">
+                <div class="graph" ng-controller="GraphCtrl" ng-style="{width: {{! width }} + 'px'}" ng-click="selectGraph()" ng-class="{'active-graph' : is_selected() }">
                     {% include "graph.html" %}
                 </div>
             </div>
