@@ -5,10 +5,8 @@
     module.factory('settings', function($rootScope){
         var factory = {};
 
-        var state = 'OFF';
-        factory.state = state;
         factory.selected_graph = false;
-        factory.show_point = false;
+        factory.graphs = {};
 
         factory.subscribe = function(scope, event, callback) {
             var handler = $rootScope.$on(event, callback);
