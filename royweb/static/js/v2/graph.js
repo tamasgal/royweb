@@ -28,12 +28,14 @@
             console.log("Initialised graph with ID " + $scope.guid);
             settings.graphs[$scope.guid] = {};
             settings.graphs[$scope.guid].show_point = $scope.show_point;
+            settings.graphs[$scope.guid].width = $scope.width;
         };
         $scope.init();
 
         var update_settings = function () {
             console.log("Updating settings_update!");
             $scope.show_point = settings.graphs[$scope.guid].show_point;
+            $scope.width = settings.graphs[$scope.guid].width;
             console.log($scope.show_point);
         };
 
@@ -47,6 +49,6 @@
             if(data) {
                 $scope.datapoints = data.slice(Math.max(data.length - 35, 1));
             };
-        }, 1000);
+        }, 500);
     });
 }());
