@@ -1,15 +1,20 @@
-<c3chart bindto-id="{{! guid }}"
-         chart-data="datapoints"
-         chart-transition="0"
-         chart-columns="datacolumns"
-         chart-x="datax"
-         transition-duration="0"
-         show-legend="true">
-    <chart-axis-x axis-id="time" axis-type="timeseries">
-        <chart-axis-x-tick tick-rotate="50" tick-format-function="timeFormat" />
-    </chart-axis-x>
-    <chart-points show-point="{{! show_point }}" point-expand-enabled="true"/>
-    <chart-lines show-line="false"/>
-    <chart-grid show-y="true"></chart-grid>
-
-</c3chart>
+<div class="graph"
+     ng-controller="GraphCtrl"
+     ng-style="{'width': width}"
+     ng-click="selectGraph()"
+     ng-class="{'active-graph' : is_selected() }">
+    <c3chart bindto-id="{{! guid }}"
+             chart-data="datapoints"
+             chart-transition="0"
+             chart-columns="datacolumns"
+             chart-x="datax"
+             transition-duration="0"
+             show-legend="true">
+        <chart-axis-x axis-id="time" axis-type="timeseries">
+            <chart-axis-x-tick tick-rotate="50" tick-format-function="timeFormat" />
+        </chart-axis-x>
+        <chart-points show-point="{{! show_point }}" point-expand-enabled="true"/>
+        <chart-lines show-line="false"/>
+        <chart-grid show-y="true"></chart-grid>
+    </c3chart>
+</div>
