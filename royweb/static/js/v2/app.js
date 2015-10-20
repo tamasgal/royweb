@@ -11,4 +11,8 @@
             settings.selected_graph = false;
         };
     }]);
+
+    module.controller('ContentController',
+            ['$scope', 'settings', function($scope, settings) {
+    }]);
 }());
