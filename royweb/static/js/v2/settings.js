@@ -5,26 +5,28 @@
     module.factory('settings', function($rootScope){
         var factory = {};
 
-        var state = 'OFF';
-        factory.state = state;
+        factory.selected_graph = false;
+        factory.graphs = {};
 
-        factory.subscribe = function(scope, callback) {
-            var handler = $rootScope.$on('settings-service-event', callback);
+        factory.subscribe = function(scope, event, callback) {
+            var handler = $rootScope.$on(event, callback);
             scope.$on('$destroy', handler);
         };
 
-        factory.notify = function() {
-            $rootScope.$emit('settings-service-event');
+        factory.notify = function(event) {
+            console.log("Emmiting " + event);
+            $rootScope.$emit(event);
         };
 
         return factory;
     });
 
-    // Emit signal when something in settings is changed
+    // Emit signal when something in settings has changed
     module.run(function($rootScope, settings){
         $rootScope.settings = settings;
-        $rootScope.$watch('settings', function(){
-            settings.notify();
+        $rootScope.$watch('settings.selected_graph', function(){
+            console.log("Settings changed");
+            settings.notify('selected-graph-event');
         }, true);
     });
 }());
