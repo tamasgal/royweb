@@ -34,6 +34,7 @@ define("udp_port", default="9999", type=int,
        help="The port where the ROyCruncher sends data to.")
 
 define("config_file", help="Location of the configuration file.")
+define("db_file", default="roy.db", help="Location of the database file.")
 define("pid_file", help="Location of the PID file.")
 define("log_file", help="Location of the log file for stdout and stderr.")
 
