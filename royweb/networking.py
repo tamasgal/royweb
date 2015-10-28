@@ -60,14 +60,17 @@ class WebSocketBroadcaster(object):
             size = sys.getsizeof(data)
             print("Received {0} bytes of data from {1}.".format(size, addr))
             try:
-                client_message = self.with_timestamp(data)
-                for client in self.clients:
-                    client.write_message(self.with_timestamp(data))
+                self._broadcast_data(data)
             except ValueError:
                 print("Invalid JSON message received: '{0}'".format(data))
             except WebSocketClosedError:
                 print("WebSocket was closed due to an error, while sending "
                       "the following JSON message: '{0}'".format(data))
+
+    def _broadcast_data(self, data):
+        client_message = self.with_timestamp(data)
+        for client in self.clients:
+            client.write_message(self.with_timestamp(data))
 
     def with_timestamp(self, json_obj):
         """Returns a copy of a json obj with an additional time property."""
