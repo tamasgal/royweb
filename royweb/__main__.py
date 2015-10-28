@@ -23,6 +23,7 @@ from random import random
 import math
 
 from royweb.networking import PacketHandler, UDPDispatcher
+from royweb.database import DBManager
 from royweb.webhandler import (V2Handler, MainHandler, EchoWebSocket,
                                UnitTests, SpecTests)
 
@@ -70,6 +71,7 @@ def main():
     print("Starting ROyWeb with PID {0}".format(pid))
     print("Running on {0}:{1}".format(royweb_ip, royweb_port))
     print("Listening for UDP data on port {0}".format(udp_port))
+    print("Database for offline storage: {0}".format(options.db_file))
 
     settings = {'debug': True,
                 'static_path': os.path.join(root, 'static'),
@@ -86,7 +88,8 @@ def main():
         (r"/spec_tests", SpecTests),
     ], **settings)
 
-    udp_dispatcher = UDPDispatcher(royweb_ip, udp_port, clients)
+    db_manager = DBManager(options.db_file)
+    udp_dispatcher = UDPDispatcher(royweb_ip, udp_port, clients, db_manager)
     t = threading.Thread(target=udp_dispatcher.run)
     t.daemon = True
     t.start()
@@ -97,6 +100,7 @@ def main():
     except KeyboardInterrupt:
         print("Stopping tornado...")
         udp_dispatcher.stop()
+        db_manager.disconnect()
         tornado.ioloop.IOLoop.instance().stop()
 
 

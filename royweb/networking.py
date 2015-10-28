@@ -43,12 +43,13 @@ class PacketHandler(object):
 
 class UDPDispatcher(object):
     """Receives data from UDP and redistributes them via WebSockets."""
-    def __init__(self, server, port, clients):
+    def __init__(self, server, port, clients, db_manager):
         """Bind to UDP port."""
         self.is_running = True
         udp_ip = server
         udp_port = port
         self.clients = clients
+        self.db_manager = db_manager
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.sock.bind((udp_ip, udp_port))
 
@@ -60,18 +61,20 @@ class UDPDispatcher(object):
             size = sys.getsizeof(data)
             print("Received {0} bytes of data from {1}.".format(size, addr))
             try:
-                self._broadcast_data(data)
+                client_message = self.with_timestamp(data)
             except ValueError:
                 print("Invalid JSON message received: '{0}'".format(data))
             except WebSocketClosedError:
                 print("WebSocket was closed due to an error, while sending "
                       "the following JSON message: '{0}'".format(data))
+            else:
+                self._broadcast_data(data)
+                self._insert_into_db(json.loads(self.with_timestamp(data).decode('utf-8')))
 
     def _insert_into_db(self, data):
-        pass
+        self.db_manager.store(data)
 
     def _broadcast_data(self, data):
-        client_message = self.with_timestamp(data)
         for client in self.clients:
             client.write_message(self.with_timestamp(data))
 
