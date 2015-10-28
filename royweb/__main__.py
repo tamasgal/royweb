@@ -22,7 +22,7 @@ from time import sleep
 from random import random
 import math
 
-from royweb.networking import PacketHandler, WebSocketBroadcaster
+from royweb.networking import PacketHandler, UDPDispatcher
 from royweb.webhandler import (V2Handler, MainHandler, EchoWebSocket,
                                UnitTests, SpecTests)
 
@@ -86,7 +86,7 @@ def main():
         (r"/spec_tests", SpecTests),
     ], **settings)
 
-    ws_broadcaster = WebSocketBroadcaster(royweb_ip, udp_port, clients)
+    ws_broadcaster = UDPDispatcher(royweb_ip, udp_port, clients)
     t = threading.Thread(target=ws_broadcaster.run)
     t.daemon = True
     t.start()

@@ -9,7 +9,7 @@ from __future__ import print_function
 
 __author__ = 'Tamas Gal'
 __email__ = 'tamas.gal@physik.uni-erlangen.de'
-__all__ = ('PacketHandler', 'WebSocketBroadcaster')
+__all__ = ('PacketHandler', 'UDPDispatcher')
 
 import sys
 import socket
@@ -41,7 +41,7 @@ class PacketHandler(object):
         return message
 
 
-class WebSocketBroadcaster(object):
+class UDPDispatcher(object):
     """Receives data from UDP and redistributes them via WebSockets."""
     def __init__(self, server, port, clients):
         """Bind to UDP port."""
@@ -66,6 +66,9 @@ class WebSocketBroadcaster(object):
             except WebSocketClosedError:
                 print("WebSocket was closed due to an error, while sending "
                       "the following JSON message: '{0}'".format(data))
+
+    def _insert_into_db(self, data):
+        pass
 
     def _broadcast_data(self, data):
         client_message = self.with_timestamp(data)
