@@ -22,7 +22,8 @@ from time import sleep
 from random import random
 import math
 
-from royweb.networking import PacketHandler, WebSocketBroadcaster
+from royweb.networking import PacketHandler, UDPDispatcher
+from royweb.database import DBManager
 from royweb.webhandler import (V2Handler, MainHandler, EchoWebSocket,
                                UnitTests, SpecTests)
 
@@ -34,6 +35,7 @@ define("udp_port", default="9999", type=int,
        help="The port where the ROyCruncher sends data to.")
 
 define("config_file", help="Location of the configuration file.")
+define("db_file", default="roy.db", help="Location of the database file.")
 define("pid_file", help="Location of the PID file.")
 define("log_file", help="Location of the log file for stdout and stderr.")
 
@@ -69,6 +71,7 @@ def main():
     print("Starting ROyWeb with PID {0}".format(pid))
     print("Running on {0}:{1}".format(royweb_ip, royweb_port))
     print("Listening for UDP data on port {0}".format(udp_port))
+    print("Database for offline storage: {0}".format(options.db_file))
 
     settings = {'debug': True,
                 'static_path': os.path.join(root, 'static'),
@@ -85,8 +88,9 @@ def main():
         (r"/spec_tests", SpecTests),
     ], **settings)
 
-    ws_broadcaster = WebSocketBroadcaster(royweb_ip, udp_port, clients)
-    t = threading.Thread(target=ws_broadcaster.run)
+    db_manager = DBManager(options.db_file)
+    udp_dispatcher = UDPDispatcher(royweb_ip, udp_port, clients, db_manager)
+    t = threading.Thread(target=udp_dispatcher.run)
     t.daemon = True
     t.start()
 
@@ -95,30 +99,9 @@ def main():
         tornado.ioloop.IOLoop.instance().start()
     except KeyboardInterrupt:
         print("Stopping tornado...")
-        ws_broadcaster.stop()
+        udp_dispatcher.stop()
+        db_manager.disconnect()
         tornado.ioloop.IOLoop.instance().stop()
-
-
-def send_test_parameter():
-    udp_ip = "127.0.0.1"
-    udp_port = 9999
-
-    ph = PacketHandler(udp_ip, udp_port)
-
-    print("UDP target IP: {0}".format(udp_ip))
-    print("UDP target port: {0}".format(udp_port))
-
-    i = 100
-    while True:
-        bias = i % 10
-        ph.send('foo', random()*1.5+bias, 'MHz', 'The foo parameter description.',)
-        sleep(random()*1.5+0.1)
-
-        bias = math.sin(i)*2
-        ph.send('narf', random()*1.5+bias, 'ms', 'The narf parameter description.',)
-        sleep(random()*1.5+0.1)
-
-        i += 1
 
 
 if __name__ == "__main__":
