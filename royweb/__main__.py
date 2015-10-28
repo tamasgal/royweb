@@ -100,28 +100,6 @@ def main():
         tornado.ioloop.IOLoop.instance().stop()
 
 
-def send_test_parameter():
-    udp_ip = "127.0.0.1"
-    udp_port = 9999
-
-    ph = PacketHandler(udp_ip, udp_port)
-
-    print("UDP target IP: {0}".format(udp_ip))
-    print("UDP target port: {0}".format(udp_port))
-
-    i = 100
-    while True:
-        bias = i % 10
-        ph.send('foo', random()*1.5+bias, 'MHz', 'The foo parameter description.',)
-        sleep(random()*1.5+0.1)
-
-        bias = math.sin(i)*2
-        ph.send('narf', random()*1.5+bias, 'ms', 'The narf parameter description.',)
-        sleep(random()*1.5+0.1)
-
-        i += 1
-
-
 if __name__ == "__main__":
     main()
 
