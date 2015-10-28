@@ -86,8 +86,8 @@ def main():
         (r"/spec_tests", SpecTests),
     ], **settings)
 
-    ws_broadcaster = UDPDispatcher(royweb_ip, udp_port, clients)
-    t = threading.Thread(target=ws_broadcaster.run)
+    udp_dispatcher = UDPDispatcher(royweb_ip, udp_port, clients)
+    t = threading.Thread(target=udp_dispatcher.run)
     t.daemon = True
     t.start()
 
@@ -96,7 +96,7 @@ def main():
         tornado.ioloop.IOLoop.instance().start()
     except KeyboardInterrupt:
         print("Stopping tornado...")
-        ws_broadcaster.stop()
+        udp_dispatcher.stop()
         tornado.ioloop.IOLoop.instance().stop()
 
 
