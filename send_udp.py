@@ -1,12 +1,31 @@
 #!/usr/bin/env python
+"""
+Send random data to ROyWeb via UDP.
+
+Usage:
+  send_udp.py [--ip=127.0.0.1] [--port=9999]
+  send_udp.py -h | --help
+  send_udp.py --version
+
+Options:
+  -h --help      Show this screen.
+  --version      Show version.
+  --ip=<ip>      The address of the ROyWeb server. [default: 127.0.0.1]
+  --port=<port>  Port to send data to. [default: 9999]
+"""
+
 from time import sleep
 from random import random
 import math
 
 from royweb import PacketHandler
 
-udp_ip = "127.0.0.1"
-udp_port = 9999
+from docopt import docopt
+
+arguments = docopt(__doc__)
+
+udp_ip = arguments["--ip"]
+udp_port = int(arguments["--port"])
 
 ph = PacketHandler(udp_ip, udp_port)
 

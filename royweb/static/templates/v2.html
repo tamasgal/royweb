@@ -19,9 +19,9 @@
 
 
   </head>
-  <body>
+  <body ng-controller="MainController">
 
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top" ng-click="reset_graph_selection()">
       <div class="container">
         <div class="navbar-header">
           <button type="button"
@@ -83,16 +83,11 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div id="content" class="col-sm-9">
-                <div class="graph" ng-controller="GraphCtrl" ng-style="{width: {{! width }} + 'px'}" ng-click="changeState()">
-                    {% include "graph.html" %}
-                </div>
-                <div class="graph" ng-controller="GraphCtrl" ng-style="{width: {{! width }} + 'px'}" ng-click="changeState()">
-                    {% include "graph.html" %}
-                </div>
+            <div id="content" class="col-sm-9" ng-controller="ContentController">
+                {% include "graph.html" %}
             </div>
             <div id="sidebar" class="col-sm-3">
-                {% include "settings.html" %}
+                {% include "controlpanel.html" %}
                 {% include "parameters.html" %}
             </div>
         </div>
@@ -105,7 +100,8 @@
     <script src="/static/js/external/c3.min.js"></script>
     <script src="/static/js/external/bootstrap.min.js"></script>
     <script src="/static/js/external/chroma.min.js"></script>
-    <script src="/static/js/external/angular-1.4.7.min.js"></script>
+    <script src="/static/js/external/angular.min.js"></script>
+    <script src="/static/js/external/angular-touch.min.js"></script>
     <script src="/static/js/external/c3-angular.js"></script>
     <script src="/static/js/v2/websocket.js"></script>
     <script src="/static/js/tools.js"></script>
