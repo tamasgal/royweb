@@ -18,6 +18,7 @@ Monitoring a specific parameter should be as easy as sending a JSON object throu
 
 Feel free to contribute or join; any kind of feedback is welcome!
 
+Btw. the new GUI is already available under http://your-royweb-server.yep:8080/**v2** it is however in a very early alpha state.
 
 Documentation
 -------------
