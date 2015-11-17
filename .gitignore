@@ -63,3 +63,6 @@ sessions
 
 # Mac OS X
 .DS_Store
+
+# ROyWeb database
+roy.db
