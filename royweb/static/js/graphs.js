@@ -685,7 +685,6 @@ function ScatterPlot() {
             });
 
             var dataset = data.slice(-1)[0].value;
-            console.log(dataset);
             //var points = self.points.selectAll("points-" + roy.tools.escaped(parameter_type))
             //          .data(dataset);
             var points = self.svg.select(".points-" + roy.tools.escaped(parameter_type))
@@ -698,6 +697,7 @@ function ScatterPlot() {
                   .attr("cy", function(d) { return self.yScale(d[1]); })
                   .attr("r", 2)
                   .attr("class", data.type)
+                  .style("opacity", 0.7)
                   .attr("fill", self.parameter_color(parameter_type));
 
             points.transition()
