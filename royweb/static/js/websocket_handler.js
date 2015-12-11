@@ -36,6 +36,9 @@ ws.onmessage = function (evt) {
                 case "timeplot":
                     var new_graph = new TimePlot();
                     break;
+                case "scatterplot":
+                    var new_graph = new ScatterPlot();
+                    break;
                 case "histogram":
                     var new_graph = new Histogram();
                     new_graph.set_nbins(graph.nbins);
