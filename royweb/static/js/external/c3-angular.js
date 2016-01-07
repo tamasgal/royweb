@@ -1,18 +1,8 @@
-/**
- * @ngdoc module
- * @name C3jsChartDirective
- * @description 
- *   AngularJS Directive for the c3js library. With this directive we make it easier 
- *   to work with the great c3js libary. We provide a number of directives that make 
- *   it possible to declaritively create some charts.
- *
- *   This documentation can be found online at: {@link http://jettro.github.io/c3-angular-directive/api-docs/0.7/C3jsChartDirective.html}
- *  
- *   More information about the directive can be found here {@link http://jettro.github.io/c3-angular-directive/}
- *
- *   The documentation is generated using jsdoc, and this plugin: {@link https://github.com/allenhwkim/angular-jsdoc}
- */
-angular.module('gridshore.c3js.chart', []);angular.module('gridshore.c3js.chart')
+/*! c3-angular - v1.0.1 - 2016-01-04
+* https://github.com/jettro/c3-angular-sample
+* Copyright (c) 2016 ; Licensed  */
+angular.module('gridshore.c3js.chart', []);
+angular.module('gridshore.c3js.chart')
     .directive('chartAxes', ChartAxes);
 /**
  * @ngdoc directive
@@ -90,6 +80,7 @@ function ChartAxes () {
         "link": axesLinker
     };
 };
+
 angular.module('gridshore.c3js.chart')
     .directive('chartAxis', ChartAxis);
 
@@ -134,6 +125,7 @@ function ChartAxis () {
         "link": axisLinker
     };
 };
+
 angular.module('gridshore.c3js.chart')
     .directive('chartAxisX', ChartAxisX);
 
@@ -184,6 +176,10 @@ angular.module('gridshore.c3js.chart')
  * @param {String} axis-type The type of the x-axis can be one of the following three: timeseries, category or indexed (default).
  *
  *   {@link http://c3js.org/reference.html#axis-x-type | c3js doc}
+ *
+ * @param {String} axis-x-format Specify format of x axis data, usefull when using timeseries.
+ *
+ *   {@link http://c3js.org/reference.html#data-xFormat | c3js doc}
  *
  * @example
  * Usage:
@@ -236,6 +232,11 @@ function ChartAxisX () {
             axis.type=type;   
         }
         chartCtrl.addAxisProperties('x', axis);
+
+        var xFormat = attrs.axisXFormat;
+        if (xFormat) {
+            chartCtrl.setXFormat(xFormat);
+        }
     };
 
     return {
@@ -247,7 +248,8 @@ function ChartAxisX () {
         "replace": true,
         "link": axisLinker
     };
-};angular.module('gridshore.c3js.chart')
+}
+angular.module('gridshore.c3js.chart')
     .directive('chartAxisXTick', ChartAxisXTick);
 
 /**
@@ -292,10 +294,13 @@ function ChartAxisX () {
  *
  *   {@link http://c3js.org/reference.html#axis-x-tick-values| c3js doc}
  *
- * @param {Function} tick-format Provide a d3 based format for the tick value.
+ * @param {String} tick-format Provide a d3 based format for the tick value.
  *   format: '$,'
  *
- *   {@link http://c3js.org/reference.html#axis-x-tick-format| c3js doc}
+ * @param {String} tick-format-time Provide a d3 based format for the tick value in case of timeseries data.
+ *   format: '%Y-%m-%d %H:%M:%S'
+ *
+ *   {@link http://c3js.org/reference.html#data-xFormat| c3js doc}
  *
  * @param {Function} tick-format-function Provide a function to format the tick value.
  *   format: function (d) { return '$' + d; }
@@ -381,7 +386,13 @@ function ChartAxisXTick() {
 
         var tickValues = attrs.tickValues;
         if (tickValues) {
-            tick.values = tickValues;
+            if (tickValues) {
+                if (tickValues.indexOf(',') > -1) {
+                    tick.values = tickValues.split(',');
+                } else {
+                    tick.values = tickValues;
+                }
+            }
         }
 
         var outer = attrs.tickOuter;
@@ -398,6 +409,11 @@ function ChartAxisXTick() {
         var format = attrs.format;
         if (format) {
             tick.format = d3.format(format);
+        }
+
+        var formatTime = attrs.formatTime;
+        if (formatTime) {
+            tick.format = d3.time.format(format);
         }
 
         chartCtrl.addXTick(tick);
@@ -418,6 +434,7 @@ function ChartAxisXTick() {
         "link": tickLinker
     };
 };
+
 angular.module('gridshore.c3js.chart')
     .directive('chartAxisY', ChartAxisY);
 
@@ -546,7 +563,8 @@ function ChartAxisY() {
         "replace": true,
         "link": axisLinker
     };
-}angular.module('gridshore.c3js.chart')
+}
+angular.module('gridshore.c3js.chart')
     .directive('chartAxisYTick', ChartAxisYTick);
 
 /**
@@ -562,7 +580,7 @@ function ChartAxisY() {
  *   chart-axis-y
  *
  * @param {Number} tick-count Specify the number of ticks on the x axis.
- *   
+ *
  *   {@link http://c3js.org/reference.html#axis-y-tick-count| c3js doc}
  *
  * @param {Boolean} tick-outer Default is not to show the outer tick, setting this to true will show the outer tick.
@@ -585,7 +603,7 @@ function ChartAxisY() {
  * @example
  * Usage:
  *   <chart-axis-y-tick tick-outer="..." tick-count="..."/>
- * 
+ *
  * Example:
  *   {@link http://jettro.github.io/c3-angular-directive/#examples}
  *
@@ -612,7 +630,11 @@ function ChartAxisYTick() {
 
         var tickValues = attrs.tickValues;
         if (tickValues) {
-            tick.values = tickValues;
+            if (tickValues.indexOf(',') > -1) {
+                tick.values = tickValues.split(',');
+            } else {
+                tick.values = tickValues;
+            }
         }
 
         var format = attrs.tickFormat;
@@ -624,7 +646,7 @@ function ChartAxisYTick() {
 
         if (attrs.tickFormatFunction) {
             chartCtrl.addYTickFormatFunction(scope.tickFormatFunction());
-        }        
+        }
     };
 
     return {
@@ -636,7 +658,8 @@ function ChartAxisYTick() {
         "replace": true,
         "link": tickLinker
     };
-}angular.module('gridshore.c3js.chart')
+}
+angular.module('gridshore.c3js.chart')
     .directive('chartBar', ChartBar);
 /**
  * @ngdoc directive
@@ -694,7 +717,8 @@ function ChartBar() {
         replace: true,
         link: barLinker
     };
-}angular.module('gridshore.c3js.chart')
+}
+angular.module('gridshore.c3js.chart')
     .directive('c3chart', ['$timeout', function(timeout) {
         return C3Chart(timeout);
     }]);
@@ -772,9 +796,12 @@ function ChartBar() {
  * 
  *   {@link http://c3js.org/reference.html#api-focus| c3js doc}
  *
- * @param {Number} transition-duration Duration of transition (in milliseconds) for chart animation.
+ * @param {Number} transition-duration Duration of transition (in milliseconds) for chart animation. If you specify 0, transitions will be disabled which is good for large datasets.
  *
  *   {@link http://c3js.org/reference.html#transition-duration| c3js doc}
+ *
+ * @param {Object} initial-config Provide the initial config object to start the graph with.
+ *
  * @example
  * Usage:
  *   <c3chart >
@@ -822,6 +849,7 @@ function C3Chart ($timeout) {
         var paddingLeft = attrs.paddingLeft;
         var sortData = attrs.sortData;
         var transitionDuration = attrs.transitionDuration;
+        var initialConfig = attrs.initialConfig;
 
         if (paddingTop) {
             chartCtrl.addPadding('top', paddingTop);
@@ -847,6 +875,9 @@ function C3Chart ($timeout) {
         if (transitionDuration) {
             chartCtrl.addTransitionDuration(transitionDuration);
         }
+        if (initialConfig) {
+            chartCtrl.addInitialConfig(initialConfig);
+        }
         // Trick to wait for all rendering of the DOM to be finished.
         $timeout(function () {
             chartCtrl.showGraph();
@@ -865,7 +896,6 @@ function C3Chart ($timeout) {
             "chartData": "=chartData",
             "chartColumns": "=chartColumns",
             "chartX": "=chartX",
-            "transitionDuration": "@transitionDuration",
             "callbackFunction": "&"
         },
         "template": "<div><div id='{{bindto}}'></div><div ng-transclude></div></div>",
@@ -874,6 +904,7 @@ function C3Chart ($timeout) {
         "link": chartLinker
     };
 }
+
 angular.module('gridshore.c3js.chart')
     .directive('chartColors', ChartColors);
 
@@ -933,6 +964,7 @@ function ChartColors () {
         "link": colorsLinker
     };
 }
+
 angular.module('gridshore.c3js.chart')
     .directive('chartColumn', ChartColumn);
 
@@ -993,539 +1025,626 @@ function ChartColumn () {
         "link": columnLinker
     };
 }
-/**
- * @name ChartController
- * @description Controller for the c3js directive
- */
+
 angular.module('gridshore.c3js.chart')
-	/**
-	 * @controller 
-	 */
-    .controller('ChartController', ['$scope', '$timeout', function ($scope, $timeout) {
+    /**
+     * @controller
+     */
+    .controller('ChartController', ChartController);
 
-        function resetVars() {
-            $scope.chart = null;
-            $scope.columns = [];
-            $scope.types = {};
-            $scope.axis = {};
-            $scope.axes = {};
-            $scope.padding = null;
-            $scope.xValues = null;
-            $scope.xsValues = null;
-            $scope.xTick = null;
-            $scope.yTick = null;
-            $scope.names = null;
-            $scope.grid = null;
-            $scope.legend = null;
-            $scope.tooltip = null;
-            $scope.chartSize = null;
-            $scope.colors = null;
-            $scope.colorThresholds = null;
-            $scope.gauge = null;
-            $scope.jsonKeys = null;
-            $scope.groups = null;
-            $scope.sorting = null;
-            $scope.transitionDuration = null;
+ChartController.$inject = ['$scope', '$timeout'];
+function ChartController($scope, $timeout) {
+    this.showGraph = showGraph;
+
+    this.addColumn = addColumn;
+    this.addAxisProperties = addAxisProperties;
+    this.rotateAxis = rotateAxis;
+    this.addPadding = addPadding;
+    this.addSorting = addSorting;
+    this.addSize = addSize;
+
+    this.addColors = addColors;
+    this.addColorThresholds = addColorThresholds;
+    this.addColorFunction = addColorFunction;
+
+    this.addGrid = addGrid;
+    this.addGridLine = addGridLine;
+    this.hideGridFocus = hideGridFocus;
+
+    this.addLegend = addLegend;
+
+    this.addTooltip = addTooltip;
+    this.addTooltipTitleFormatFunction = addTooltipTitleFormatFunction;
+    this.addTooltipNameFormatFunction = addTooltipNameFormatFunction;
+    this.addTooltipValueFormatFunction = addTooltipValueFormatFunction;
+
+    this.addYAxis = addYAxis;
+    this.addYTick = addYTick;
+    this.addYTickFormatFunction = addYTickFormatFunction;
+
+    this.addXAxisValues = addXAxisValues;
+    this.addXTick = addXTick;
+    this.addXTickFormatFunction = addXTickFormatFunction;
+    this.addXType = addXType;
+    this.addXSValues = addXSValues;
+
+    this.addChartCallbackFunction = addChartCallbackFunction;
+    this.addInitialConfig = addInitialConfig;
+
+    this.addDataLabelsFormatFunction = addDataLabelsFormatFunction;
+    this.addTransitionDuration = addTransitionDuration;
+
+    this.addGauge = addGauge;
+    this.addGaugeLabelFormatFunction = addGaugeLabelFormatFunction;
+
+    this.addBar = addBar;
+
+    this.addLine = addLine;
+
+    this.addPie = addPie;
+    this.addPieLabelFormatFunction = addPieLabelFormatFunction;
+
+    this.addDonut = addDonut;
+    this.addDonutLabelFormatFunction = addDonutLabelFormatFunction;
+
+    this.addGroup = addGroup;
+
+    this.addPoint = addPoint;
+
+    this.addOnInitFunction = addOnInitFunction;
+    this.addOnMouseoverFunction = addOnMouseoverFunction;
+    this.addOnMouseoutFunction = addOnMouseoutFunction;
+    this.addOnRenderedFunction = addOnRenderedFunction;
+    this.addOnResizeFunction = addOnResizeFunction;
+    this.addOnResizedFunction = addOnResizedFunction;
+    this.addDataOnClickFunction = addDataOnClickFunction;
+    this.addDataOnMouseoverFunction = addDataOnMouseoverFunction;
+    this.addDataOnMouseoutFunction = addDataOnMouseoutFunction;
+
+    this.setXFormat = setXFormat;
+
+    resetVars();
+
+    function resetVars() {
+        $scope.chart = null;
+        $scope.columns = [];
+        $scope.types = {};
+        $scope.axis = {};
+        $scope.axes = {};
+        $scope.padding = null;
+        $scope.xValues = null;
+        $scope.xFormat = null;
+        $scope.xsValues = null;
+        $scope.xTick = null;
+        $scope.yTick = null;
+        $scope.names = null;
+        $scope.grid = null;
+        $scope.legend = null;
+        $scope.tooltip = null;
+        $scope.chartSize = null;
+        $scope.colors = null;
+        $scope.colorThresholds = null;
+        $scope.gauge = null;
+        $scope.jsonKeys = null;
+        $scope.groups = null;
+        $scope.sorting = null;
+        $scope.transitionDuration = null;
+        $scope.initialConfig = null;
+    }
+
+    function showGraph() {
+        var config = {};
+        if ($scope.initialConfig) {
+            config = $scope.initialConfig;
+        }
+        config.bindto = "#" + $scope.bindto;
+        config.data = config.data || {};
+
+        if ($scope.xValues) {
+            config.data.x = $scope.xValues;
+        }
+        if ($scope.xsValues) {
+            config.data.xs = $scope.xsValues;
+        }
+        if ($scope.columns) {
+            config.data.columns = $scope.columns;
+        }
+        if ($scope.xFormat) {
+            config.data.xFormat = $scope.xFormat;
+        }
+        config.data.types = config.data.types || $scope.types;
+        config.data.axes = config.data.axes || $scope.axes;
+        if ($scope.names) {
+            config.data.names = $scope.names;
+        }
+        if ($scope.padding != null) {
+            config.padding = $scope.padding;
+        }
+        if ($scope.sorting != null) {
+            if ($scope.sorting == "null") {
+                config.data.order = null;
+            } else {
+                config.data.order = $scope.sorting;
+            }
+        }
+        if ($scope.transitionDuration != null) {
+            config.transition = config.transition || {};
+            config.transition.duration = $scope.transitionDuration;
+        }
+        if ($scope.colors) {
+            config.data.colors = $scope.colors;
+        }
+        if ($scope.colorFunction) {
+            config.data.color = $scope.colorFunction;
+        }
+        if ($scope.showLabels && $scope.showLabels === "true") {
+            config.data.labels = true;
+        }
+        if ($scope.dataLabelsFormatFunction) {
+            config.data.labels = config.data.labels || {};
+            config.data.labels.format = $scope.dataLabelsFormatFunction;
+        }
+        if ($scope.groups != null) {
+            config.data.groups = $scope.groups;
+        }
+        if ($scope.showSubchart && $scope.showSubchart === "true") {
+            config.subchart = {"show": true};
+        }
+        if ($scope.enableZoom && $scope.enableZoom === "true") {
+            config.zoom = {"enabled": true};
+        }
+        config.axis = config.axis || $scope.axis;
+        if ($scope.xTick) {
+            config.axis.x.tick = $scope.xTick;
+        }
+        if ($scope.xTickFormatFunction) {
+            config.axis.x.tick = config.axis.x.tick || {};
+            config.axis.x.tick.format = $scope.xTickFormatFunction;
         }
 
-        resetVars();
-
-        this.showGraph = function () {
-            var config = {};
-            config.bindto = "#" + $scope.bindto;
-            config.data = {};
-            config.transition = {};
-
-            if ($scope.transitionDuration) {
-                config.transition.duration = $scope.transitionDuration;
-            }
-            if ($scope.xValues) {
-                config.data.x = $scope.xValues;
-            }
-            if ($scope.xsValues) {
-                config.data.xs = $scope.xsValues;
-            }
-            if ($scope.columns) {
-                config.data.columns = $scope.columns;
-            }
-            config.data.types = $scope.types;
-            config.data.axes = $scope.axes;
-            if ($scope.names) {
-                config.data.names = $scope.names;
-            }
-            if ($scope.padding != null) {
-                config.padding = $scope.padding;
-            }
-            if ($scope.sorting != null) {
-                if ($scope.sorting == "null") {
-                    config.data.order = null;
-                } else {
-                    config.data.order = $scope.sorting;
-                }
-            }
-            if ($scope.transitionDuration != null) {
-                config.transition = config.transition || {};
-                config.transition.duration = $scope.transitionDuration;
-            }
-            if ($scope.colors) {
-                config.data.colors = $scope.colors;
-            }
-            if ($scope.colorFunction) {
-                config.data.color = $scope.colorFunction;
-            }
-            if ($scope.showLabels && $scope.showLabels === "true") {
-                config.data.labels = true;
-            }
-            if ($scope.dataLabelsFormatFunction) {
-                config.data.labels        = config.data.labels || {};
-                config.data.labels.format = $scope.dataLabelsFormatFunction;
-            }
-            if ($scope.groups != null) {
-                config.data.groups = $scope.groups;
-            }
-            if ($scope.showSubchart && $scope.showSubchart === "true") {
-                config.subchart = {"show": true};
-            }
-            if ($scope.enableZoom && $scope.enableZoom === "true") {
-                config.zoom = {"enabled": true};
-            }
-            config.axis = $scope.axis;
-            if ($scope.xTick) {
-                config.axis.x.tick = $scope.xTick;
-            }
-            if ($scope.xTickFormatFunction) {
-                config.axis.x.tick        = config.axis.x.tick || {};
-                config.axis.x.tick.format = $scope.xTickFormatFunction;
-            }
-
-            if ($scope.xType) {
-                config.axis.x.type = $scope.xType;
-            }
-            if ($scope.yTick) {
-                config.axis.y.tick = $scope.yTick;
-            }
-            if ($scope.yTickFormatFunction) {
-                config.axis.y.tick        = config.axis.y.tick || {};
-                config.axis.y.tick.format = $scope.yTickFormatFunction;
-            }
-
-            if ($scope.grid != null) {
-                config.grid = $scope.grid;
-            }
-            if ($scope.legend != null) {
-                config.legend = $scope.legend;
-            }
-            if ($scope.tooltip != null) {
-                config.tooltip = $scope.tooltip;
-            } else {
-                config.tooltip = {}
-            }
-            if ($scope.tooltipTitleFormatFunction) {
-                config.tooltip.format       = config.tooltip.format || {};
-                config.tooltip.format.title = $scope.tooltipTitleFormatFunction;
-            }
-            if ($scope.tooltipNameFormatFunction) {
-                config.tooltip.format      = config.tooltip.format || {};
-                config.tooltip.format.name = $scope.tooltipNameFormatFunction;
-            }
-            if ($scope.tooltipValueFormatFunction) {
-                config.tooltip.format       = config.tooltip.format || {};
-                config.tooltip.format.value = $scope.tooltipValueFormatFunction;
-            }
-
-            if ($scope.chartSize != null) {
-                config.size = $scope.chartSize;
-            }
-            if ($scope.colors != null) {
-                config.color = {"pattern": $scope.colors};
-                config.color = {
-                    "pattern": $scope.colors,
-                    "threshold" : {
-                        "values" : $scope.colorThresholds
-                    }
-                };
-            }
-            if ($scope.gauge != null) {
-                config.gauge = $scope.gauge;
-            } else {
-                config.gauge = {}
-            }
-            if ($scope.gaugeLabelFormatFunction) {
-                config.gauge.label = config.gauge.label || {};
-                config.gauge.label.format = $scope.gaugeLabelFormatFunction;
-            }            
-            if ($scope.point != null) {
-                config.point = $scope.point;
-            }
-            if ($scope.bar != null) {
-                config.bar = $scope.bar;
-            }
-            if ($scope.line != null) {
-                config.line = $scope.line;
-            }
-            if ($scope.pie != null) {
-                config.pie = $scope.pie;
-            }
-            if ($scope.pieLabelFormatFunction) {
-                config.pie.label = config.pie.label || {};
-                config.pie.label.format = $scope.pieLabelFormatFunction;
-            }            
-            if ($scope.donut != null) {
-                config.donut = $scope.donut;
-            } else {
-                config.donut = {}
-            }
-            if ($scope.donutLabelFormatFunction) {
-                config.donut.label = config.donut.label || {};
-                config.donut.label.format = $scope.donutLabelFormatFunction;
-            }            
-            if ($scope.onInit != null) {
-                config.oninit = $scope.onInit;
-            }
-            if ($scope.onMouseover != null) {
-                config.onmouseover = $scope.onMouseover;
-            }
-            if ($scope.onMouseout != null) {
-                config.onmouseout = $scope.onMouseout;
-            }
-            if ($scope.onRendered != null) {
-                config.onrendered = $scope.onRendered;
-            }
-            if ($scope.onResize != null) {
-                config.onresize = $scope.onResize;
-            }
-            if ($scope.onResized != null) {
-                config.onresized = $scope.onResized;
-            }
-            if ($scope.dataOnClick != null) {
-                config.data.onclick = function (data, element) {
-                    $scope.$apply(function () {
-                        $scope.dataOnClick({"data": data});
-                    });
-                };
-            }
-            if ($scope.dataOnMouseover != null) {
-                config.data.onmouseover = function (data) {
-                    $scope.$apply(function () {
-                        $scope.dataOnMouseover({"data": data});
-                    });
-                };
-            }
-            if ($scope.dataOnMouseout != null) {
-                config.data.onmouseout = function (data) {
-                    $scope.$apply(function () {
-                        $scope.dataOnMouseout({"data": data});
-                    });
-                };
-            }
-
-            $scope.config = config;
-
-            if ($scope.chartData && $scope.chartColumns) {
-                $scope.$watch('chartData', function () {
-                    loadChartData();
-                },true);
-            } else {
-                $scope.chart = c3.generate($scope.config);
-            }
-
-            $scope.$on('$destroy', function () {
-                $timeout(function(){
-                    if (angular.isDefined($scope.chart)) {
-                        $scope.chart = $scope.chart.destroy();
-                        resetVars();
-                    }
-                }, 10000)
-            });
-        };
-
-        this.addColumn = function (column, columnType, columnName, columnColor) {
-            $scope.columns.push(column);
-            addColumnProperties(column[0], columnType, columnName, columnColor);
-        };
-
-        this.addDataLabelsFormatFunction = function (dataLabelsFormatFunction) {
-            $scope.dataLabelsFormatFunction = dataLabelsFormatFunction;
-        };
-
-        this.addChartCallbackFunction = function(chartCallbackFunction) {
-            $scope.chartCallbackFunction = chartCallbackFunction;
-        };
-
-        this.addTransitionDuration = function(transitionDuration) {
-            $scope.transitionDuration = transitionDuration;
-        };
-
-        this.addYAxis = function (yAxis) {
-            $scope.axes = yAxis;
-            if (!$scope.axis.y2) {
-                $scope.axis.y2 = {"show": true};
-            }
-        };
-
-        this.addXAxisValues = function (xValues) {
-            $scope.xValues = xValues;
-        };
-
-        this.addXSValues = function (xsValues) {
-            $scope.xsValues = xsValues;
-        };
-
-        this.addAxisProperties = function (id, axis) {
-            $scope.axis[id] = axis;
-        };
-
-        this.addXTick = function (tick) {
-            $scope.xTick = tick;
-        };
-
-        this.addXTickFormatFunction = function (xTickFormatFunction) {
-            $scope.xTickFormatFunction = xTickFormatFunction;
-        };
-
-        this.addXType = function (type) {
-            $scope.xType = type;
-        };
-
-        this.addYTick = function (tick) {
-            $scope.yTick = tick;
-        };
-
-        this.addYTickFormatFunction = function (yTickFormatFunction) {
-            $scope.yTickFormatFunction = yTickFormatFunction;
-        };
-
-        this.rotateAxis = function () {
-            $scope.axis.rotated = true;
-        };
-
-        this.addPadding = function (side, amount) {
-            if ($scope.padding == null) {
-                $scope.padding = {};
-            }
-            $scope.padding[side] = parseInt(amount);
-        };
-
-        this.addSorting = function (sorting) {
-            $scope.sorting = sorting;
+        if ($scope.xType) {
+            config.axis.x.type = $scope.xType;
+        }
+        if ($scope.yTick) {
+            config.axis.y.tick = $scope.yTick;
+        }
+        if ($scope.yTickFormatFunction) {
+            config.axis.y.tick = config.axis.y.tick || {};
+            config.axis.y.tick.format = $scope.yTickFormatFunction;
         }
 
-        this.addGrid = function (axis) {
-            if ($scope.grid == null) {
-                $scope.grid = {};
-            }
-            if ($scope.grid[axis] == null) {
-                $scope.grid[axis] = {};
-            }
-            $scope.grid[axis].show = true;
-        };
+        if ($scope.grid != null) {
+            config.grid = $scope.grid;
+        }
+        if ($scope.legend != null) {
+            config.legend = $scope.legend;
+        }
+        if ($scope.tooltip != null) {
+            config.tooltip = $scope.tooltip;
+        } else {
+            config.tooltip = {}
+        }
+        if ($scope.tooltipTitleFormatFunction) {
+            config.tooltip.format = config.tooltip.format || {};
+            config.tooltip.format.title = $scope.tooltipTitleFormatFunction;
+        }
+        if ($scope.tooltipNameFormatFunction) {
+            config.tooltip.format = config.tooltip.format || {};
+            config.tooltip.format.name = $scope.tooltipNameFormatFunction;
+        }
+        if ($scope.tooltipValueFormatFunction) {
+            config.tooltip.format = config.tooltip.format || {};
+            config.tooltip.format.value = $scope.tooltipValueFormatFunction;
+        }
 
-        this.addGridLine = function (axis, value, text) {
-            if ($scope.grid == null) {
-                $scope.grid = {};
-            }
-            if (axis === "x") {
-                if ($scope.grid.x === undefined) {
-                    $scope.grid.x = {};
+        if ($scope.chartSize != null) {
+            config.size = $scope.chartSize;
+        }
+        if ($scope.colors != null) {
+            config.color = {"pattern": $scope.colors};
+            config.color = {
+                "pattern": $scope.colors,
+                "threshold": {
+                    "values": $scope.colorThresholds
                 }
-                if ($scope.grid.x.lines === undefined) {
-                    $scope.grid.x.lines = [];
-                }
-            } else {
-                if ($scope.grid.y === undefined) {
-                    $scope.grid.y = {};
-                }
-                if ($scope.grid.y.lines === undefined) {
-                    $scope.grid.y.lines = [];
-                }
+            };
+        }
+        if ($scope.gauge != null) {
+            config.gauge = $scope.gauge;
+        } else {
+            config.gauge = {}
+        }
+        if ($scope.gaugeLabelFormatFunction) {
+            config.gauge.label = config.gauge.label || {};
+            config.gauge.label.format = $scope.gaugeLabelFormatFunction;
+        }
+        if ($scope.point != null) {
+            config.point = $scope.point;
+        }
+        if ($scope.bar != null) {
+            config.bar = $scope.bar;
+        }
+        if ($scope.line != null) {
+            config.line = $scope.line;
+        }
+        if ($scope.pie != null) {
+            config.pie = $scope.pie;
+        }
+        if ($scope.pieLabelFormatFunction) {
+            config.pie.label = config.pie.label || {};
+            config.pie.label.format = $scope.pieLabelFormatFunction;
+        }
+        if ($scope.donut != null) {
+            config.donut = $scope.donut;
+        } else {
+            config.donut = {}
+        }
+        if ($scope.donutLabelFormatFunction) {
+            config.donut.label = config.donut.label || {};
+            config.donut.label.format = $scope.donutLabelFormatFunction;
+        }
+        if ($scope.onInit != null) {
+            config.oninit = $scope.onInit;
+        }
+        if ($scope.onMouseover != null) {
+            config.onmouseover = $scope.onMouseover;
+        }
+        if ($scope.onMouseout != null) {
+            config.onmouseout = $scope.onMouseout;
+        }
+        if ($scope.onRendered != null) {
+            config.onrendered = $scope.onRendered;
+        }
+        if ($scope.onResize != null) {
+            config.onresize = $scope.onResize;
+        }
+        if ($scope.onResized != null) {
+            config.onresized = $scope.onResized;
+        }
+        if ($scope.dataOnClick != null) {
+            config.data.onclick = function (data, element) {
+                $scope.$apply(function () {
+                    $scope.dataOnClick({"data": data});
+                });
+            };
+        }
+        if ($scope.dataOnMouseover != null) {
+            config.data.onmouseover = function (data) {
+                $scope.$apply(function () {
+                    $scope.dataOnMouseover({"data": data});
+                });
+            };
+        }
+        if ($scope.dataOnMouseout != null) {
+            config.data.onmouseout = function (data) {
+                $scope.$apply(function () {
+                    $scope.dataOnMouseout({"data": data});
+                });
+            };
+        }
 
-            }
-            if (axis === "y2") {
-                $scope.grid.y.lines.push({"value": value, "text": text, "axis": "y2"});
-            } else {
-                $scope.grid[axis].lines.push({"value": value, "text": text});
-            }
-        };
+        $scope.config = config;
 
-        this.addLegend = function (legend) {
-            $scope.legend = legend;
-        };
-
-        this.addTooltip = function (tooltip) {
-            $scope.tooltip = tooltip;
-        };
-        this.addTooltipTitleFormatFunction = function (tooltipTitleFormatFunction) {
-            $scope.tooltipTitleFormatFunction = tooltipTitleFormatFunction;
-        };
-        this.addTooltipNameFormatFunction = function (tooltipNameFormatFunction) {
-            $scope.tooltipNameFormatFunction = tooltipNameFormatFunction;
-        };
-        this.addTooltipValueFormatFunction = function (tooltipValueFormatFunction) {
-            $scope.tooltipValueFormatFunction = tooltipValueFormatFunction;
-        };
-
-        this.addSize = function (chartSize) {
-            $scope.chartSize = chartSize;
-        };
-
-        this.addColors = function (colors) {
-            $scope.colors = colors;
-        };
-
-        this.addColorThresholds = function (thresholds) {
-            $scope.colorThresholds = thresholds;
-            if($scope.colors){
-                $scope.colors.threshold = {
-                    "values" :  $scope.colorThresholds
-                }
-            }
-        };
-        
-        this.addColorFunction = function (colorFunction) {
-            $scope.colorFunction = colorFunction;
-        };
-
-        this.addOnInitFunction = function (onInitFunction) {
-            $scope.onInit = onInitFunction;
-        };
-
-        this.addOnMouseoverFunction = function (onMouseoverFunction) {
-            $scope.onMouseover = onMouseoverFunction;
-        };
-
-        this.addOnMouseoutFunction = function (onMouseoutFunction) {
-            $scope.onMouseout = onMouseoutFunction;
-        };
-
-        this.addOnRenderedFunction = function (onRederedFunction) {
-            $scope.onRendered = onRederedFunction;
-        };
-
-        this.addOnResizeFunction = function (onResizeFunction) {
-            $scope.onResize = onResizeFunction;
-        };
-
-        this.addOnResizedFunction = function (onResizedFuncton) {
-            $scope.onResized = onResizedFuncton;
-        };
-
-        this.addDataOnClickFunction = function (theFunction) {
-            $scope.dataOnClick = theFunction;
-        };
-
-        this.addDataOnMouseoverFunction = function (theFunction) {
-            $scope.dataOnMouseover = theFunction;
-        };
-
-        this.addDataOnMouseoutFunction = function (theFunction) {
-            $scope.dataOnMouseout = theFunction;
-        };
-
-        this.addGauge = function (gauge) {
-            $scope.gauge = gauge;
-        };
-
-        this.addGaugeLabelFormatFunction = function (gaugeLabelFormatFunction) {
-            $scope.gaugeLabelFormatFunction = gaugeLabelFormatFunction;
-        };
-
-        this.addBar = function (bar) {
-            $scope.bar = bar;
-        };
-
-        this.addLine = function (line) {
-            $scope.line = line;
-        };
-
-        this.addPie = function (pie) {
-            $scope.pie = pie;
-        };
-
-        this.addPieLabelFormatFunction = function (pieLabelFormatFunction) {
-            $scope.pieLabelFormatFunction = pieLabelFormatFunction;
-        };
-
-        this.addDonut = function (donut) {
-            $scope.donut = donut;
-        };
-
-        this.addDonutLabelFormatFunction = function (donutLabelFormatFunction) {
-            $scope.donutLabelFormatFunction = donutLabelFormatFunction;
-        };
-
-        this.addGroup = function (group) {
-            if ($scope.groups == null) {
-                $scope.groups = [];
-            }
-            $scope.groups.push(group);
-        };
-
-        this.addPoint = function(point) {
-            $scope.point = point;
-        };
-
-        this.hideGridFocus = function () {
-            if ($scope.grid == null) {
-                $scope.grid = {};
-            }
-            $scope.grid["focus"] = {"show": false};
-        };
-
-        function addColumnProperties(id, columnType, columnName, columnColor) {
-            if (columnType !== undefined) {
-                $scope.types[id] = columnType;
-            }
-            if (columnName !== undefined) {
-                if ($scope.names === null) {
-                    $scope.names = {};
-                }
-                $scope.names[id] = columnName;
-            }
-            if (columnColor !== undefined) {
-                if ($scope.colors === null) {
-                    $scope.colors = {};
-                }
-                $scope.colors[id] = columnColor;
+        if ($scope.chartData && $scope.chartColumns) {
+            $scope.$watch('chartData', function () {
+                loadChartData();
+            }, true);
+        } else {
+            $scope.chart = c3.generate($scope.config);
+            if ($scope.chartCallbackFunction) {
+                $scope.chartCallbackFunction($scope.chart);
             }
         }
 
-        function loadChartData() {
-            $scope.jsonKeys = {};
-            $scope.jsonKeys.value = [];
-            angular.forEach($scope.chartColumns, function (column) {
-                $scope.jsonKeys.value.push(column.id);
-                addColumnProperties(column.id, column.type, column.name, column.color);
-            });
-            if ($scope.chartX) {
-                $scope.jsonKeys.x = $scope.chartX.id;
-            }
-            if ($scope.names) {
-                $scope.config.data.names = $scope.names;
-            }
-            if ($scope.colors) {
-                $scope.config.data.colors = $scope.colors;
-            }
-            if ($scope.groups) {
-                $scope.config.data.groups = $scope.groups;
-            }
-
-            $scope.config.data.keys = $scope.jsonKeys;
-            $scope.config.data.json = $scope.chartData;
-
-            if (!$scope.chartIsGenerated) {
-                $scope.chart = c3.generate($scope.config);
-                $scope.chartIsGenerated = true;
-
-                // Use the API as documented here to interact with the chart object
-                // http://c3js.org/reference.html#api
-                if ($scope.chartCallbackFunction) {
-                    $scope.chartCallbackFunction($scope.chart);
+        $scope.$on('$destroy', function () {
+            $timeout(function () {
+                if (angular.isDefined($scope.chart)) {
+                    $scope.chart = $scope.chart.destroy();
+                    resetVars();
                 }
-            } else {
-                $scope.chart.load($scope.config.data);
+            }, 10000)
+        });
+    }
+
+    function addColumn(column, columnType, columnName, columnColor) {
+        $scope.columns.push(column);
+        addColumnProperties(column[0], columnType, columnName, columnColor);
+    }
+
+    function addYAxis(yAxis) {
+        $scope.axes = yAxis;
+        if (!$scope.axis.y2) {
+            $scope.axis.y2 = {"show": true};
+        }
+    }
+
+    function addDataLabelsFormatFunction(dataLabelsFormatFunction) {
+        $scope.dataLabelsFormatFunction = dataLabelsFormatFunction;
+    }
+
+    function addChartCallbackFunction(chartCallbackFunction) {
+        $scope.chartCallbackFunction = chartCallbackFunction;
+    }
+
+    function addTransitionDuration(transitionDuration) {
+        $scope.transitionDuration = transitionDuration;
+    }
+
+    function addXAxisValues(xValues) {
+        $scope.xValues = xValues;
+    }
+
+    function addXSValues(xsValues) {
+        $scope.xsValues = xsValues;
+    }
+
+    function addAxisProperties(id, axis) {
+        $scope.axis[id] = axis;
+    }
+
+    function addXTick(tick) {
+        $scope.xTick = tick;
+    }
+
+    function addXTickFormatFunction(xTickFormatFunction) {
+        $scope.xTickFormatFunction = xTickFormatFunction;
+    }
+
+    function addXType(type) {
+        $scope.xType = type;
+    }
+
+    function addYTick(tick) {
+        $scope.yTick = tick;
+    }
+
+    function addYTickFormatFunction(yTickFormatFunction) {
+        $scope.yTickFormatFunction = yTickFormatFunction;
+    }
+
+    function rotateAxis() {
+        $scope.axis.rotated = true;
+    }
+
+    function addPadding(side, amount) {
+        if ($scope.padding == null) {
+            $scope.padding = {};
+        }
+        $scope.padding[side] = parseInt(amount);
+    }
+
+    function addSorting(sorting) {
+        $scope.sorting = sorting;
+    }
+
+    function addGrid(axis) {
+        if ($scope.grid == null) {
+            $scope.grid = {};
+        }
+        if ($scope.grid[axis] == null) {
+            $scope.grid[axis] = {};
+        }
+        $scope.grid[axis].show = true;
+    }
+
+    function addGridLine(axis, value, text) {
+        if ($scope.grid == null) {
+            $scope.grid = {};
+        }
+        if (axis === "x") {
+            if ($scope.grid.x === undefined) {
+                $scope.grid.x = {};
+            }
+            if ($scope.grid.x.lines === undefined) {
+                $scope.grid.x.lines = [];
+            }
+        } else {
+            if ($scope.grid.y === undefined) {
+                $scope.grid.y = {};
+            }
+            if ($scope.grid.y.lines === undefined) {
+                $scope.grid.y.lines = [];
+            }
+
+        }
+        if (axis === "y2") {
+            $scope.grid.y.lines.push({"value": value, "text": text, "axis": "y2"});
+        } else {
+            $scope.grid[axis].lines.push({"value": value, "text": text});
+        }
+    }
+
+    function addLegend(legend) {
+        $scope.legend = legend;
+    }
+
+    function addTooltip(tooltip) {
+        $scope.tooltip = tooltip;
+    }
+
+    function addTooltipTitleFormatFunction(tooltipTitleFormatFunction) {
+        $scope.tooltipTitleFormatFunction = tooltipTitleFormatFunction;
+    }
+
+    function addTooltipNameFormatFunction(tooltipNameFormatFunction) {
+        $scope.tooltipNameFormatFunction = tooltipNameFormatFunction;
+    }
+
+    function addTooltipValueFormatFunction(tooltipValueFormatFunction) {
+        $scope.tooltipValueFormatFunction = tooltipValueFormatFunction;
+    }
+
+    function addSize(chartSize) {
+        $scope.chartSize = chartSize;
+    }
+
+    function addColors(colors) {
+        $scope.colors = colors;
+    }
+
+    function addColorThresholds(thresholds) {
+        $scope.colorThresholds = thresholds;
+        if ($scope.colors) {
+            $scope.colors.threshold = {
+                "values": $scope.colorThresholds
             }
         }
-    }]);
+    }
+
+    function addColorFunction(colorFunction) {
+        $scope.colorFunction = colorFunction;
+    }
+
+    function addOnInitFunction(onInitFunction) {
+        $scope.onInit = onInitFunction;
+    }
+
+    function addOnMouseoverFunction(onMouseoverFunction) {
+        $scope.onMouseover = onMouseoverFunction;
+    }
+
+    function addOnMouseoutFunction(onMouseoutFunction) {
+        $scope.onMouseout = onMouseoutFunction;
+    }
+
+    function addOnRenderedFunction(onRederedFunction) {
+        $scope.onRendered = onRederedFunction;
+    }
+
+    function addOnResizeFunction(onResizeFunction) {
+        $scope.onResize = onResizeFunction;
+    }
+
+    function addOnResizedFunction(onResizedFuncton) {
+        $scope.onResized = onResizedFuncton;
+    }
+
+    function addDataOnClickFunction(theFunction) {
+        $scope.dataOnClick = theFunction;
+    }
+
+    function addDataOnMouseoverFunction(theFunction) {
+        $scope.dataOnMouseover = theFunction;
+    }
+
+    function addDataOnMouseoutFunction(theFunction) {
+        $scope.dataOnMouseout = theFunction;
+    }
+
+    function addGauge(gauge) {
+        $scope.gauge = gauge;
+    }
+
+    function addGaugeLabelFormatFunction(gaugeLabelFormatFunction) {
+        $scope.gaugeLabelFormatFunction = gaugeLabelFormatFunction;
+    }
+
+    function addBar(bar) {
+        $scope.bar = bar;
+    }
+
+    function addLine(line) {
+        $scope.line = line;
+    }
+
+    function addPie(pie) {
+        $scope.pie = pie;
+    }
+
+    function addPieLabelFormatFunction(pieLabelFormatFunction) {
+        $scope.pieLabelFormatFunction = pieLabelFormatFunction;
+    }
+
+    function addDonut(donut) {
+        $scope.donut = donut;
+    }
+
+    function addDonutLabelFormatFunction(donutLabelFormatFunction) {
+        $scope.donutLabelFormatFunction = donutLabelFormatFunction;
+    }
+
+    function addGroup(group) {
+        if ($scope.groups == null) {
+            $scope.groups = [];
+        }
+        $scope.groups.push(group);
+    }
+
+    function addPoint(point) {
+        $scope.point = point;
+    }
+
+    function hideGridFocus() {
+        if ($scope.grid == null) {
+            $scope.grid = {};
+        }
+        $scope.grid["focus"] = {"show": false};
+    }
+
+    function setXFormat(xFormat) {
+        $scope.xFormat = xFormat;
+    }
+
+    function addInitialConfig(initialConfig) {
+        $scope.initialConfig = initialConfig;
+    }
+
+    function addColumnProperties(id, columnType, columnName, columnColor) {
+        if (columnType !== undefined) {
+            $scope.types[id] = columnType;
+        }
+        if (columnName !== undefined) {
+            if ($scope.names === null) {
+                $scope.names = {};
+            }
+            $scope.names[id] = columnName;
+        }
+        if (columnColor !== undefined) {
+            if ($scope.colors === null) {
+                $scope.colors = {};
+            }
+            $scope.colors[id] = columnColor;
+        }
+    }
+
+    function loadChartData() {
+        $scope.jsonKeys = {};
+        $scope.jsonKeys.value = [];
+        angular.forEach($scope.chartColumns, function (column) {
+            $scope.jsonKeys.value.push(column.id);
+            addColumnProperties(column.id, column.type, column.name, column.color);
+        });
+        if ($scope.chartX) {
+            $scope.jsonKeys.x = $scope.chartX.id;
+        }
+        if ($scope.names) {
+            $scope.config.data.names = $scope.names;
+        }
+        if ($scope.colors) {
+            $scope.config.data.colors = $scope.colors;
+        }
+        if ($scope.groups) {
+            $scope.config.data.groups = $scope.groups;
+        }
+
+        $scope.config.data.keys = $scope.jsonKeys;
+        $scope.config.data.json = $scope.chartData;
+
+        if (!$scope.chartIsGenerated) {
+            $scope.chart = c3.generate($scope.config);
+            $scope.chartIsGenerated = true;
+
+            // Use the API as documented here to interact with the chart object
+            // http://c3js.org/reference.html#api
+            if ($scope.chartCallbackFunction) {
+                $scope.chartCallbackFunction($scope.chart);
+            }
+        } else {
+            $scope.config.data.unload = true;
+            $scope.chart.load($scope.config.data);
+        }
+    }
+}
 angular.module('gridshore.c3js.chart')
     .directive('chartDonut', ChartDonut);
 /**
@@ -1621,6 +1740,7 @@ function ChartDonut() {
         link: donutLinker
     };
 }
+
 angular.module('gridshore.c3js.chart')
     .directive('chartEvents', ChartEvents);
 
@@ -1748,6 +1868,7 @@ function ChartEvents() {
         "link": eventsLinker
     };
 }
+
 angular.module('gridshore.c3js.chart')
     .directive('chartGauge', ChartGauge);
 /**
@@ -1768,7 +1889,7 @@ angular.module('gridshore.c3js.chart')
  *
  * @param {Number} max The maximum value used in the Guage.
  *
- *   {@link http://c3js.org/reference.html#data-color| c3js docs}
+ *   {@link http://c3js.org/reference.html#gauge-max| c3js docs}
  *
  * @param {Number} width The width of the Guage.
  *
@@ -1836,6 +1957,7 @@ function ChartGauge () {
         link: gaugeLinker
     };
 }
+
 angular.module('gridshore.c3js.chart')
     .directive('chartGrid', ChartGrid);
 
@@ -1909,7 +2031,8 @@ function ChartGrid () {
         "transclude": true,
         "template": "<div ng-transclude></div>"
     };
-}angular.module('gridshore.c3js.chart')
+}
+angular.module('gridshore.c3js.chart')
     .directive('chartGridOptional', ChartGridOptional);
 /**
  * @ngdoc directive
@@ -1965,6 +2088,7 @@ function ChartGridOptional() {
         "link": gridLinker
     };
 }
+
 angular.module('gridshore.c3js.chart')
     .directive('chartGroup', ChartGroup);
 
@@ -2022,6 +2146,7 @@ function ChartGroup () {
         "link": groupLinker
     };
 }
+
 angular.module('gridshore.c3js.chart')
     .directive('chartLegend', ChartLegend);
 
@@ -2029,7 +2154,8 @@ angular.module('gridshore.c3js.chart')
  * @ngdoc directive
  * @name chartLegend
  * @description
- *  `chart-legend` is used configure the legend to add to the chart.
+ *  `chart-legend` is used configure the legend to add to the chart. You can also add function to handle events related
+ *  to the legend: onClick, onMouseOver and onMouseOut.
  *
  * Restrict To:
  *   Element
@@ -2038,16 +2164,28 @@ angular.module('gridshore.c3js.chart')
  *   c3chart
  *
  * @param {Boolean} showLegend Whether to show the legend or not, default is show.
- *   
+ *
  *   {@link http://c3js.org/reference.html#legend-show| c3js docs}
  *
  * @param {String} legendPosition One of the following values: bottom, right, inset.
  *
  *   {@link http://c3js.org/reference.html#legend-position| c3js docs}
  *
+ * @param {Function} onMouseover Provide callback to be called when you hoover the legend.
+ *
+ *   {@link http://c3js.org/reference.html#legend-item-onmouseover| c3js docs}
+ *
+ * @param {Function} onMouseout Provide callback to be called when you hoover out of the legend.
+ *
+ *   {@link http://c3js.org/reference.html#legend-item-onmouseout| c3js docs}
+ *
+ * @param {Function} onClick Provide callback to be called when you click the legend.
+ *
+ *   {@link http://c3js.org/reference.html#legend-item-onmouseout| c3js docs}
+ *
  * @example
  * Usage:
- *   <chart-legend show-legend="..." legend-position="..."/>
+ *   <chart-legend show-legend="..." legend-position="..." on-click="..."/>
  * 
  * Example:
  *   {@link http://jettro.github.io/c3-angular-directive/#examples}
@@ -2071,6 +2209,35 @@ function ChartLegend () {
             }
         }
 
+        if (attrs.onMouseover) {
+            legend = legend || {};
+            legend.item = legend.item || {};
+            legend.item.onmouseover = function (data) {
+                scope.$apply(function () {
+                    scope.onMouseover({"data": data});
+                });
+            };
+        }
+        if (attrs.onMouseout) {
+            legend = legend || {};
+            legend.item = legend.item || {};
+            legend.item.onmouseout = function (data) {
+                scope.$apply(function () {
+                    scope.onMouseout({"data": data});
+                });
+            };
+        }
+        if (attrs.onClick) {
+            legend = legend || {};
+            legend.item = legend.item || {};
+
+            legend.item.onclick = function (data) {
+                scope.$apply(function () {
+                    scope.onClick({"data": data});
+                });
+            };
+        }
+
         if (legend != null) {
             chartCtrl.addLegend(legend);
         }
@@ -2079,11 +2246,16 @@ function ChartLegend () {
     return {
         "require": "^c3chart",
         "restrict": "E",
-        "scope": {},
+        "scope": {
+            "onMouseover": "&",
+            "onMouseout": "&",
+            "onClick": "&"
+        },
         "replace": true,
         "link": legendLinker
     };
-}angular.module('gridshore.c3js.chart')
+}
+angular.module('gridshore.c3js.chart')
     .directive('chartLine', ChartLine);
 /**
  * @ngdoc directive
@@ -2134,6 +2306,7 @@ function ChartLine() {
         link: lineLinker
     };
 }
+
 
 angular.module('gridshore.c3js.chart')
     .directive('chartPie', ChartPie);
@@ -2211,6 +2384,7 @@ function ChartPie () {
         link: pieLinker
     };
 }
+
 angular.module('gridshore.c3js.chart')
     .directive('chartPoints', ChartPoints);
 
@@ -2290,7 +2464,8 @@ function ChartPoints () {
         replace: true,
         link: pointLinker
     };
-}angular.module('gridshore.c3js.chart')
+}
+angular.module('gridshore.c3js.chart')
     .directive('chartSize', ChartSize);
 
 /**
@@ -2349,6 +2524,7 @@ function ChartSize() {
         "link": sizeLinker
     };
 }
+
 angular.module('gridshore.c3js.chart')
     .directive('chartTooltip', ChartTooltip);
 
