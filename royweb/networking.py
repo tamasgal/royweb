@@ -72,9 +72,11 @@ class UDPDispatcher(object):
                 self._insert_into_db(json.loads(self.with_timestamp(data).decode('utf-8')))
 
     def _insert_into_db(self, data):
+        """Keep recorde of the data"""
         self.db_manager.store(data)
 
     def _broadcast_data(self, data):
+        """Send data to every connected web client"""
         for client in self.clients:
             client.write_message(self.with_timestamp(data))
 
@@ -88,3 +90,4 @@ class UDPDispatcher(object):
     def stop(self):
         """Stop the port listener."""
         self.is_running = False
+

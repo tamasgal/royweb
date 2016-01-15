@@ -15,7 +15,9 @@ import sqlite3 as lite
 
 
 class DBManager(object):
+    """Handler for the parameter log database."""
     def __init__(self, db_file):
+        """Initialise to given db_file"""
         self.connection = lite.connect(db_file, check_same_thread=False)
         with self.connection:
             cursor = self.connection.cursor()
@@ -24,6 +26,7 @@ class DBManager(object):
                                       "Type TEXT, Value REAL, Timestamp BLOB)")
 
     def store(self, data):
+        """Create an entry in the database with given data"""
         print(data)
         with self.connection:
             cursor = self.connection.cursor()
@@ -32,4 +35,5 @@ class DBManager(object):
                            .format(data['type'], data['value'], data['time']))
 
     def disconnect(self):
+        """Clean up the database connection"""
         self.connection.close()

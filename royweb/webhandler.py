@@ -68,6 +68,7 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
         self.clients.append(self)
 
     def on_message(self, message):
+        """Preliminary message handling. Need to be refactored!"""
         try:
             json_message = json.loads(message)
             if json_message['kind'] == 'session_save':
