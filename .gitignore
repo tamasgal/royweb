@@ -60,6 +60,7 @@ docs/_build/
 
 # Session files
 sessions
+*.db
 
 # Mac OS X
 .DS_Store
