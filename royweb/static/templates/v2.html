@@ -21,7 +21,8 @@
   </head>
   <body ng-controller="MainController">
 
-    <nav class="navbar navbar-default navbar-fixed-top" ng-click="reset_graph_selection()">
+    <nav class="navbar navbar-default navbar-fixed-top"
+         ng-click="reset_graph_selection()">
       <div class="container">
         <div class="navbar-header">
           <button type="button"
@@ -36,7 +37,7 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="#">
-              <img alt="Restless Oyster" src="/static/img/roy_logo_inline.png" />
+              <img alt="ROy" src="/static/img/roy_logo_inline.png" />
           </a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
@@ -83,7 +84,8 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div id="content" class="col-sm-9" ng-controller="ContentController">
+            <div id="content" class="col-sm-9"
+                 ng-controller="ContentController">
                 {% include "graph.html" %}
             </div>
             <div id="sidebar" class="col-sm-3">
