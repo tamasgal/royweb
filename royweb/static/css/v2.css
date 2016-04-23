@@ -4,7 +4,7 @@ body { padding-top: 60px; }
 }
 
 .active-graph {
-    border: 1px solid red;
+    border: 1px dashed steelblue;
 }
 
 /* Content */
@@ -38,4 +38,9 @@ body { padding-top: 60px; }
             table td.third-col {
     width: 25%;
     text-align: right;
+}
+
+#settings table input {
+    width: 70px;
+    border: 1px solid #dfdfdf;
 }

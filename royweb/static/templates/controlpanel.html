@@ -1,13 +1,34 @@
 <div id="settings" ng-controller="ControlPanelController" ng-show="selected_graph">
-    <h3>Graph settings</h3>
-    <table>
+    <h5>Graph settings</h5>
+
+    <table class="table table-striped">
+        <colgroup>
+            <col class="col-md-7">
+            <col class="col-md-5">
+        </colgroup>
         <tr>
             <td>Show points</td>
-            <td><input type="checkbox" ng-model="show_point" ng-change="update_settings()"></td>
+            <td>
+                <input type="checkbox"
+                       ng-model="show_point"
+                       ng-change="update_settings()">
+            </td>
         </tr>
         <tr>
             <td>Width</td>
-            <td><input type="number" ng-model="width" ng-change="update_settings()"></td>
+            <td>
+                <input type="number"
+                       ng-model="width"
+                       ng-change="update_settings()">
+            </td>
+        </tr>
+        <tr>
+            <td>Height</td>
+            <td>
+                <input type="number"
+                       ng-model="height"
+                       ng-change="update_settings()">
+            </td>
         </tr>
     </table>
 </div>
