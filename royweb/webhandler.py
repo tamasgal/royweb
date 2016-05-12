@@ -33,7 +33,7 @@ class MainHandler(tornado.web.RequestHandler):
 
     def get(self):
         self.render("index.html",
-                    royweb_ip=self.royweb_ip,
+                    royweb_ip=self.request.headers._as_list["Host"],
                     royweb_port=self.royweb_port,
                     version=royweb.__version__)
 
@@ -47,7 +47,7 @@ class V2Handler(tornado.web.RequestHandler):
 
     def get(self):
         self.render("v2.html",
-                    royweb_ip=self.royweb_ip,
+                    royweb_ip=self.request.headers._as_list["Host"],
                     royweb_port=self.royweb_port,
                     version=royweb.__version__)
 
