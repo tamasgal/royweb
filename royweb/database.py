@@ -30,9 +30,15 @@ class DBManager(object):
         print(data)
         with self.connection:
             cursor = self.connection.cursor()
-            cursor.execute("INSERT INTO Parameters(Type, Value, Timestamp)"
-                                        "VALUES('{0}', '{1}', '{2}');"
-                           .format(data['type'], data['value'], data['time']))
+            try:
+                cursor.execute("INSERT INTO Parameters(Type, Value, Timestamp)"
+                               "VALUES('{0}', '{1}', '{2}');"
+                               .format(data['type'],
+                                       data['value'],
+                                       data['time']))
+            except KeyError:
+                print("The following data could not be logged: '{0}'"
+                      .format(data))
 
     def disconnect(self):
         """Clean up the database connection"""
