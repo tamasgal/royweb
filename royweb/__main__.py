@@ -70,7 +70,7 @@ def main():
 
     print("Starting ROyWeb with PID {0}".format(pid))
     print("Running on {0}:{1}".format(royweb_ip, royweb_port))
-    print("Listening for UDP data on port {0}".format(udp_port))
+    print("Listening for UDP data at 0.0.0.0 on port {0}".format(udp_port))
     print("Database for offline storage: {0}".format(options.db_file))
 
     settings = {'debug': True,
@@ -89,7 +89,7 @@ def main():
     ], **settings)
 
     db_manager = DBManager(options.db_file)
-    udp_dispatcher = UDPDispatcher(royweb_ip, udp_port, clients, db_manager)
+    udp_dispatcher = UDPDispatcher("0.0.0.0", udp_port, clients, db_manager)
     t = threading.Thread(target=udp_dispatcher.run)
     t.daemon = True
     t.start()
