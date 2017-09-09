@@ -69,7 +69,7 @@ class UDPDispatcher(object):
                       "the following JSON message: '{0}'".format(data))
             else:
                 self._broadcast_data(data)
-                self._insert_into_db(json.loads(self.with_timestamp(data).decode('utf-8')))
+                self._insert_into_db(json.loads(self.with_timestamp(data)))
 
     def _insert_into_db(self, data):
         """Keep recorde of the data"""

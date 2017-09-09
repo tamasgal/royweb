@@ -12,7 +12,8 @@ setup(name='royweb',
       include_package_data=True,
       platforms='any',
       install_requires=[
-          'tornado==3.2.2',
+          # 'tornado==3.2.2',
+          'tornado',
       ],
       entry_points={
           'console_scripts': [
