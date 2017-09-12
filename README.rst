@@ -9,6 +9,15 @@ The current status is beta and is already used by many people. Thanks for you fe
     :width: 700
     :align: center
 
+Quick Setup with Docker
+=======================
+
+A small Alpine Linux image with Python 3.6.2 and ROyWeb is available on Docker Hub::
+
+    docker run -ti -p 8080:8080 -p 9999:9999/udp tamasgal/royweb:0.9.7
+
+A fully working ROyWeb installation with the webserver running on 8080 and the UDP listener on 9999.
+
 
 Future Plans
 ============
